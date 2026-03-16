@@ -332,7 +332,7 @@ def spawn_near(species, level, group_size)
 end
 
 def clefairy_minigame(length = 4)
-  possible_elements = ["Left!", " Up!", "Right!", "Down!"]
+  possible_elements = ["Left!", "Up!", "Right!", "Down!"]
   pbMessage("Listen up and remember this!")
   sequence = []
   message = ""
