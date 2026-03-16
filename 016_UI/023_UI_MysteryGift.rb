@@ -464,7 +464,7 @@ def pbNextMysteryGiftID
   for i in $Trainer.mystery_gifts
     return i[0] if i.length>1
   end
-  return nil
+  return 0
 end
 
 def pbReceiveMysteryGift(id)
