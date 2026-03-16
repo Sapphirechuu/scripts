@@ -270,6 +270,7 @@ end
 
 def rivalRematch(loseDialog)
   trainer = getRebattledTrainerFromKey(BATTLED_TRAINER_RIVAL_KEY)
+  updated_trainer = healRebattledTrainerPokemon(trainer)
   player_won = hoennRivalBattle(loseDialog)
   checkTrainerRematchChallenges()
   # trainer
