@@ -21,7 +21,6 @@ Events.onMapChange+= proc { |_old_map_id|
   }
 
 def clear_current_map_weather
-    echoln "clearing weather"
     $game_screen.weather(:None,0,0)
 end
 

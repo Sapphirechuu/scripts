@@ -773,22 +773,23 @@ class Questlog
     @text.clear if @text
     @text2.clear if @text2
 
-    drawTextExMulti(@main, 188, 54, 318, 8, quest.desc,
+    pbDrawOutlineText(@main, 188, 54, 512, 384, quest.name,
+                      Color.new(255, 172, 115), Color.new(0, 0, 0))
+    drawTextExMulti(@main, 188, 84, 318, 8, quest.desc,
                     Color.new(255, 255, 255), Color.new(0, 0, 0))
     pbDrawOutlineText(@main, 188, 330, 512, 384, quest.location,
                       Color.new(255, 172, 115), Color.new(0, 0, 0))
-    pbDrawOutlineText(@main, 10, -178, 512, 384, quest.name,
-                      quest.color, Color.new(0, 0, 0))
+
 
     draw_completion_status(quest)
   end
 
   def draw_completion_status(quest)
     if quest.completed
-      pbDrawOutlineText(@main, 8, 250, 512, 384, _INTL("Completed"),
+      pbDrawOutlineText(@main, 8, 315, 512, 384, _INTL("Completed"),
                         pbColor(:LIGHTBLUE), Color.new(0, 0, 0))
     else
-      pbDrawOutlineText(@main, 8, 250, 512, 384, _INTL("Not Completed"),
+      pbDrawOutlineText(@main, 8, 315, 512, 384, _INTL("Not Completed"),
                         pbColor(:LIGHTRED), Color.new(0, 0, 0))
     end
   end

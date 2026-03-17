@@ -69,13 +69,17 @@ end
 
 def wally_fuse_pokemon(with_fusion_screen = true)
 
-  head_pokemon_index = 0
-  body_pokemon_index = 1
+  head_pokemon_index = 1
+  body_pokemon_index = 0
 
   trainer = $PokemonGlobal.battledTrainers[BATTLED_TRAINER_WALLY_KEY]
 
-  body_pokemon = trainer.currentTeam[body_pokemon_index]
   head_pokemon = trainer.currentTeam[head_pokemon_index]
+  body_pokemon = trainer.currentTeam[body_pokemon_index]
+
+  echoln head_pokemon.species
+  echoln body_pokemon.species
+
   return if head_pokemon.isFusion? || body_pokemon.isFusion?
   npcTrainerFusionScreenPokemon(head_pokemon.clone, body_pokemon.clone) if with_fusion_screen
 
