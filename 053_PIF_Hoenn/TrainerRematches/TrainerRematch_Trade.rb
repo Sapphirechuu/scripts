@@ -135,7 +135,6 @@ TRAINER_CLASS_PICKINESS = {
 def evaluate_pokemon_worth(pkmn, compare_level: nil, favorite_type: nil)
   species_data = pkmn.species_data
   return 0 unless species_data
-
   level = pkmn.level
   level_diff = compare_level ? (level - compare_level) : 0
   level_score = level * 2 + [level_diff, 0].max * 1.5 # bonus if player's level is higher
@@ -145,7 +144,9 @@ def evaluate_pokemon_worth(pkmn, compare_level: nil, favorite_type: nil)
   iv_score = (pkmn.iv&.values&.sum || 0) / 4.0
   shiny_score = pkmn.shiny? ? 50 : 0
   fusion_bonus = pkmn.isFusion? ? 40 : 0
-  type_bonus = (favorite_type && pkmn.hasType?(favorite_type)) ? 30 : 0
+
+  type_exists = GameData::Type.exists?(favorite_type) || nil
+  type_bonus = (type_exists && pkmn.hasType?(favorite_type)) ? 30 : 0
 
   score = level_score +
     base_stats_score +
@@ -195,10 +196,6 @@ end
 def generateTrainerTradeOffer(trainer)
   wanted_types = BattledTrainer::TRAINER_CLASS_FAVORITE_TYPES[trainer.trainerType]
   wanted_types = [:NORMAL] if !wanted_types || wanted_types.empty?
-
-
-  echoln "ICI?????"
-
   if wanted_types.include?(:ANY)
     pbChoosePokemon(1, 2)
   else
@@ -215,7 +212,6 @@ def generateTrainerTradeOffer(trainer)
                       pokemon.hasOneOfTheseTypes?(wanted_types)
                     })
   end
-  echoln "??? là????"
   chosen_index = pbGet(1)
   if chosen_index && chosen_index >= 0
     chosen_pokemon = $Trainer.party[chosen_index]
