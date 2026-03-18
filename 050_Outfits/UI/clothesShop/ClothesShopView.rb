@@ -138,15 +138,15 @@ class ClothesShopView < PokemonMart_Scene
         if itemwindow.item != olditem
           displayNewItem(itemwindow)
         end
-        if Input.trigger?(Input::AUX1) #L button
+        if Input.trigger?(Input::X) #X button
           @adapter.switchVersion(itemwindow.item, -1)
           updateTrainerPreview()
         end
 
-        if Input.trigger?(Input::AUX2)  #R button
+        if Input.trigger?(Input::Y)  #Y button
           switchItemVersion(itemwindow)
         end
-        if Input.trigger?(Input::SPECIAL) #R button
+        if Input.trigger?(Input::SPECIAL) #Z button
           @adapter.toggleEvent(itemwindow.item)
           updateTrainerPreview()
         end

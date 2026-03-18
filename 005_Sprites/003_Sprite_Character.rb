@@ -82,6 +82,9 @@ class Sprite_Character < RPG::Sprite
     if @character && @character != $game_player
       checkModifySpriteGraphics(@character) if @character.active?
     end
+    if @character.character_name == "000"
+      @character.character_name=""
+    end
     update
   end
 
@@ -263,9 +266,6 @@ class Sprite_Character < RPG::Sprite
       self.bitmap = @bushbitmap.bitmap
     end
     self.visible = !@character.transparent
-    if @character_name == "000" && !$DEBUG
-      self.visible = false
-    end
     if @tile_id == 0
       sx = @character.pattern * @cw
       sy = ((@character.direction - 2) / 2) * @ch
