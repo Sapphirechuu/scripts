@@ -61,6 +61,7 @@ def unfuseCore(fused_pokemon)
   #Items
   $PokemonBag.pbStoreItem(fused_pokemon.item, 1) if fused_pokemon.item
 
+  fused_pokemon.exp_gained_since_fused =0 unless fused_pokemon.exp_gained_since_fused
   # Exp
   head_pokemon.exp_gained_with_player = 0 unless head_pokemon.exp_gained_with_player
   head_pokemon.exp_gained_with_player += fused_pokemon.exp_gained_since_fused
