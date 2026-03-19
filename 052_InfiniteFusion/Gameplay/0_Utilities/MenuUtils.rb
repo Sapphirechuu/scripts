@@ -2,16 +2,22 @@ def obtainBadgeMessage(badgeName)
   Kernel.pbMessage(_INTL("\\me[Badge get]{1} obtained the {2}!", $Trainer.name, badgeName))
 end
 
-def pbSpendMoney(amount)
-  pbReceiveMoney(0- amount)
+def pbSpendMoney(amount,showMessage=false,msgwindow=nil, goldwindow=nil)
+  pbReceiveMoney(0- amount,showMessage,msgwindow,goldwindow,)
 end
-def pbReceiveMoney(amount,showMessage=true)
-  msgwindow = pbCreateMessageWindow(nil)
-  goldwindow = pbDisplayGoldWindow(msgwindow)
+def pbReceiveMoney(amount, showMessage=true, msgwindow=nil, goldwindow=nil)
+  msgwindow  = pbCreateMessageWindow(nil)      unless msgwindow
+  goldwindow = pbDisplayGoldWindow(msgwindow)  unless goldwindow
+
   if showMessage
-    pbMessage(_INTL("{1} received ${2}!",$Trainer.name, amount.to_s_formatted))
+    if amount >= 0
+      pbMessage(_INTL("{1} received ${2}!", $Trainer.name, amount.to_s_formatted))
+    else
+      pbMessage(_INTL("{1} spent ${2}!", $Trainer.name, amount.abs.to_s_formatted))
+    end
   end
-  #show current money
+
+  # Show current money initial pause
   15.times do
     Graphics.update
     Input.update
@@ -22,20 +28,25 @@ def pbReceiveMoney(amount,showMessage=true)
 
   oldMoney    = $Trainer.money
   targetMoney = oldMoney + amount
-  $Trainer.money = targetMoney
-  step = [amount / 15, 1].max
-  current = oldMoney
+  step        = [(amount.abs / 15), 1].max
+  current     = oldMoney
 
-  #count up
-  while current < targetMoney
-    current += step
-    current = targetMoney if current > targetMoney
+  # Count up/down animation
+  while (amount >= 0 ? current < targetMoney : current > targetMoney)
+    current += (amount >= 0 ? step : -step)
+    current = targetMoney if (amount >= 0 ? current > targetMoney : current < targetMoney)
+
+    color = amount >= 0 ? "00FF00" : "FF0000"
+    sign  = amount >= 0 ? "+" : "-"
     goldwindow.text = _INTL(
-      "Money:\n<ar>{1}</ar>\n<ar><c3=00FF00>+ {2}</c3></ar>",
+      "Money:\n<ar>{1}</ar>\n<ar><c3={2}>{3} {4}</c3></ar>",
       current.to_s_formatted,
-      amount.to_s_formatted
+      color,
+      sign,
+      amount.abs.to_s_formatted
     )
-    pbSEPlay("Mart buy item") if current < targetMoney
+
+    pbSEPlay("Mart buy item") if (amount >= 0 ? current < targetMoney : current > targetMoney)
     Graphics.update
     Input.update
     pbUpdateSceneMap
@@ -43,15 +54,18 @@ def pbReceiveMoney(amount,showMessage=true)
     goldwindow.update
   end
 
+  $Trainer.money = targetMoney
 
+  # Final display text
   goldwindow.text = _INTL(
     "Money:\n<ar>{1}</ar>",
     targetMoney.to_s_formatted
   )
 
-  #show final money
   goldwindow.resizeToFit(goldwindow.text, Graphics.width)
   goldwindow.width = 160 if goldwindow.width <= 160
+
+  # Show final balance pause
   20.times do
     Graphics.update
     Input.update
@@ -59,15 +73,25 @@ def pbReceiveMoney(amount,showMessage=true)
     msgwindow.update
     goldwindow.update
   end
+
   goldwindow.dispose
   pbDisposeMessageWindow(msgwindow)
 end
 
+def pbSpendCosmeticMoney(amount,showMessage=false,msgwindow=nil, goldwindow=nil)
+  pbReceiveCosmeticsMoney(0- amount,showMessage,msgwindow,goldwindow,)
+end
+def pbReceiveCosmeticsMoney(amount, showMessage=true, msgwindow=nil, goldwindow=nil)
+  msgwindow  = pbCreateMessageWindow(nil)          unless msgwindow
+  goldwindow = pbDisplayCosmeticsMoneyWindow(msgwindow) unless goldwindow
 
-def pbReceiveCosmeticsMoney(amount)
-  msgwindow = pbCreateMessageWindow(nil)
-  # Assuming goldwindow handles the display for currency
-  goldwindow = pbDisplayCosmeticsMoneyWindow(msgwindow)
+  if showMessage
+    if amount >= 0
+      pbMessage(_INTL("{1} received {2} {3}!", $Trainer.name, amount.to_s_formatted, COSMETIC_CURRENCY_NAME))
+    else
+      pbMessage(_INTL("{1} spent {2} {3}!", $Trainer.name, amount.abs.to_s_formatted, COSMETIC_CURRENCY_NAME))
+    end
+  end
 
   # Show current cosmetic money initial pause
   15.times do
@@ -78,33 +102,36 @@ def pbReceiveCosmeticsMoney(amount)
     goldwindow.update
   end
 
-  oldMoney    = $Trainer.cosmetics_money
-  oldMoney = 0 unless oldMoney
+  oldMoney    = $Trainer.cosmetics_money || 0
   targetMoney = oldMoney + amount
-  $Trainer.cosmetics_money = targetMoney
-  step = [amount / 15, 1].max
-  current = oldMoney
+  step        = [(amount.abs / 15), 1].max
+  current     = oldMoney
 
-  # Count up animation
-  while current < targetMoney
-    current += step
-    current = targetMoney if current > targetMoney
+  # Count up/down animation
+  while (amount >= 0 ? current < targetMoney : current > targetMoney)
+    current += (amount >= 0 ? step : -step)
+    current = targetMoney if (amount >= 0 ? current > targetMoney : current < targetMoney)
 
-    # Updated to use COSMETIC_CURRENCY_NAME and cosmetic_money
+    color   = amount >= 0 ? "00FF00" : "FF0000"
+    sign    = amount >= 0 ? "+" : "-"
     goldwindow.text = _INTL(
-      "{1}:\n<ar>{2}</ar>\n<ar><c3=00FF00>+ {3}</c3></ar>",
+      "{1}:\n<ar>{2}</ar>\n<ar><c3={3}>{4} {5}</c3></ar>",
       COSMETIC_CURRENCY_NAME,
       current.to_s_formatted,
-      amount.to_s_formatted
+      color,
+      sign,
+      amount.abs.to_s_formatted
     )
 
-    pbSEPlay("Mart buy item") if current < targetMoney
+    pbSEPlay("Mart buy item") if amount >= 0 ? current < targetMoney : current > targetMoney
     Graphics.update
     Input.update
     pbUpdateSceneMap
     msgwindow.update
     goldwindow.update
   end
+
+  $Trainer.cosmetics_money = targetMoney
 
   # Final display text
   goldwindow.text = _INTL(
@@ -113,9 +140,10 @@ def pbReceiveCosmeticsMoney(amount)
     targetMoney.to_s_formatted
   )
 
-  # Show final balance pause
   goldwindow.resizeToFit(goldwindow.text, Graphics.width)
   goldwindow.width = 160 if goldwindow.width <= 160
+
+  # Show final balance pause
   20.times do
     Graphics.update
     Input.update

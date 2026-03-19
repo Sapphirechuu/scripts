@@ -407,7 +407,7 @@ def pbGetGoldString
 end
 
 
-def pbDisplayGoldWindow(msgwindow)
+def pbDisplayGoldWindow(msgwindow,x=nil,y=nil)
   moneyString = pbGetGoldString()
   goldwindow = Window_AdvancedTextPokemon.new(_INTL("Money:\n<ar>{1}</ar>", moneyString))
   goldwindow.setSkin("Graphics/Windowskins/goldskin")
@@ -418,12 +418,15 @@ def pbDisplayGoldWindow(msgwindow)
   else
     goldwindow.y = 0
   end
+  goldwindow.x = x if x
+  goldwindow.y = y if y
+
   goldwindow.viewport = msgwindow.viewport
   goldwindow.z = msgwindow.z
   return goldwindow
 end
 
-def pbDisplayCosmeticsMoneyWindow(msgwindow)
+def pbDisplayCosmeticsMoneyWindow(msgwindow,x=nil,y=nil)
   moneyString = pbGetCosmeticsMoneyString()
   goldwindow = Window_AdvancedTextPokemon.new(_INTL("{2}:\n<ar>{1}</ar>", moneyString,COSMETIC_CURRENCY_NAME))
   goldwindow.setSkin("Graphics/Windowskins/goldskin")
@@ -434,6 +437,9 @@ def pbDisplayCosmeticsMoneyWindow(msgwindow)
   else
     goldwindow.y = 0
   end
+  goldwindow.x = x if x
+  goldwindow.y = y if y
+
   goldwindow.viewport = msgwindow.viewport
   goldwindow.z = msgwindow.z
   return goldwindow
@@ -808,6 +814,9 @@ def pbMessageDisplay(msgwindow, message, letterbyletter = true, commandProc = ni
       when "g" # Display gold window
         goldwindow.dispose if goldwindow
         goldwindow = pbDisplayGoldWindow(msgwindow)
+      when "cm" # Display cosmetics money window
+        goldwindow.dispose if goldwindow
+        goldwindow = pbDisplayCosmeticsMoneyWindow(msgwindow)
       when "ft" # Display battle factory tokens
         goldwindow.dispose if goldwindow
         goldwindow = pbDisplayBattleFactoryPointsWindow(msgwindow)

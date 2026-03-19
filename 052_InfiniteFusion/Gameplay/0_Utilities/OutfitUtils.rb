@@ -126,15 +126,23 @@ def purchaseDyeKitMenu(hats_kit_price = 0, clothes_kit_price = 0)
     return
   end
   pbCallBub(2, @event_id)
-  pbMessage(_INTL("\\GWelcome! Are you interested in dyeing your outfits different colours?"))
+  pbMessage(_INTL("Welcome! Are you interested in dyeing your outfits different colours?"))
 
   pbCallBub(2, @event_id)
   pbMessage(_INTL("I make handy \\C[1]Dye Kits\\C[0] from my Smeargle's paint that can be used to dye your outfits any color you want!"))
 
   pbCallBub(2, @event_id)
-  pbMessage(_INTL("\\GWhat's more is that it's reusable so you can go completely wild with it if you want! Are you interested?"))
+  pbMessage(_INTL("What's more is that it's reusable so you can go completely wild with it if you want! Are you interested?"))
 
-  money = Settings::HOENN ? $Trainer.cosmetics_money : $Trainer.money
+  msgwindow = pbCreateMessageWindow(nil)
+  pbMessageDisplay(msgwindow, _INTL("Which dye kit would you like to purchase?"))
+  if Settings::HOENN
+    money = $Trainer.cosmetics_money
+    goldwindow = pbDisplayCosmeticsMoneyWindow(msgwindow,300)
+  else
+    money = $Trainer.money
+    goldwindow = pbDisplayGoldWindow(msgwindow,300)
+  end
 
   choice = optionsMenu(commands, commands.length)
   case commands[choice]
@@ -142,39 +150,39 @@ def purchaseDyeKitMenu(hats_kit_price = 0, clothes_kit_price = 0)
     if money < hats_kit_price
       pbCallBub(2, @event_id)
       pbMessage(_INTL("Oh, you don't have enough money..."))
+      goldwindow.dispose
       return
     end
-    pbMessage(_INTL("\\G\\PN purchased the dye kit."))
-
-    if Settings::HOENN
-      $Trainer.cosmetics_money -= hats_kit_price
-    else
-      $Trainer.money -= hats_kit_price
-    end
-    pbSEPlay("SlotsCoin")
+    purchaseWindowAnimation(hats_kit_price,msgwindow,goldwindow)
     Kernel.pbReceiveItem(:HATSDYEKIT)
     pbCallBub(2, @event_id)
-    pbMessage(_INTL("\\GHere you go! Have fun dyeing your hats!"))
+    pbMessage(_INTL("Here you go! Have fun dyeing your hats!"))
   when command_clothes
     if money < clothes_kit_price
       pbCallBub(2, @event_id)
       pbMessage(_INTL("Oh, you don't have enough money..."))
+      goldwindow.dispose
       return
     end
-    pbMessage(_INTL("\\G\\PN purchased the dye kit."))
-    if Settings::HOENN
-      $Trainer.cosmetics_money -= clothes_kit_price
-    else
-      $Trainer.money -= clothes_kit_price
-    end
 
-    pbSEPlay("SlotsCoin")
+    #pbMessage(_INTL("\\PN purchased the dye kit."))
+    purchaseWindowAnimation(clothes_kit_price,msgwindow,goldwindow)
     Kernel.pbReceiveItem(:CLOTHESDYEKIT)
     pbCallBub(2, @event_id)
-    pbMessage(_INTL("\\GHere you go! Have fun dyeing your clothes!"))
+    pbMessage(_INTL("Here you go! Have fun dyeing your clothes!"))
   end
   pbCallBub(2, @event_id)
   pbMessage(_INTL("You can use \\C[1]Dye Kits\\C[0] at any time when you change clothes."))
+end
+
+def purchaseWindowAnimation(price, msgwindow,goldwindow)
+  if Settings::HOENN
+    pbSpendCosmeticMoney(price,false,msgwindow,goldwindow)
+  else
+    pbSpendMoney(price,false,msgwindow,goldwindow)
+  end
+  msgwindow.dispose
+  goldwindow.dispose
 end
 
 def isWearingTeamAquaOutfit()
