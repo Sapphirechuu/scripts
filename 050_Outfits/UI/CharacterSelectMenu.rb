@@ -67,9 +67,20 @@ class CharacterSelectionMenuView
   end
 
   def init_labels()
-    Kernel.pbDisplayText("Confirm", (CONFIRM_X + CURSOR_X_MARGIN), CONFIRM_Y)
-  end
+    @textValues["confirm"].dispose if @textValues["confirm"]
+    yposition = CONFIRM_Y
+    xposition = CONFIRM_X+CURSOR_X_MARGIN
 
+    baseColor= baseColor ? baseColor : Color.new(72,72,72)
+    shadowColor= shadowColor ? shadowColor : Color.new(160,160,160)
+    @textValues["confirm"] = BitmapSprite.new(Graphics.width,Graphics.height,@viewport)
+    textPosition=[
+      [_INTL("Confirm"),xposition,yposition,2,baseColor,shadowColor],
+    ]
+    pbSetSystemFont(@textValues["confirm"].bitmap)
+    pbDrawTextPositions(@textValues["confirm"].bitmap,textPosition)
+    #Kernel.pbDisplayText("Confirm", (CONFIRM_X+CURSOR_X_MARGIN), CONFIRM_Y)
+  end
   def start
     init_graphics()
     init_labels()
