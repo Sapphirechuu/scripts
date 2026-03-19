@@ -290,6 +290,7 @@ class Scene_Map
     $game_map.update
     disposeSpritesets
     GC.start
+    $PokemonTemp.dependentEvents = nil
     createSpritesets
     if fadeout
       $game_temp.transition_processing = false
