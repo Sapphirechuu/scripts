@@ -822,6 +822,7 @@ def pbTrainerBattle(trainerID, trainerName, endSpeech = nil,
   # Finish off the recorded waiting trainer, because they have now been battled
   if decision == 1 && $PokemonTemp.waitingTrainer # Win
     pbMapInterpreter.pbSetSelfSwitch($PokemonTemp.waitingTrainer[1], "A", true)
+    $Trainer.stats&.incr_nb_battles
   end
   $PokemonTemp.waitingTrainer = nil
   # Return true if the player won the battle, and false if any other result
