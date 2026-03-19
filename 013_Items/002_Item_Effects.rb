@@ -831,6 +831,12 @@ ItemHandlers::UseOnPokemon.add(:EXPCANDY, proc { |item, pkmn, scene|
   if pbConfirmMessage(message)
     exp = 1000 * nb
     pkmn.exp += exp
+    pkmn.exp_gained_with_player =0 unless pkmn.exp_gained_with_player
+    echoln pkmn.exp_gained_with_player
+
+    pkmn.exp_gained_with_player += exp
+
+    echoln pkmn.exp_gained_with_player
     pkmn.calc_stats
 
     if pkmn.level != previous_level

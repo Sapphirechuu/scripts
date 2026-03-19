@@ -13,7 +13,7 @@ class ExpExtraction
     @exp_to_extract = 0
     @nb_candies = (@exp_to_extract / 1000).floor
     @full_price = BASE_PRICE + @unit_price * @nb_candies
-    @total_exp = pokemon.exp
+    @total_exp = pokemon.exp_gained_with_player
 
     update_text
 
@@ -57,7 +57,7 @@ end
 #
 def extractExpFromPokemon(pokemon, unitPrice, nbCandiesVariable = 1)
   pokemon.exp_gained_with_player = 0 if !pokemon.exp_gained_with_player
-
+  echoln pokemon.exp_gained_with_player
   valid_exp = [pokemon.exp_gained_with_player,pokemon.exp].min
   max_value = valid_exp / 1000.floor
 
