@@ -7,7 +7,6 @@ class ExpExtraction
   attr_accessor :nb_candies
   BASE_PRICE = 1000
   LOSS_PER_CANDY = 50
-  # todo: use "Exp gained with trainer" instead of total EXP
   def initialize(pokemon, unit_price)
     @pokemon = pokemon
     @unit_price = unit_price
@@ -58,7 +57,9 @@ end
 #
 def extractExpFromPokemon(pokemon, unitPrice, nbCandiesVariable = 1)
   pokemon.exp_gained_with_player = 0 if !pokemon.exp_gained_with_player
-  max_value = pokemon.exp_gained_with_player / 1000.floor
+
+  valid_exp = [pokemon.exp_gained_with_player,pokemon.exp].min
+  max_value = valid_exp / 1000.floor
 
   if max_value < 1
     pbCallBubDown(2, @event_id)
@@ -78,22 +79,30 @@ def extractExpFromPokemon(pokemon, unitPrice, nbCandiesVariable = 1)
   }
 
   params = ChooseNumberParams.new
-  params.setRange(1, max_value)
+  params.setRange(0, max_value)
   params.setDefaultValue(1)
+  params.setCancelValue(0)
 
-  pbMessageChooseNumber(_INTL("\\GHow many Exp. Candies to extract?"), params, &update_proc)
-
+  value = pbMessageChooseNumber(_INTL("\\GHow many \\C[1]Exp. Candies\\C[0] to extract?"), params, &update_proc)
   new_exp = pokemon.exp - expExtraction.exp_to_extract
   new_exp -= ExpExtraction::LOSS_PER_CANDY*expExtraction.nb_candies
+  new_exp -= expExtraction.nb_candies
 
+
+  new_exp = 0 if new_exp < 0
   nb_candies = expExtraction.nb_candies
 
   new_level = pokemon.calculate_level_at_exp(new_exp)
   expExtraction.dispose
+  if expExtraction.nb_candies <= 0 || value <=0 #value:0 means that it was cancelled
+    return false
+  end
+
 
   pbCallBubDown(2, @event_id)
   if pbConfirmMessage(_INTL("Your {1} will go from \\C[1]Level {2}\\C[0] to \\C[1]Level {3}\\C[0] after all the Exp. Candies are extracted. Do you still want to continue?", pokemon.name, pokemon.level, new_level))
-    removeExp(pokemon, expExtraction.exp_to_extract)
+    exp_to_extract = expExtraction.exp_to_extract + ExpExtraction::LOSS_PER_CANDY*expExtraction.nb_candies
+    removeExp(pokemon, exp_to_extract)
     pbSet(nbCandiesVariable, nb_candies)
   else
     return false
@@ -121,5 +130,6 @@ def removeExp(pokemon, exp_to_remove)
   end
 
   pokemon.exp -= exp_to_remove
+  pokemon.exp = 0 if pokemon.exp < 0
   pokemon.calc_stats
 end
