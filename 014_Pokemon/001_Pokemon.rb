@@ -153,6 +153,7 @@ class Pokemon
     echoln("Forced Form: #{@forced_form}")
     echoln("Time Form Set: #{@time_form_set}")
     echoln("Experience: #{@exp}")
+    echoln("EXP with player: #{@exp_gained_with_player}")
     echoln("EXP When Fused Head: #{@exp_when_fused_head}")
     echoln("EXP When Fused Body: #{@exp_when_fused_body}")
     echoln("EXP Gained Since Fused: #{@exp_gained_since_fused}")

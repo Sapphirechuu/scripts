@@ -837,7 +837,7 @@ ItemHandlers::UseOnPokemon.add(:EXPCANDY, proc { |item, pkmn, scene|
       pbSEPlay("itemlevel")
       pbMessage(_INTL("{1} grew to level {2}!",pkmn.name,pkmn.level))
     else
-      pbMessage(_INTL("{1} gained some experience."))
+      pbMessage(_INTL("{1} gained some experience.",pkmn.name))
     end
     $PokemonBag.pbDeleteItem(:EXPCANDY, nb -1)
     scene.pbHardRefresh
