@@ -133,5 +133,5 @@ GameData::Environment.register({
 GameData::Environment.register({
   :id   => :Bridge,
   :name => _INTL("Bridge"),
-  :battle_base => "wood"
+  :battle_base => "Bridge"
 })

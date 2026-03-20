@@ -125,7 +125,7 @@ class BattledTrainer
       when 1
         pbMessage(_INTL("You can now trade with each other!"))
       when 2
-        pbMessage(_INTL("They will now give you items from time to time!"))
+        pbMessage(_INTL("They will now give you items after rematches from time to time!"))
       # when 3
       #   pbMessage(_INTL("You can now partner up with them!"))
       end

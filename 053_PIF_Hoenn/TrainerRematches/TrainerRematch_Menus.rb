@@ -93,14 +93,12 @@ def postBattleActionsMenu(trainer=nil)
   options << cancelCommand
 
   trainer = applyTrainerRandomEvents(trainer)
-  if trainer.has_pending_action
-    try_give_gift(trainer)  #only when there's a pending action so that it can't be abused by talking to the npc over and over
-  end
   showPrerematchDialog
   choice = optionsMenu(options,options.find_index(cancelCommand),options.find_index(cancelCommand))
   case options[choice]
   when rematchCommand
     doPostBattleAction(:BATTLE,trainer)
+    try_give_gift(trainer)
   when rematchSingleCommand
     doPostBattleAction(:BATTLE,trainer,false)
   when rematchDoubleCommand

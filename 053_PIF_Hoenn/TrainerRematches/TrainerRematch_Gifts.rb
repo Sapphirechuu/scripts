@@ -67,7 +67,7 @@ TRAINER_REMATCH_SPECIFIC_GIFTS = {
 
 def should_give_item(trainer)
   return false unless trainer.friendship_level >= 2
-  base_rate = 10 # percent
+  base_rate = 30 # percent
   item_chances = base_rate + (trainer.friendship / 10).floor
   return rand(100) < item_chances
 end
