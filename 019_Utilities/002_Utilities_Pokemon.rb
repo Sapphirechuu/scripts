@@ -148,16 +148,22 @@ def pbAddForeignPokemon(pkmn, level = 1, owner_name = nil, nickname = nil, owner
   return true
 end
 
-def pbGenerateEgg(pkmn, text = "")
+def receiveEgg(species)
+  pbGenerateEgg(species)
+  pbMEPlay("Egg get")
+  pbMessage(_INTL("{1} received a Pokémon egg!",$Trainer.name))
+end
+
+def pbGenerateEgg(pkmn, obtain_text = "")
   return false if !pkmn #|| $Trainer.party_full?
   pkmn = Pokemon.new(pkmn, Settings::EGG_LEVEL) if !pkmn.is_a?(Pokemon)
   # Set egg's details
   pkmn.name           = _INTL("Egg")
   pkmn.steps_to_hatch = pkmn.species_data.hatch_steps
-  pkmn.obtain_text    = text
+  pkmn.obtain_text    = obtain_text
   pkmn.calc_stats
+
   # Add egg to party
-  echoln "adding to party"
   if $Trainer.party.length<6
     $Trainer.party[$Trainer.party.length] = pkmn
   else
