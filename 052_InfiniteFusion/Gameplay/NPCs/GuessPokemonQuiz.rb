@@ -1,4 +1,8 @@
 class FusionQuiz
+  attr_accessor :silhouette_color
+  attr_accessor :windowed
+  attr_accessor :picture_offset_x
+  attr_accessor :picture_offset_y
 
   #
   # Possible difficulties:
@@ -23,6 +27,11 @@ class FusionQuiz
     @score = 0
     @current_streak = 0
     @streak_multiplier = 0.15
+
+    @silhouette_color = Color.new(255, 255, 255, 200)
+    @windowed=true
+    @picture_offset_x = 0
+    @picture_offset_y = 0
   end
 
 
@@ -57,7 +66,7 @@ class FusionQuiz
         round_multiplier += round_multiplier_increase
       else
         pbMessage(_INTL("This concludes our quiz! You've cumulated {1} points in total.", @score))
-        pbMessage(_INTL("Thanks for playing with us today!"))
+        pbMessage(_INTL("Thanks for playing!"))
       end
     end
     end_quiz()
@@ -90,6 +99,8 @@ class FusionQuiz
     end
 
     pick_random_pokemon()
+    sprite_loader = BattleSpriteLoader.new
+    @pif_sprite = sprite_loader.select_new_pif_fusion_sprite(@head_id,@body_id)
     show_fusion_picture(true)
     correct_answers = []
 
@@ -210,14 +221,17 @@ class FusionQuiz
   def show_fusion_picture(obscured = false, x = nil, y = nil)
     hide_fusion_picture()
     spriteLoader = BattleSpriteLoader.new
-    bitmap = spriteLoader.load_fusion_sprite(@head_id, @body_id)
+    bitmap = spriteLoader.load_pif_sprite_directly(@pif_sprite)
     bitmap.scale_bitmap(Settings::FRONTSPRITE_SCALE)
     @previewwindow = PictureWindow.new(bitmap)
+    @previewwindow.opacity = 0 unless @windowed
     @previewwindow.y = y ? y : 30
+    @previewwindow.y += @picture_offset_y
     @previewwindow.x = x ? x : (@difficulty == :ADVANCED ? 275 : 100)
+    @previewwindow.x += @picture_offset_x
     @previewwindow.z = 100000
     if obscured
-      @previewwindow.picture.pbSetColor(255, 255, 255, 200)
+      @previewwindow.picture.pbSetColorValue(@silhouette_color)
     end
   end
 

@@ -127,6 +127,7 @@ class Game_System
 
   # Plays the currently memorized background music
   def bgm_restore
+    echoln @memorized_bgm
     bgm_play(@memorized_bgm)
   end
 

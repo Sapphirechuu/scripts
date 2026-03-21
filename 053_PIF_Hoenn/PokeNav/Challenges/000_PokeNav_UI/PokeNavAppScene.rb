@@ -247,15 +247,9 @@ class PokeNavAppScene
     pbPlayCursorSE
     @index = (@index + delta) % @buttons.length
     hover(@buttons[@index]&.id)
-
-    echoln "new: #{@index}"
-
   end
 
   def move_to_index(index)
-    echoln "old: #{@index}"
-
-
     return if @buttons.empty?
     pbPlayCursorSE
     @index = index
