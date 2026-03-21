@@ -267,9 +267,9 @@ class FusionQuiz
     if @current_streak % 4 == 0
       extra_points = (@current_streak/4)*streak_base_worth
       if @current_streak >= 8
-        pbMessage(_INTL("That's {1} correct answers in a row. You're on a roll!\\wtnp[15]", @current_streak))
+        pbMessage(_INTL("That's {1} correct answers in a row. You're on a roll!\\wtnp[20]", @current_streak))
       else
-        pbMessage(_INTL("That's {1} correct answers in a row. You're doing great!\\wtnp[15]", @current_streak))
+        pbMessage(_INTL("That's {1} correct answers in a row. You're doing great!\\wtnp[20]", @current_streak))
       end
       pbMessage(_INTL("Here's {1} extra points for maintaining a streak!\\wtnp[15]",extra_points))
       award_points(extra_points)

@@ -16,8 +16,8 @@ class FusionQuizAppScene < PokeNavAppScene
   end
 
   def pbStartScene(buttons = nil)
-    super(buttons)
     $game_system.bgm_memorize
+    super(buttons)
     pbBGMPlay("game_corner")
     displayTextElements
   end

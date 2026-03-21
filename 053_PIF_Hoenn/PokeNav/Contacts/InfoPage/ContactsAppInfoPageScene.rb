@@ -25,6 +25,8 @@ class ContactsAppInfoPageScene < PokeNavAppScene
   FRIENDSHIP_ICON_START_X = 40
   FRIENDSHIP_ICON_START_Y = 20
 
+  INFO_TEXT_LINES_PER_PAGE = 2
+
   def header_name
     return _INTL("Trainers")
   end
@@ -76,7 +78,8 @@ class ContactsAppInfoPageScene < PokeNavAppScene
     if isDarkMode
       @value_color_base, @value_color_shadow = @value_color_shadow, @value_color_base
     end
-
+    @info_text_page = 0
+    @info_text_pages = []
   end
 
   def pbStartScene(screen, trainer)
@@ -180,9 +183,7 @@ class ContactsAppInfoPageScene < PokeNavAppScene
     current_y += INFO_HEADER_GAP
     displayValue(favorite_type, INFO_TEXT_X, current_y)
 
-    echoln "before trainer_data"
     trainer_data = GameData::Trainer.try_get(@trainer.trainerType, @trainer.trainerName, 0)
-    echoln "after trainer_data"
     current_y += INFO_TEXT_GAP * 1.5
     if @trainer.previous_random_events
       action = getBestMatchingPreviousRandomEvent(trainer_data, @trainer.previous_random_events)
@@ -206,8 +207,11 @@ class ContactsAppInfoPageScene < PokeNavAppScene
                               GameData::Species.get(action.reversed_pokemon).real_name)
         end
         displayText(action_text, INFO_HEADER_X, current_y)
+        # No pagination needed for event text — clear pages so LEFT/RIGHT do nothing
+        @info_text_pages = []
+        @info_text_page = 0
       else
-        displayInfoText(current_y,trainer_data)
+        displayInfoText(current_y, trainer_data)
       end
     end
   end
@@ -218,12 +222,31 @@ class ContactsAppInfoPageScene < PokeNavAppScene
       full_text = "\"" + infoText + "\""
       max_width = SPRITE_POSITION_X - INFO_HEADER_X - 20
       temp_bitmap = Bitmap.new(1, 1)
-      lines = wrap_text(full_text, temp_bitmap, max_width)
+      all_lines = wrap_text(full_text, temp_bitmap, max_width)
       temp_bitmap.dispose
-      lines.each do |line|
+
+      # Rebuild pages only when switching trainers (page resets to 0 in change_trainer)
+      @info_text_pages = all_lines.each_slice(INFO_TEXT_LINES_PER_PAGE).to_a
+      @info_text_page = @info_text_page.clamp(0, [@info_text_pages.size - 1, 0].max)
+
+      page_lines = @info_text_pages[@info_text_page] || []
+      page_lines.each do |line|
         displayText(line, INFO_HEADER_X, current_y)
         current_y += INFO_TEXT_GAP
       end
+
+      # Draw pagination indicator when there are multiple pages, e.g. "1 / 3"
+      if @info_text_pages.size > 1
+        indicator = "#{@info_text_page + 1} / #{@info_text_pages.size}"
+        indicator_x = Graphics.width - 80
+
+        echoln current_y- INFO_TEXT_GAP
+
+        displayText(indicator, indicator_x, 340)
+      end
+    else
+      @info_text_pages = []
+      @info_text_page = 0
     end
   end
 
@@ -234,6 +257,18 @@ class ContactsAppInfoPageScene < PokeNavAppScene
     elsif Input.trigger?(Input::DOWN)
       change_trainer(1)
       pbSEPlay("GUI naming tab swap start")
+    elsif Input.trigger?(Input::LEFT)
+      if @info_text_pages.size > 1 && @info_text_page > 0
+        @info_text_page -= 1
+        pbSEPlay("GUI naming tab swap start")
+        refresh_info_text
+      end
+    elsif Input.trigger?(Input::RIGHT)
+      if @info_text_pages.size > 1 && @info_text_page < @info_text_pages.size - 1
+        @info_text_page += 1
+        pbSEPlay("GUI naming tab swap start")
+        refresh_info_text
+      end
     elsif Input.trigger?(Input::BACK)
       pbPlayCloseMenuSE
       @exiting = true
@@ -244,7 +279,16 @@ class ContactsAppInfoPageScene < PokeNavAppScene
     end
   end
 
+  # Re-renders only the info text area without rebuilding the whole scene.
+  def refresh_info_text
+    Kernel.pbClearText
+    showHeaderName
+    showTrainerInfo
+  end
+
   def change_trainer(index_delta)
+    @info_text_page = 0
+    @info_text_pages = []
     @screen.change_trainer(index_delta)
     @sprites["trainer"]&.dispose
     @friendship_icons&.each_with_index { |_, i| @sprites.delete("friendship_icon_#{i}") }
