@@ -76,7 +76,7 @@ class PokeRadarAppScene < PokeNavAppScene
       icon_path = pbCheckPokemonIconFiles(pokemon_species)
       bmp = load_bitmap(icon_path, false)
       button = PokenavButton.new(pokemon_species, bmp)
-      button.crop_width = button.source_bitmap.bitmap.width / 2
+      button.crop_width = button.icon_bitmap.bitmap.width / 2
       button.refresh
       buttons << button if button
     end
@@ -84,7 +84,7 @@ class PokeRadarAppScene < PokeNavAppScene
       icon_path = pbCheckPokemonIconFiles(pokemon_species)
       bmp = load_bitmap(icon_path, true)
       button = PokenavButton.new(pokemon_species, bmp)
-      button.crop_width = button.source_bitmap.bitmap.width / 2
+      button.crop_width = button.icon_bitmap.bitmap.width / 2
       button.refresh
       buttons << button
     end

@@ -1,31 +1,83 @@
 class FusionQuizAppScene < PokeNavAppScene
+  attr_accessor :playing
+  attr_accessor :difficulty
+
+  def initialize
+    super
+    @playing = false
+  end
+
+  def y_gap
+    return 64;
+  end
+
+  def start_x
+    return Graphics.width-200;
+  end
+
+  def pbStartScene(buttons = nil)
+    super(buttons)
+    $game_system.bgm_memorize
+    pbBGMPlay("game_corner")
+    displayTextElements
+  end
+
   def bg_path
-    return "Graphics/Pictures/Pokegear/FusionQuiz/bg"
+    if @playing
+      if @difficulty == :ADVANCED
+        return "Graphics/Pictures/Pokegear/FusionQuiz/bg_play_advanced"
+      else
+        return "Graphics/Pictures/Pokegear/FusionQuiz/bg_play"
+      end
+    else
+      return "Graphics/Pictures/Pokegear/FusionQuiz/bg_menu"
+    end
+  end
+
+  def cursor_path
+    return "Graphics/Pictures/Pokegear/FusionQuiz/cursor"
   end
 
   def header_name
-    return _INTL("Fusion Quiz")
+    return _INTL("Guess that Fusion!")
+  end
+
+  def header_path
+    return "Graphics/Pictures/Pokegear/FusionQuiz/bg_header_quiz"
   end
 
   def click(button_id)
-    $game_system.bgm_memorize
     case button_id
     when "play"
-      pbBGMPlay("game_corner")
       @selected = :play
       @exiting = true
     when "score"
       @selected = :score
       @exiting = true
-    when "exit"
+    else
       pbPlayCloseMenuSE
       @selected = :exit
       @exiting = true
     end
   end
 
+  def updateInput
+    if Input.trigger?(Input::BACK)
+      pbPlayCloseMenuSE
+      @selected = :exit
+      @exiting = true
+      return
+    end
+    super
+  end
+
   def selected_action
     return @selected
+  end
+
+  def updateBackground
+    echoln bg_path
+    @sprites["bg"].setBitmap(bg_path) unless @sprites["bg"].disposed?
   end
 
   def pbEndSceneKeepBg
@@ -35,6 +87,7 @@ class FusionQuizAppScene < PokeNavAppScene
     pbDisposeSpriteHash(sprites_without_bg)
     @buttons.each(&:dispose)
     Kernel.pbClearText
+    showHeaderName
   end
 
   def disposeBg
@@ -46,9 +99,9 @@ class FusionQuizAppScene < PokeNavAppScene
 
   def pbEndScene
     echoln "ENDING"
+    $game_system.bgm_stop
     $game_system.bgm_restore
     super
   end
 
-
-  end
+end

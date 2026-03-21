@@ -11,7 +11,7 @@ class PokenavButton < SpriteWrapper
   attr_accessor :height
   attr_accessor :width
   attr_accessor :image_path
-  attr_accessor :source_bitmap
+  attr_accessor :icon_bitmap
   attr_accessor :x
   attr_accessor :y
   attr_accessor :crop_width
@@ -23,7 +23,7 @@ class PokenavButton < SpriteWrapper
   DEFAULT_WIDTH = 200
   DEFAULT_HEIGHT = 40
 
-  def initialize(id, image = nil, text = nil, viewport = nil)
+  def initialize(id, icon = nil, text = nil, viewport = nil)
     super(viewport)
 
     @id = id
@@ -34,7 +34,7 @@ class PokenavButton < SpriteWrapper
 
     @text_color = pbColor(:DARK_TEXT_MAIN_COLOR)
     @shadow_color = pbColor(:DARK_TEXT_SHADOW_COLOR)
-
+    @text_padding = text_padding
     if isDarkMode
       @text_color, @shadow_color = @shadow_color, @text_color
     end
@@ -42,14 +42,14 @@ class PokenavButton < SpriteWrapper
     @bg.setBitmap(background_image)
     @bg.z = self.z - 1
     # Determine source bitmap
-    if image.is_a?(String)
-      @source_bitmap = AnimatedBitmap.new(image)
-      bmp = @source_bitmap.bitmap
-    elsif image.is_a?(AnimatedBitmap)
-      @source_bitmap = image
-      bmp = image.bitmap
-    elsif image.is_a?(Bitmap)
-      bmp = image
+    if icon.is_a?(String)
+      @icon_bitmap = AnimatedBitmap.new(icon)
+      bmp = @icon_bitmap.bitmap
+    elsif icon.is_a?(AnimatedBitmap)
+      @icon_bitmap = icon
+      bmp = icon.bitmap
+    elsif icon.is_a?(Bitmap)
+      bmp = icon
     else
       bmp = nil
     end
@@ -64,6 +64,23 @@ class PokenavButton < SpriteWrapper
     refresh
   end
 
+  def text_alignment
+    return 0 #Left
+    #1 for centered
+  end
+
+  def text_padding
+    return 4
+  end
+  def viewport=(vp)
+    super(vp)
+    @bg&.dispose
+    @bg = IconSprite.new(0, 0, vp)
+    @bg.setBitmap(background_image)
+    @bg.z = self.z - 1
+    create_empty_bitmap if self.bitmap.nil?
+    refresh
+  end
 
   def background_image
     return ""
@@ -125,9 +142,9 @@ class PokenavButton < SpriteWrapper
   end
 
   def dispose_graphics
-    @source_bitmap.dispose if @source_bitmap
+    @icon_bitmap.dispose if @icon_bitmap
     @bg.dispose if @bg
-    @source_bitmap = nil
+    @icon_bitmap = nil
     @bg =nil
   end
 
@@ -160,8 +177,8 @@ class PokenavButton < SpriteWrapper
       )
     end
 
-    if @source_bitmap
-      bmp = @source_bitmap.bitmap
+    if @icon_bitmap
+      bmp = @icon_bitmap.bitmap
       width = @crop_width || bmp.width
       height = @crop_height || bmp.height
       self.bitmap.blt(0, 0, bmp, Rect.new(0, 0, width, height))
@@ -172,18 +189,20 @@ class PokenavButton < SpriteWrapper
 
   def draw_text
     return unless self.bitmap && @text && @text != ""
-    padding = 4
+    padding = @text_padding
     max_width = self.bitmap.width - (padding * 2)
 
-    # Wrap text to fit within button width
     lines = wrap_text(@text, self.bitmap, max_width)
 
+    total_text_height = lines.length * LINE_HEIGHT
+    start_y = (self.bitmap.height - total_text_height) / 2
+
     lines.each_with_index do |line, i|
-      y_pos = DESC_Y + (LINE_HEIGHT * i)
+      y_pos = start_y + (LINE_HEIGHT * i)
       self.bitmap.font.color = @shadow_color
-      self.bitmap.draw_text(padding + 1, y_pos + 1, max_width, LINE_HEIGHT, line)
+      self.bitmap.draw_text(padding + 1, y_pos + 1, max_width, LINE_HEIGHT, line, text_alignment)
       self.bitmap.font.color = @text_color
-      self.bitmap.draw_text(padding, y_pos, max_width, LINE_HEIGHT, line)
+      self.bitmap.draw_text(padding, y_pos, max_width, LINE_HEIGHT, line, text_alignment)
     end
   end
 

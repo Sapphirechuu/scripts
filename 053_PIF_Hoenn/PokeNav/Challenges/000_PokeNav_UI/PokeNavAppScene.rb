@@ -46,6 +46,10 @@ class PokeNavAppScene
     return ""
   end
 
+  def cursor_path
+    return "Graphics/Pictures/Pokegear/icon_button"
+  end
+
   def header_name
     return _INTL("PokeNav App")
   end
@@ -77,6 +81,7 @@ class PokeNavAppScene
 
     @buttons.each_with_index do |b, i|
       b.viewport = @viewport
+      b.z=1
       @sprites["button#{i}"] = b
     end
     if @buttons && !@buttons.empty?
@@ -92,6 +97,7 @@ class PokeNavAppScene
   def init_graphics
     @sprites["bg"] = IconSprite.new(0, 0, @viewport)
     @sprites["bg"].setBitmap(bg_path)
+    @sprites["bg"].z=0
   end
 
   def pbUpdate
@@ -148,9 +154,6 @@ class PokeNavAppScene
     end
   end
 
-  def cursor_path
-    return "Graphics/Pictures/Pokegear/icon_button"
-  end
 
   def createCursor
     return unless cursor_path

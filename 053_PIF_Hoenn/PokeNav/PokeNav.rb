@@ -27,13 +27,13 @@ class Pokenav
     :POKERADAR => _INTL("PokéRadar"), # given by the rival somewhere?
     :POKECHALLENGE => _INTL("PokéChallenge"), #Obtained at Slateport fan club
     :BOXLINK => _INTL("Box Link"),
+    :FUSIONQUIZ => _INTL("Guess that Fusion!"),
 
     #To implement
-    # Weather map
-    # Contacts list (A page where you can see all the trainers you can rebattle and their current team)
     # Statistics  (shows you a bunch of statstics. nb of times you fused, nb of steps taken, etc.)
     #
     #Other ideas
+    # Guess That Fusion -> same game as in pif 1, but in app form
     # Slot machine
     # Weather
     # Secret Bases map (a map that lists all the secret bases)
@@ -104,6 +104,8 @@ class PokemonPokegearScreen
         toggleDarkMode
       elsif chosen == :BOXLINK
         openBoxLinkApp
+      elsif chosen == :FUSIONQUIZ
+        openGuessThatFusionApp
         # elsif cmdPhone>=0 && cmd==cmdPhone
         #   pbFadeOutIn {
         #     PokemonPhoneScene.new.start
@@ -139,6 +141,14 @@ class PokemonPokegearScreen
       scene = PokeRadarAppScene.new
       screen = PokeRadarAppScreen.new(scene)
       screen.pbStartScreen(@scene)
+    }
+  end
+
+  def openGuessThatFusionApp
+    pbFadeOutIn {
+      scene = FusionQuizAppScene.new
+      screen = FusionQuizAppScreen.new(scene)
+      screen.pbStartScreen(@scene,screen)
     }
   end
 
