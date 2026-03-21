@@ -43,8 +43,8 @@ end
 def setTrainerFriendship(trainer)
   params = ChooseNumberParams.new
   params.setRange(0,100)
-  params.setDefaultValue($game_map.map_id)
-  number = pbMessageChooseNumber(_INTL("Frienship (0-100)?"),params)
+  params.setDefaultValue(trainer.friendship)
+  number = pbMessageChooseNumber(_INTL("Friendship (0-100)?"),params)
   trainer.friendship = number
   trainer.increase_friendship(0)
   return trainer
