@@ -308,6 +308,9 @@ class FusionQuiz
   def give_answer(prompt_message, answer_id, choices,question_type=:BODY)
     question_answered = false
     answer_pokemon_name = getPokemon(answer_id).real_name
+
+    echoln choices
+    choices = generate_new_choices(answer_id,question_type)
     while !question_answered
       if @difficulty == :ADVANCED
         player_answer = prompt_pick_answer_advanced(prompt_message, answer_id)
@@ -317,8 +320,6 @@ class FusionQuiz
       confirmed = pbMessage(_INTL("Is this your final answer?"), [_INTL("Yes"), _INTL("No")])
       if confirmed == 0
         question_answered = true
-      else
-        should_generate_new_choices = false
       end
     end
     return player_answer == answer_pokemon_name
@@ -355,6 +356,7 @@ class FusionQuiz
   end
 
   def prompt_pick_answer_regular(prompt_message, real_answer, choices, question_type=:BODY)
+    echoln choices
     if choices && choices.is_a?(Array)
       commands = choices.shuffle
     else
