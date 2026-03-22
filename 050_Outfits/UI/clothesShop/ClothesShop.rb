@@ -74,11 +74,12 @@ def hairShop(outfits_list = [],free=false, customMessage=nil)
 end
 
 def pokemonHairstylesShop()
-  hairShop([HAIR_EEVEE,HAIR_LYCANROC,
-            HAIR_HAPPINY,HAIR_GARDEVOIR,
-            HAIR_LEAFEON,HAIR_ORICORIO,
+  hairShop([HAIR_EEVEE,HAIR_TORCHIC,
+            HAIR_LYCANROC, HAIR_HAPPINY,
+            HAIR_GARDEVOIR, HAIR_LEAFEON,
+            HAIR_ORICORIO,HAIR_TYRANITAR,
             HAIR_HOOH,HAIR_CRESSELIA,
-            HAIR_LATIAS,HAIR_TYRANITAR])
+            HAIR_LATIAS,])
 end
 
 def switchHatsPosition()

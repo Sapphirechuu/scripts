@@ -212,6 +212,7 @@ HAIR_EEVEE="eeveetail"
 HAIR_LEAFEON="leafeonbob"
 HAIR_ORICORIO="oricoriopuffs"
 HAIR_TYRANITAR="tyranaspikes"
+HAIR_TORCHIC="torchictuft"
 
 HAIR_BRENDAN = "brendan"
 HAIR_MAY = "may"
