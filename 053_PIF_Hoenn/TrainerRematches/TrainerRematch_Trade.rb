@@ -202,7 +202,7 @@ def generateTrainerTradeOffer(trainer)
     wanted_types_string = wanted_types.map { |type|
       type_name = GameData::Type.get(type).real_name
       "- \\C[1]#{type_name}\\C[0]"
-    }.join("\\n")
+    }.join(", ")
 
     trainerClassName = GameData::TrainerType.get(trainer.trainerType).real_name
     pbMessage(_INTL("{1} {2} is looking for Pokémon of the following type(s):\\n{3}\\nWhich Pokémon do you want to trade?",
