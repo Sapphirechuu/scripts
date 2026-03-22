@@ -130,13 +130,13 @@ def select_altering_cave_encounter
   level_range = 8..16
   encounter_table =
     {
-      :MONDAY => [:ZUBAT, :ZUBAT, :ZUBAT, :ZUBAT, :HOUNDOUR],
-      :TUESDAY => [:ZUBAT, :ZUBAT, :ZUBAT, :ZUBAT, :SCRAGGY],
-      :WEDNESDAY => [:ZUBAT, :ZUBAT, :ZUBAT, :ZUBAT, :ZORUA],
-      :THURSDAY => [:ZUBAT, :ZUBAT, :ZUBAT, :ZUBAT, :WOOBAT],
-      :FRIDAY => [:ZUBAT, :ZUBAT, :ZUBAT, :ZUBAT, :TEDDIURSA],
-      :SATURDAY => [:ZUBAT, :ZUBAT, :ZUBAT, :ZUBAT, :TYNAMO],
-      :SUNDAY => [:ZUBAT, :ZUBAT, :ZUBAT, :ZUBAT, :SMEARGLE],
+      :MONDAY => [:ZUBAT, :ZUBAT, :ZUBAT, :WOOBAT, :HOUNDOUR],
+      :TUESDAY => [:ZUBAT, :ZUBAT, :ZUBAT, :WOOBAT, :SCRAGGY],
+      :WEDNESDAY => [:ZUBAT, :ZUBAT, :ZUBAT, :WOOBAT, :ZORUA],
+      :THURSDAY => [:ZUBAT, :ZUBAT, :ZUBAT, :WOOBAT, :MAREEP],
+      :FRIDAY => [:ZUBAT, :ZUBAT, :ZUBAT, :WOOBAT, :TEDDIURSA],
+      :SATURDAY => [:ZUBAT, :ZUBAT, :ZUBAT, :WOOBAT, :AIPOM],
+      :SUNDAY => [:ZUBAT, :ZUBAT, :ZUBAT, :WOOBAT, :SMEARGLE],
     }
   day_of_week = getDayOfTheWeek
   species = encounter_table[day_of_week].sample
