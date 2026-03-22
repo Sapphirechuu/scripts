@@ -389,7 +389,7 @@ class FusionQuiz
       commands.push([dex_num - 1, species.real_name, species.real_name])
     end
     pbMessage(prompt_message)
-    return pbChooseList(commands, 0, nil, 1)
+    return pbChooseListWithFilter(commands, 0, nil, 1,0,42,_INTL("Type with your keyboard"))
   end
 
   def get_score
