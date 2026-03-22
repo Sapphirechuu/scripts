@@ -16,7 +16,7 @@ end
 
 def unfusePokemonFromPC(fused_pokemon, scene, pcPosition)
   return unless pokemonCanBeUnfused(fused_pokemon, scene)
-  if pbConfirmMessageSerious(_INTL("Should {1} be unfused?", fused_pokemon.name))
+  if pbConfirmMessage(_INTL("Should {1} be unfused?", fused_pokemon.name))
     head_pokemon,body_pokemon = unfuseCore(fused_pokemon)
     obtainUnfusedPokemonPC(head_pokemon, body_pokemon, pcPosition)
     pbSEPlay("Minimize")
@@ -28,7 +28,7 @@ end
 
 def unfusePokemonFromParty(fused_pokemon, scene, partyPosition)
   return unless pokemonCanBeUnfused(fused_pokemon, scene)
-  if pbConfirmMessageSerious(_INTL("Should {1} be unfused?", fused_pokemon.name))
+  if pbConfirmMessage(_INTL("Should {1} be unfused?", fused_pokemon.name))
 
     head_pokemon,body_pokemon = unfuseCore(fused_pokemon)
     obtainUnfusedPokemonParty(head_pokemon, body_pokemon, partyPosition)
