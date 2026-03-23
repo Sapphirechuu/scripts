@@ -1214,11 +1214,13 @@ def setFusionMoves(fusedPoke, poke2, selected2ndOption = false)
   scene = FusionMovesOptionsScene.new(fusedPoke,poke2)
   screen = PokemonOptionScreen.new(scene)
   screen.pbStartScreen
-  moves = []
-  moves << scene.move1 if scene.move1
-  moves << scene.move2 if scene.move2
-  moves << scene.move3 if scene.move3
-  moves << scene.move4 if scene.move4
+  moves = scene.getSelectedMoves
+
+  # moves = []
+  # moves << scene.move1 if scene.move1
+  # moves << scene.move2 if scene.move2
+  # moves << scene.move3 if scene.move3
+  # moves << scene.move4 if scene.move4
 
   fusedPoke.moves=moves
   # bodySpecies = getBodyID(fusedPoke)
