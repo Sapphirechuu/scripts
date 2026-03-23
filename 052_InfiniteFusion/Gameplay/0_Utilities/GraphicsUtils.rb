@@ -17,9 +17,14 @@ def pbCheckPokemonIconFiles(speciesID, egg = false, dna = false)
   return pbResolveBitmap("Graphics/Icons/iconDNA.png")
 end
 
-def addShinyStarsToGraphicsArray(imageArray, xPos, yPos, shinyBody, shinyHead, debugShiny, srcx = nil, srcy = nil, width = nil, height = nil,
+def addShinyStarsToGraphicsArray(imageArray, xPos, yPos, shinyBody, shinyHead, debugShiny, radarShiny, srcx = nil, srcy = nil, width = nil, height = nil,
                                  showSecondStarUnder = false, showSecondStarAbove = false)
-  color = debugShiny ? Color.new(0, 0, 0, 255) : nil
+    if debugShiny == true
+    color = debugShiny ? Color.new(0, 0, 0, 255) : nil
+  end
+  if radarShiny == true
+    color = radarShiny ? Color.new(0, 0, 255, 255) : nil
+  end
   imageArray.push(["Graphics/Pictures/shiny", xPos, yPos, srcx, srcy, width, height, color])
   if shinyBody && shinyHead
     if showSecondStarUnder

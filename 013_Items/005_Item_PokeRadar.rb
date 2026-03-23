@@ -328,7 +328,11 @@ Events.onWildPokemonCreate += proc { |_sender, e|
   for grass in grasses
     next if $game_player.x != grass[0] || $game_player.y != grass[1]
     pokemon.shiny = true if grass[3] == 2
-    break
+	if grass[3] == 2
+	  pokemon.shiny = true
+	  pokemon.debug_shiny = false
+	  pokemon.radar_shiny = true
+	end
   end
 
 }

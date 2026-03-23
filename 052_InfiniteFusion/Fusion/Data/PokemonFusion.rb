@@ -1073,7 +1073,9 @@ class PokemonFusionScene
       if @pokemon1.shiny?
         @pokemon1.body_shiny = true
       end
+	  
       @pokemon1.debug_shiny = true if @pokemon1.debug_shiny || @pokemon2.debug_shiny
+	  @pokemon1.radar_shiny = true if @pokemon1.radar_shiny || @pokemon2.radar_shiny
 
       setFusionIVs(superSplicer)
       # add to pokedex
@@ -1099,6 +1101,9 @@ class PokemonFusionScene
       removeItem = false
       if @pokemon2.isShiny? || @pokemon1.isShiny?
         @pokemon1.makeShiny
+		if @pokemon1.radar_shiny || @pokemon2.radar_shiny
+		  @pokemon1.radar_shiny = true
+		end
         if !(@pokemon1.debug_shiny || @pokemon2.debug_shiny)
           @pokemon1.natural_shiny = true if @pokemon2.natural_shiny
         end
