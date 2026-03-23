@@ -48,6 +48,7 @@ class Pokemon
   attr_accessor :body_shiny
   attr_accessor :debug_shiny
   attr_accessor :natural_shiny
+  attr_accessor :radar_shiny
 
 
   #Fusions
@@ -169,6 +170,7 @@ class Pokemon
     echoln("Body Shiny: #{@body_shiny}")
     echoln("Debug Shiny: #{@debug_shiny}")
     echoln("Natural Shiny: #{@natural_shiny}")
+	echoln("Radar Shiny: #{@radar_shiny}")
 
     echoln("Calculated ability: #{@ability}")
     echoln("Abilities hash: #{getAbilityList()}")
@@ -321,7 +323,9 @@ class Pokemon
   def debugShiny?
     return !@natural_shiny || @debug_shiny
   end
-
+  def radarShiny?
+    return @radar_shiny
+  end
   def bodyShiny?
     return @body_shiny
   end
