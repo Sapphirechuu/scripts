@@ -1210,44 +1210,48 @@ end
 def setFusionMoves(fusedPoke, poke2, selected2ndOption = false)
   # NEW METHOD (not ready)
 
-  # clearUIForMoves
-  #
-  # moves=fusedPoke.moves
-  # scene = FusionMovesOptionsScene.new(fusedPoke,poke2)
-  # screen = PokemonOptionScreen.new(scene)
-  # screen.pbStartScreen
-  # moves =[scene.move1,scene.move2,scene.move3,scene.move3]
-  #
-  # fusedPoke.moves=moves
-  bodySpecies = getBodyID(fusedPoke)
-  headSpecies = getHeadID(fusedPoke, bodySpecies)
-  bodySpeciesName = GameData::Species.get(bodySpecies).real_name
-  headSpeciesName = GameData::Species.get(headSpecies).real_name
+  clearUIForMoves
 
-  choice = Kernel.pbMessage(_INTL("What to do with the moveset?"), [_INTL("Combine movesets"), _INTL("Keep {1}'s moveset", bodySpeciesName), _INTL("Keep {1}'s moveset", headSpeciesName)], 0)
-  if choice == 1
-    if selected2ndOption
-      fusedPoke.moves = poke2.moves
-    else
-      return
-    end
-    return
-  elsif choice == 2
-    if selected2ndOption
-      return
-    else
-      fusedPoke.moves = poke2.moves
-    end
-    return
-  else
-    # Learn moves
-    movelist = poke2.moves
-    for move in movelist
-      if move.id != 0
-        pbLearnMove(fusedPoke, move.id, true, false, true)
-      end
-    end
-  end
+  moves=fusedPoke.moves
+  scene = FusionMovesOptionsScene.new(fusedPoke,poke2)
+  screen = PokemonOptionScreen.new(scene)
+  screen.pbStartScreen
+  moves = []
+  moves << scene.move1 if scene.move1
+  moves << scene.move2 if scene.move2
+  moves << scene.move3 if scene.move3
+  moves << scene.move4 if scene.move4
+
+  fusedPoke.moves=moves
+  # bodySpecies = getBodyID(fusedPoke)
+  # headSpecies = getHeadID(fusedPoke, bodySpecies)
+  # bodySpeciesName = GameData::Species.get(bodySpecies).real_name
+  # headSpeciesName = GameData::Species.get(headSpecies).real_name
+  #
+  # choice = Kernel.pbMessage(_INTL("What to do with the moveset?"), [_INTL("Combine movesets"), _INTL("Keep {1}'s moveset", bodySpeciesName), _INTL("Keep {1}'s moveset", headSpeciesName)], 0)
+  # if choice == 1
+  #   if selected2ndOption
+  #     fusedPoke.moves = poke2.moves
+  #   else
+  #     return
+  #   end
+  #   return
+  # elsif choice == 2
+  #   if selected2ndOption
+  #     return
+  #   else
+  #     fusedPoke.moves = poke2.moves
+  #   end
+  #   return
+  # else
+  #   # Learn moves
+  #   movelist = poke2.moves
+  #   for move in movelist
+  #     if move.id != 0
+  #       pbLearnMove(fusedPoke, move.id, true, false, true)
+  #     end
+  #   end
+  # end
 end
 
 def setPokemonLevel(pokemon1, pokemon2, superSplicers)

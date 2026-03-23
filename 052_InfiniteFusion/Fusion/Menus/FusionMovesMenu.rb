@@ -25,10 +25,12 @@ class FusionMovesOptionsScene < PokemonOption_Scene
   end
 
   def initUIElements
-    @sprites["title"] = Window_UnformattedTextPokemon.newWithSize(
-      _INTL(""), 0, 0, Graphics.width, 64, @viewport)
+    @sprites["titleMsg"] = Window_UnformattedTextPokemon.newWithSize(
+      _INTL("Select your Pokémon's moves"), 0, 0, Graphics.width, 64, @viewport)
+    @sprites["title"] = Window_UnformattedTextPokemon.newWithSize(_INTL(""), 0, 20, Graphics.width, 64, @viewport)
     @sprites["textbox"] = pbCreateMessageWindow
     @sprites["textbox"].letterbyletter = false
+    addBackgroundPlane(@sprites,"bg","Fusion/movesOverlay",@viewport)
     pbSetSystemFont(@sprites["textbox"].contents)
   end
 
@@ -48,10 +50,10 @@ class FusionMovesOptionsScene < PokemonOption_Scene
       @sprites["option"][i] = (@PokemonOptions[i].get || 0)
     end
     @sprites["title"] = Window_UnformattedTextPokemon.newWithSize(
-      _INTL("Select moves"), 0, 0, Graphics.width, 64, @viewport)
+      _INTL("Select moves"), 0, 50, Graphics.width, 64, @viewport)
     @sprites["title"].setSkin("Graphics/Windowskins/invisible")
     @sprites["option"].setSkin("Graphics/Windowskins/invisible")
-    @sprites["textbox"].setSkin("Graphics/Windowskins/invisible")
+    #@sprites["textbox"].setSkin("Graphics/Windowskins/invisible")
     # @sprites["textbox"].text = "Select moves"
     updateDescription(0)
     pbFadeInAndShow(@sprites) { pbUpdate }
@@ -72,7 +74,7 @@ class FusionMovesOptionsScene < PokemonOption_Scene
     value_base_color = Color.new(248, 248, 248)
     value_shadow_color = Color.new(104, 104, 104)
 
-    @sprites["title"].text = _INTL("{1}", move.real_name)
+     @sprites["title"].text = _INTL("{1}", move.real_name)
 
     damage = move.base_damage == 0 ? "-" : move.base_damage.to_s
     accuracy = move.accuracy == 0 ? "100" : move.accuracy.to_s
@@ -84,26 +86,23 @@ class FusionMovesOptionsScene < PokemonOption_Scene
     end
 
     textpos = [
-      [_INTL("Type"), 20, 84, 0, label_base_color, label_shadow_color],
-      [_INTL("Category"), 20, 116, 0, label_base_color, label_shadow_color],
-
-      [_INTL("Power"), 20, 148, 0, label_base_color, label_shadow_color],
-      [_INTL("{1}", damage), 140, 148, 0, value_base_color, value_shadow_color],
-
-      [_INTL("Accuracy"), 20, 180, 0, label_base_color, label_shadow_color],
-      [_INTL("{1}%", accuracy), 140, 180, 0, value_base_color, value_shadow_color],
-
-      [_INTL("PP"), 20, 212, 0, label_base_color, label_shadow_color], #move.total_pp
-      [_INTL("{1}", pp), 140, 212, 0, value_base_color, value_shadow_color] #move.total_pp
-
+      [_INTL("Type"), 20, 94, 0, label_base_color, label_shadow_color],
+      [_INTL("Category"), 20, 126, 0, label_base_color, label_shadow_color],
+      [_INTL("Power"), 20, 158, 0, label_base_color, label_shadow_color],
+      [_INTL("{1}", damage), 140, 158, 0, value_base_color, value_shadow_color],
+      [_INTL("Accuracy"), 20, 190, 0, label_base_color, label_shadow_color],
+      [_INTL("{1}%", accuracy), 140, 190, 0, value_base_color, value_shadow_color],
+      [_INTL("PP"), 20, 222, 0, label_base_color, label_shadow_color],
+      [_INTL("{1}", pp), 140, 222, 0, value_base_color, value_shadow_color]
     ]
+
     imagepos = []
 
     yPos = 90
     type_number = GameData::Type.get(move.type).id_number
     category = move.category
-    imagepos.push(["Graphics/Pictures/types", 120, 94, 0, type_number * 28, 64, 28]) #248
-    imagepos.push(["Graphics/Pictures/category", 120, 124, 0, category * 28, 64, 28])
+    imagepos.push(["Graphics/Pictures/types", 140, 104, 0, type_number * 28, 64, 28])
+    imagepos.push(["Graphics/Pictures/category", 140, 136, 0, category * 28, 64, 28])
     if !move
       imagepos=[]
     end
@@ -129,11 +128,27 @@ class FusionMovesOptionsScene < PokemonOption_Scene
   def updateDescription(index)
     index = 0 if !index
     begin
-      move = getMoveForIndex(index)
-      draw_move_info(move)
-      new_description = getMoveDescription(move)
-      @sprites["textbox"].text = _INTL(new_description)
-    rescue
+      # Use the currently highlighted option value (left/right position),
+      # not the committed @move1/@move2 etc.
+      highlighted_value = @sprites["option"] ? @sprites["option"][index] : 0
+      highlighted_value ||= 0
+
+      move = case index
+             when 0 then highlighted_value == 0 ? @poke1.moves[0] : @poke2.moves[0]
+             when 1 then highlighted_value == 0 ? @poke1.moves[1] : @poke2.moves[1]
+             when 2 then highlighted_value == 0 ? @poke1.moves[2] : @poke2.moves[2]
+             when 3 then highlighted_value == 0 ? @poke1.moves[3] : @poke2.moves[3]
+             else nil
+             end
+
+      if move
+        draw_move_info(move)
+        @sprites["textbox"].text = _INTL(getMoveDescription(move))
+      else
+        @sprites["overlay"].bitmap.clear
+        @sprites["textbox"].text = getDefaultDescription
+      end
+    rescue => e
       @sprites["textbox"].text = getDefaultDescription
     end
   end
@@ -209,8 +224,8 @@ class FusionMovesOptionsScene < PokemonOption_Scene
 
   def initOptionsWindow
     optionsWindow = Window_PokemonOptionFusionMoves.new(@PokemonOptions, 0,
-                                             @sprites["title"].height, Graphics.width,
-                                             Graphics.height - @sprites["title"].height - @sprites["textbox"].height)
+                                                        @sprites["title"].height, Graphics.width,
+                                                        Graphics.height - @sprites["title"].height - @sprites["textbox"].height)
     optionsWindow.viewport = @viewport
     optionsWindow.visible = true
     return optionsWindow
