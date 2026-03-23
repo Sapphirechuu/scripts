@@ -48,7 +48,7 @@ class FusionMovesOptionsScene < PokemonOption_Scene
   end
 
   CURSOR_X_OFFSET = 8
-  CURSOR_Y_OFFSET = 8
+  CURSOR_Y_OFFSET = 16
 
   def showPokemonIcons
     @sprites["pokeicon_1"] = PokemonIconSprite.new(@body_species.species, @viewport)
