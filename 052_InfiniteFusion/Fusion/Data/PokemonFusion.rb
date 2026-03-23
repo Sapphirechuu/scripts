@@ -1208,8 +1208,6 @@ def locate_ability_index(pokemon, ability)
 end
 
 def setFusionMoves(fusedPoke, poke2, selected2ndOption = false)
-  # NEW METHOD (not ready)
-
   clearUIForMoves
 
   moves=fusedPoke.moves
