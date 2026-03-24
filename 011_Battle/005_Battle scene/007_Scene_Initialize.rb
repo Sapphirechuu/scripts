@@ -35,12 +35,20 @@ class PokeBattle_Scene
                                                        16, Graphics.height - 96 + 2, Graphics.width - 32, 96, @viewport)
     msgWindow.z = 200
     msgWindow.opacity = 0
-    msgWindow.baseColor = PokeBattle_SceneConstants::MESSAGE_BASE_COLOR
-    msgWindow.shadowColor = PokeBattle_SceneConstants::MESSAGE_SHADOW_COLOR
+
+    base_color = PokeBattle_SceneConstants::MESSAGE_BASE_COLOR
+    shadow_color = PokeBattle_SceneConstants::MESSAGE_SHADOW_COLOR
+
+    if isDarkMode
+      base_color, shadow_color = shadow_color, base_color
+    end
+    msgWindow.baseColor = base_color
+    msgWindow.shadowColor = shadow_color
+
     msgWindow.letterbyletter = true
     @sprites["messageWindow"] = msgWindow
     # Create command window
-    @sprites["commandWindow"] = CommandMenuDisplay.new(@viewport, 200)
+    @sprites["commandWindow"] = CommandMenuDisplay.new(@viewport, 200,base_color,shadow_color)
     # Create fight window
     @sprites["fightWindow"] = FightMenuDisplay.new(@viewport, 200)
     # Create targeting window
