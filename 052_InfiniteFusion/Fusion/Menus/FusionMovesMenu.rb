@@ -350,7 +350,7 @@ class FusionMovesOptionsScene < PokemonOption_Scene
           # Confirm
           if @index_vertical == @PokemonOptions.length
             if @selected_moves.length > 0 && validateSelectedMoves
-              echoln listUniqueAvailableMoves
+              echoln @maxMovesNb
               if @selected_moves.length < @maxMovesNb && listUniqueAvailableMoves.length > @selected_moves.length
                 if pbConfirmMessage(_INTL("You have only selected #{@selected_moves.length} move(s). Are you sure you want to continue?"))
                   break
@@ -396,7 +396,7 @@ class FusionMovesOptionsScene < PokemonOption_Scene
             else
               @selected_moves << move
               # Auto-jump to Confirm when 4th move is selected
-              if @selected_moves.length == 4
+              if @selected_moves.length == @maxMovesNb
                 pbSEPlay("GUI naming confirm")
                 (0...@PokemonOptions.length).each { |i| @sprites["option"].setValueNoRefresh(i, @sprites["option"][@index_vertical] || 0) }
                 @sprites["option"].index = @PokemonOptions.length

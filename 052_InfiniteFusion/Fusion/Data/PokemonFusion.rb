@@ -1214,21 +1214,20 @@ def locate_ability_index(pokemon, ability)
 end
 
 def setFusionMoves(fusedPoke, poke2, selected2ndOption = false)
-  clearUIForMoves
+  combined_moves = tryCombineMovesAutomatically(fusedPoke, poke2)
+  if combined_moves
+    fusedPoke.moves=combined_moves
+  else
+    clearUIForMoves
+    scene = FusionMovesOptionsScene.new(fusedPoke,poke2)
+    screen = PokemonOptionScreen.new(scene)
+    screen.pbStartScreen
+    moves = scene.getSelectedMoves
+    fusedPoke.moves=moves
+  end
 
-  moves=fusedPoke.moves
-  scene = FusionMovesOptionsScene.new(fusedPoke,poke2)
-  screen = PokemonOptionScreen.new(scene)
-  screen.pbStartScreen
-  moves = scene.getSelectedMoves
 
-  # moves = []
-  # moves << scene.move1 if scene.move1
-  # moves << scene.move2 if scene.move2
-  # moves << scene.move3 if scene.move3
-  # moves << scene.move4 if scene.move4
 
-  fusedPoke.moves=moves
   # bodySpecies = getBodyID(fusedPoke)
   # headSpecies = getHeadID(fusedPoke, bodySpecies)
   # bodySpeciesName = GameData::Species.get(bodySpecies).real_name
@@ -1260,6 +1259,28 @@ def setFusionMoves(fusedPoke, poke2, selected2ndOption = false)
   # end
 end
 
+def tryCombineMovesAutomatically(pokemon1, pokemon2)
+  moves_1 = pokemon1.moves
+  moves_2 = pokemon2.moves
+
+  move_ids = []
+  moves_1.each do |move|
+    move_ids << move.id
+  end
+  moves_2.each do |move|
+    move_ids << move.id
+  end
+
+  unique_move_ids = move_ids.uniq
+  combined_moves = []
+  if unique_move_ids.length <= 4
+    unique_move_ids.each do |id|
+      combined_moves << Pokemon::Move.new(id)
+    end
+    return combined_moves
+  end
+  return nil
+end
 def setPokemonLevel(pokemon1, pokemon2, superSplicers)
   lv1 = @pokemon1.level
   lv2 = @pokemon2.level
