@@ -56,11 +56,12 @@ class FusionMovesOptionsScene < PokemonOption_Scene
   CURSOR_Y_OFFSET = 16
 
   def showPokemonIcons
-    @sprites["pokeicon_1"] = PokemonIconSprite.new(@body_species.species, @viewport)
+
+    @sprites["pokeicon_1"] = PokemonIconSprite.new(@head_species.species, @viewport)
     @sprites["pokeicon_1"].x = 240
     @sprites["pokeicon_1"].y = 50
 
-    @sprites["pokeicon_2"] = PokemonIconSprite.new(@head_species.species, @viewport)
+    @sprites["pokeicon_2"] = PokemonIconSprite.new(@body_species.species, @viewport)
     @sprites["pokeicon_2"].x = 364
     @sprites["pokeicon_2"].y = 50
 
@@ -236,7 +237,7 @@ class FusionMovesOptionsScene < PokemonOption_Scene
       if index == 0
         # Header row — show pokemon info panel
         draw_pokemon_info
-        species = col == 0 ? @body_species : @head_species
+        species = col == 0 ? @head_species : @body_species
         @sprites["textbox"].text = _INTL("Select all moves from {1}", GameData::Species.get(species).real_name)
         return
       end
@@ -290,7 +291,7 @@ class FusionMovesOptionsScene < PokemonOption_Scene
   end
 
   def pbGetOptions(inloadscreen = false)
-    @move_slots = (0..3).map { |i| [@poke1.moves[i], @poke2.moves[i]] }
+    @move_slots = (0..3).map { |i| [@poke2.moves[i], @poke1.moves[i]] }
 
     # Row 0: the "select all" header row
     header = EnumOption.new(
@@ -374,6 +375,7 @@ class FusionMovesOptionsScene < PokemonOption_Scene
               @selected_moves << move
               # Auto-jump to Confirm when 4th move is selected
               if @selected_moves.length == 4
+                pbSEPlay("GUI naming confirm")
                 (0...@PokemonOptions.length).each { |i| @sprites["option"].setValueNoRefresh(i, @sprites["option"][@index_vertical] || 0) }
                 @sprites["option"].index = @PokemonOptions.length
                 @sprites["option"].refresh
