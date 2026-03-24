@@ -88,8 +88,8 @@ class FusionMovesOptionsScene < PokemonOption_Scene
       _INTL("Select moves"), 0, 82, Graphics.width, 64, @viewport)
     @sprites["title"].setSkin("Graphics/Windowskins/invisible")
     @sprites["option"].setSkin("Graphics/Windowskins/invisible")
-    echoln @sprites["option"].bitmap.text_size
-    @sprites["option"].bitmap.text_size=10
+    # echoln @sprites["option"].bitmap.text_size
+    # @sprites["option"].bitmap.text_size=10
     updatePokemonCursor(0)
     updateDescription(0)
     updateCounter
@@ -443,16 +443,9 @@ class Window_PokemonOptionFusionMoves < Window_PokemonOption
         col = self[index] || 0
 
         if @options[index].is_a?(EnumOption) && @options[index].values.length > 1
-          totalwidth = @options[index].values.sum { |v| self.contents.text_size(v).width }
-          spacing = (optionwidth - totalwidth) / (@options[index].values.length - 1)
-          spacing = 0 if spacing < 0
-
-          xpos = optionwidth + rect.x + 12 + OPTIONS_X_OFFSET
-          col.times do |i|
-            xpos += self.contents.text_size(@options[index].values[i]).width + spacing
-            xpos += COLUMNS_GAP if i == 0
-          end
-
+          col0_x = optionwidth + rect.x + 12 + OPTIONS_X_OFFSET
+          col1_x = col0_x + (rect.width - col0_x) / 2 + COLUMNS_GAP
+          xpos = col == 0 ? col0_x : col1_x
           arrow_x = xpos - @selarrow.bitmap.width - 2
         else
           arrow_x = rect.x + 175
@@ -488,11 +481,10 @@ class Window_PokemonOptionFusionMoves < Window_PokemonOption
     return unless @options[index].is_a?(EnumOption) && @options[index].values.length > 1
 
     optionwidth = rect.width * 9 / 20
-    totalwidth = @options[index].values.sum { |v| self.contents.text_size(v).width }
-    spacing = (optionwidth - totalwidth) / (@options[index].values.length - 1)
-    spacing = 0 if spacing < 0
+    col0_x = optionwidth + rect.x + 12 + OPTIONS_X_OFFSET
+    col1_x = col0_x + (rect.width - col0_x) / 2 + COLUMNS_GAP
+    col_width = col1_x - col0_x - COLUMNS_GAP
 
-    xpos = optionwidth + rect.x + 12 + OPTIONS_X_OFFSET
     @options[index].values.each_with_index do |value, col|
       slot_index = index - 1
       move = slot_index >= 0 ? @scene.move_slots&.[](slot_index)&.[](col) : nil
@@ -501,12 +493,8 @@ class Window_PokemonOptionFusionMoves < Window_PokemonOption
       base   = is_selected ? @selBaseColor : Color.new(180, 180, 180)
       shadow = is_selected ? @selShadowColor : Color.new(80, 80, 80)
 
-      next_xpos = xpos + self.contents.text_size(value).width + spacing
-      next_xpos += COLUMNS_GAP if col == 0
-      max_width = col == 0 ? (next_xpos - xpos - COLUMNS_GAP) : optionwidth
-
-      pbDrawShadowText(self.contents, xpos, rect.y, max_width, rect.height, value, base, shadow)
-      xpos = next_xpos
+      xpos = col == 0 ? col0_x : col1_x
+      pbDrawShadowText(self.contents, xpos, rect.y, col_width, rect.height, value, base, shadow)
     end
   end
   def dont_draw_item(index)
