@@ -20,11 +20,9 @@ class PokeBattle_Battle
       @player.length > 1 && @opponent.length > 1
       raise _INTL("Can't have battles larger than 2v2 where both sides have multiple trainers")
     end
-
     # Find out how many Pokémon each trainer has
     side1counts = pbAbleTeamCounts(0)
     side2counts = pbAbleTeamCounts(1)
-
     # Adjust for wild multi battles
     if wildBattle? && side2counts[0] != @sideSizes[1]
       if @sideSizes[0] == @sideSizes[1]
@@ -33,57 +31,52 @@ class PokeBattle_Battle
         @sideSizes[1] = side2counts[0]
       end
     end
-
     # Main loop to ensure battle is possible
     loop do
       needsChanging = false
-
+      bottleneck = [nil, nil]  # track which side is the problem
       # Check each side (player=0, opponent=1)
       for side in 0...2
         next if side == 1 && wildBattle?
         sideCounts = (side == 0) ? side1counts : side2counts
         requireds = []
-
         # Count required battler slots per trainer
         for i in 0...@sideSizes[side]
           idxTrainer = pbGetOwnerIndexFromBattlerIndex(i * 2 + side)
           requireds[idxTrainer] ||= 0
           requireds[idxTrainer] += 1
         end
-
         # Compare required vs actual Pokémon
         sideCounts.each_with_index do |_count, i|
-          # If a trainer has no required position, shrink instead of erroring
           if !requireds[i] || requireds[i] == 0
             needsChanging = true
+            bottleneck[side] = true
             break
           end
-
-          # If they don't have enough Pokémon, shrink instead of raising
           if requireds[i] > sideCounts[i]
             needsChanging = true
+            bottleneck[side] = true
             break
           end
         end
-
-        break if needsChanging
       end
-
       break unless needsChanging
-
-      # SAFE SHRINK
+      # SAFE SHRINK — shrink whichever side is the bottleneck
+      # If opponent side is the problem, shrink it first, then match player to it
+      # If player side is the problem (or both), shrink player side
       PBDebug.log("#{@sideSizes[0]}v#{@sideSizes[1]} battle isn't possible; shrinking…")
-
-      # Always shrink PLAYER SIDE first
-      @sideSizes[0] -= 1
-
-      # Never shrink opponent unless impossible
-      if @sideSizes[1] > @sideSizes[0] + 1
-        @sideSizes[1] = @sideSizes[0] + 1
+      if bottleneck[1] && !bottleneck[0]
+        # Opponent is the bottleneck — shrink opponent, then sync player down to match
+        @sideSizes[1] -= 1
+        @sideSizes[0] = @sideSizes[1] if @sideSizes[0] > @sideSizes[1]
+      else
+        # Player is the bottleneck (or both) — shrink player, then sync opponent down
+        @sideSizes[0] -= 1
+        @sideSizes[1] = @sideSizes[0] if @sideSizes[1] > @sideSizes[0]
       end
       PBDebug.log("Trying #{@sideSizes[0]}v#{@sideSizes[1]} battle instead")
-      if @sideSizes[0] <= 0
-        raise _INTL("Couldn't lower player side any further, battle isn't possible")
+      if @sideSizes[0] <= 0 || @sideSizes[1] <= 0
+        raise _INTL("Couldn't reduce battle size any further, battle isn't possible")
       end
     end
   end
