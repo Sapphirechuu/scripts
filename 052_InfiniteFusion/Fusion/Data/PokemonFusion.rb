@@ -1094,6 +1094,7 @@ class PokemonFusionScene
         @pokemon1.steps_to_hatch = @pokemon1.species_data.hatch_steps
       end
 
+      @credits_overlay.dispose if @credits_overlay
       pbChooseAbility(ability1, ability2) if isPlayerPokemon
 
       setFusionMoves(@pokemon1, @pokemon2, firstOptionSelected) if !noMoves && isPlayerPokemon
@@ -1149,7 +1150,7 @@ class PokemonFusionScene
 end
 
 def drawSpriteCredits(pif_sprite, viewport)
-  overlay = BitmapSprite.new(Graphics.width, Graphics.height, @viewport).bitmap
+  @credits_overlay = BitmapSprite.new(Graphics.width, Graphics.height, @viewport).bitmap
   return if pif_sprite.type == :AUTOGEN
   return if pif_sprite.local_path
   x = Graphics.width / 2
@@ -1166,13 +1167,13 @@ def drawSpriteCredits(pif_sprite, viewport)
   label_base_color = Color.new(98, 231, 110)
   label_shadow_color = Color.new(27, 169, 40)
 
-  split_name = splitSpriteCredits(_INTL("Sprite by {1}", author_name), overlay, overlay.width - 20)
-  line_height = overlay.text_size(author_name).height
+  split_name = splitSpriteCredits(_INTL("Sprite by {1}", author_name), @credits_overlay, @credits_overlay.width - 20)
+  line_height = @credits_overlay.text_size(author_name).height
   textpos = split_name.each_with_index.map { |name, index|
     y = 240 - ((split_name.length - (index + 1)) * line_height)
     [name, x, y, 2, label_base_color, label_shadow_color]
   }
-  pbDrawTextPositions(overlay, textpos)
+  pbDrawTextPositions(@credits_overlay, textpos)
 end
 
 def clearUIForMoves

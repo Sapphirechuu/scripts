@@ -88,6 +88,8 @@ class FusionMovesOptionsScene < PokemonOption_Scene
       _INTL("Select moves"), 0, 82, Graphics.width, 64, @viewport)
     @sprites["title"].setSkin("Graphics/Windowskins/invisible")
     @sprites["option"].setSkin("Graphics/Windowskins/invisible")
+    echoln @sprites["option"].bitmap.text_size
+    @sprites["option"].bitmap.text_size=10
     updatePokemonCursor(0)
     updateDescription(0)
     updateCounter
@@ -327,11 +329,10 @@ class FusionMovesOptionsScene < PokemonOption_Scene
           end
         end
 
-        # Keep our tracking indices in sync with the window
         @index_vertical   = @sprites["option"].index
         @index_horizontal = @sprites["option"][@index_vertical] || 0
-
         if Input.trigger?(Input::USE)
+          #Confirm
           if @index_vertical == @PokemonOptions.length
             if @selected_moves.length > 0 && validateSelectedMoves
               break
@@ -340,14 +341,16 @@ class FusionMovesOptionsScene < PokemonOption_Scene
             next
           end
 
+          #Select all
           if @index_vertical == 0
             col = @index_horizontal
             @selected_moves = @move_slots.map { |slot| slot[col] }.compact
-            # Sync all rows to the chosen column so left/right still works after returning
             (0...@PokemonOptions.length).each { |i| @sprites["option"].setValueNoRefresh(i, col) }
             @sprites["option"].refresh
+            pbSEPlay("GUI naming confirm")
             updateCounter
             updateDescription(@index_vertical)
+
             # Auto-jump to Confirm
             @sprites["option"].index = @PokemonOptions.length
             @sprites["option"].refresh
@@ -498,9 +501,12 @@ class Window_PokemonOptionFusionMoves < Window_PokemonOption
       base   = is_selected ? @selBaseColor : Color.new(180, 180, 180)
       shadow = is_selected ? @selShadowColor : Color.new(80, 80, 80)
 
-      pbDrawShadowText(self.contents, xpos, rect.y, optionwidth, rect.height, value, base, shadow)
-      xpos += self.contents.text_size(value).width + spacing
-      xpos += COLUMNS_GAP if col == 0
+      next_xpos = xpos + self.contents.text_size(value).width + spacing
+      next_xpos += COLUMNS_GAP if col == 0
+      max_width = col == 0 ? (next_xpos - xpos - COLUMNS_GAP) : optionwidth
+
+      pbDrawShadowText(self.contents, xpos, rect.y, max_width, rect.height, value, base, shadow)
+      xpos = next_xpos
     end
   end
   def dont_draw_item(index)
