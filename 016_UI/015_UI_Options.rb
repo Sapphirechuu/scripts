@@ -490,9 +490,11 @@ class PokemonOption_Scene
   end
 
   def initOptionsWindow
+    width = Graphics.width
+    height = (Graphics.height - @sprites["title"].height - @sprites["textbox"].height) +32
     optionsWindow = Window_PokemonOption.new(@PokemonOptions, 0,
-                                             @sprites["title"].height, Graphics.width,
-                                             Graphics.height - @sprites["title"].height - @sprites["textbox"].height)
+                                             @sprites["title"].height,
+                                             width, height)
     optionsWindow.viewport = @viewport
     optionsWindow.visible = true
     return optionsWindow

@@ -3,6 +3,7 @@ class FusionMovesOptionsScene < PokemonOption_Scene
   attr_reader :all_moves
   attr_reader :selected_moves
   attr_reader :move_slots
+
   def initialize(poke1, poke2)
     @poke1 = poke1
     @poke2 = poke2
@@ -17,7 +18,10 @@ class FusionMovesOptionsScene < PokemonOption_Scene
 
     @selBaseColor = Color.new(48, 96, 216)
     @selShadowColor = Color.new(32, 32, 32)
+
+    @maxMovesNb = [listUniqueAvailableMoves.length, 4].min
   end
+
   def initUIElements
     Kernel.pbClearText()
     @sprites["pokeicon_fused"] = PokemonIconSprite.new(@fused_pokemon.species, @viewport)
@@ -26,17 +30,20 @@ class FusionMovesOptionsScene < PokemonOption_Scene
 
     @sprites["titleMsg"] = Window_UnformattedTextPokemon.newWithSize(
       _INTL("Select the moves you want to keep"), 64, 0, Graphics.width, 64, @viewport)
-    @sprites["title"] = Window_UnformattedTextPokemon.newWithSize(_INTL(""), 0, 20, Graphics.width, 64, @viewport)
+    @sprites["title"] = Window_UnformattedTextPokemon.newWithSize(_INTL(""), 0, 32, Graphics.width, 64, @viewport)
     @sprites["textbox"] = pbCreateMessageWindow
     @sprites["textbox"].letterbyletter = false
-    @sprites["textbox"].baseColor = Color.new(64, 64, 64)       # dark gray text
-    @sprites["textbox"].shadowColor = Color.new(168, 168, 168)  # lighter shadow
+    @sprites["textbox"].height = @sprites["textbox"].height + 24
+    @sprites["textbox"].y = @sprites["textbox"].y - 24
+    @sprites["textbox"].baseColor = Color.new(64, 64, 64) # dark gray text
+    @sprites["textbox"].shadowColor = Color.new(168, 168, 168) # lighter shadow
+
     addBackgroundPlane(@sprites, "bg_moves", "Fusion/movesOverlay", @viewport)
     addBackgroundPlane(@sprites, "bg_stats", "Fusion/statsOverlay", @viewport)
     @sprites["bg_stats"].visible = false
 
     @sprites["counter"] = Window_UnformattedTextPokemon.newWithSize(
-      _INTL("0 / 4"), 0, 36, Graphics.width, 84, @viewport)
+      _INTL("0 / {1}", @maxMovesNb), 336, 228, Graphics.width, 84, @viewport)
     @sprites["counter"].setSkin("Graphics/Windowskins/invisible")
 
     showPokemonIcons
@@ -45,7 +52,7 @@ class FusionMovesOptionsScene < PokemonOption_Scene
 
   def updateCounter
     count = @selected_moves.length
-    @sprites["counter"].text = _INTL("{1} / 4", count)
+    @sprites["counter"].text = _INTL("{1} / {2}", count, @maxMovesNb)
   end
 
   def getSelectedMoves
@@ -85,8 +92,7 @@ class FusionMovesOptionsScene < PokemonOption_Scene
     for i in 0...@PokemonOptions.length
       @sprites["option"][i] = (@PokemonOptions[i].get || 0)
     end
-    @sprites["title"] = Window_UnformattedTextPokemon.newWithSize(
-      _INTL("Select moves"), 0, 82, Graphics.width, 64, @viewport)
+    @sprites["title"] = Window_UnformattedTextPokemon.newWithSize(_INTL(""), 0, 66, Graphics.width, 64, @viewport)
     @sprites["title"].setSkin("Graphics/Windowskins/invisible")
     @sprites["option"].setSkin("Graphics/Windowskins/invisible")
     # echoln @sprites["option"].bitmap.text_size
@@ -123,7 +129,7 @@ class FusionMovesOptionsScene < PokemonOption_Scene
       pp = "-"
     end
 
-    start_y = 126
+    start_y = 110
     gap_height = 32
 
     textpos = [
@@ -163,7 +169,7 @@ class FusionMovesOptionsScene < PokemonOption_Scene
 
     @sprites["title"].text = ""
 
-    start_y = 94
+    start_y = 78
     gap_height = 32
 
     textpos = [
@@ -190,18 +196,18 @@ class FusionMovesOptionsScene < PokemonOption_Scene
     pbDrawTextPositions(@sprites["overlay"].bitmap, textpos)
   end
 
-  def draw_pokemon_type
-    type1_number = GameData::Type.get(@poke1.type1).id_number
-    type2_number = GameData::Type.get(@poke1.type2).id_number
-    type1rect = Rect.new(0, type1_number * 28, 64, 28)
-    type2rect = Rect.new(0, type2_number * 28, 64, 28)
-    if @poke1.type1 == @poke1.type2
-      overlay.blt(130, 78, @typebitmap.bitmap, type1rect)
-    else
-      overlay.blt(96, 78, @typebitmap.bitmap, type1rect)
-      overlay.blt(166, 78, @typebitmap.bitmap, type2rect)
-    end
-  end
+  # def draw_pokemon_type
+  #   type1_number = GameData::Type.get(@poke1.type1).id_number
+  #   type2_number = GameData::Type.get(@poke1.type2).id_number
+  #   type1rect = Rect.new(0, type1_number * 28, 64, 28)
+  #   type2rect = Rect.new(0, type2_number * 28, 64, 28)
+  #   if @poke1.type1 == @poke1.type2
+  #     overlay.blt(130, 78, @typebitmap.bitmap, type1rect)
+  #   else
+  #     overlay.blt(96, 78, @typebitmap.bitmap, type1rect)
+  #     overlay.blt(166, 78, @typebitmap.bitmap, type2rect)
+  #   end
+  # end
 
   def updatePokemonCursor(index)
     index = 0 if !index
@@ -238,7 +244,7 @@ class FusionMovesOptionsScene < PokemonOption_Scene
         # Header row — show pokemon info panel
         draw_pokemon_info
         species = col == 0 ? @head_species : @body_species
-        @sprites["textbox"].text = _INTL("Select all moves from {1}", GameData::Species.get(species).real_name)
+        @sprites["textbox"].text = _INTL("\nSelect all moves from {1}", GameData::Species.get(species).real_name)
         return
       end
 
@@ -256,6 +262,7 @@ class FusionMovesOptionsScene < PokemonOption_Scene
       @sprites["textbox"].text = getDefaultDescription
     end
   end
+
   def getDefaultDescription
     return _INTL("No move selected")
   end
@@ -271,6 +278,13 @@ class FusionMovesOptionsScene < PokemonOption_Scene
     when 2 then highlighted_value == 0 ? @poke1.moves[2] : @poke2.moves[2]
     when 3 then highlighted_value == 0 ? @poke1.moves[3] : @poke2.moves[3]
     end
+  end
+
+  def listUniqueAvailableMoves
+    moves = []
+    moves += @poke1.moves
+    moves += @poke2.moves
+    return moves.uniq { |m| m.id }
   end
 
   def pbFadeInAndShow(sprites, visiblesprites = nil)
@@ -298,18 +312,18 @@ class FusionMovesOptionsScene < PokemonOption_Scene
       "",
       ["", ""],
       proc { 0 },
-      proc { },
+      proc {},
       ["", ""]
     )
 
     move_options = @move_slots.map do |slot|
-      left_name  = slot[0] ? GameData::Move.get(slot[0].id).real_name : "-"
+      left_name = slot[0] ? GameData::Move.get(slot[0].id).real_name : "-"
       right_name = slot[1] ? GameData::Move.get(slot[1].id).real_name : "-"
       EnumOption.new(
         "",
         [left_name, right_name],
         proc { 0 },
-        proc { },
+        proc {},
         ["", ""]
       )
     end
@@ -330,19 +344,27 @@ class FusionMovesOptionsScene < PokemonOption_Scene
           end
         end
 
-        @index_vertical   = @sprites["option"].index
+        @index_vertical = @sprites["option"].index
         @index_horizontal = @sprites["option"][@index_vertical] || 0
         if Input.trigger?(Input::USE)
-          #Confirm
+          # Confirm
           if @index_vertical == @PokemonOptions.length
             if @selected_moves.length > 0 && validateSelectedMoves
-              break
+              echoln listUniqueAvailableMoves
+              if @selected_moves.length < @maxMovesNb && listUniqueAvailableMoves.length > @selected_moves.length
+                if pbConfirmMessage(_INTL("You have only selected #{@selected_moves.length} move(s). Are you sure you want to continue?"))
+                  break
+                end
+              else
+                break
+              end
+            else
+              pbPlayBuzzerSE
             end
-            pbPlayBuzzerSE
             next
           end
 
-          #Select all
+          # Select all
           if @index_vertical == 0
             col = @index_horizontal
             @selected_moves = @move_slots.map { |slot| slot[col] }.compact
@@ -412,10 +434,13 @@ class FusionMovesOptionsScene < PokemonOption_Scene
   def initOptionsWindow
     x_pos = 0
     y_pos = @sprites["title"].height
-    #y_pos += 30
-    optionsWindow = Window_PokemonOptionFusionMoves.new(@PokemonOptions, x_pos,y_pos, Graphics.width,
-                                                        Graphics.height - @sprites["title"].height - @sprites["textbox"].height,
-                                                        self)  # pass scene reference
+    item_height = 32 # standard row height in Essentials
+    num_items = @PokemonOptions.length + 1 # +1 for Confirm
+    window_height = item_height * num_items + 4 # +4 for border padding
+
+    optionsWindow = Window_PokemonOptionFusionMoves.new(@PokemonOptions, x_pos, y_pos, Graphics.width,
+                                                        window_height + 32,
+                                                        self)
     optionsWindow.viewport = @viewport
     optionsWindow.visible = true
     return optionsWindow
@@ -430,6 +455,7 @@ end
 class Window_PokemonOptionFusionMoves < Window_PokemonOption
   OPTIONS_X_OFFSET = 0
   COLUMNS_GAP = 20
+
   def initialize(options, x, y, width, height, scene)
     @scene = scene
     super(options, x, y, width, height)
@@ -492,16 +518,17 @@ class Window_PokemonOptionFusionMoves < Window_PokemonOption
       move = slot_index >= 0 ? @scene.move_slots&.[](slot_index)&.[](col) : nil
       is_selected = move && @scene.selected_moves.any? { |m| m.id == move.id }
 
-      base   = is_selected ? @selBaseColor : Color.new(180, 180, 180)
+      base = is_selected ? @selBaseColor : Color.new(180, 180, 180)
       shadow = is_selected ? @selShadowColor : Color.new(80, 80, 80)
 
       xpos = col == 0 ? col0_x : col1_x
       pbDrawShadowText(self.contents, xpos, rect.y, col_width, rect.height, value, base, shadow)
     end
   end
+
   def dont_draw_item(index)
     return false
-    #return index == @options.length
+    # return index == @options.length
   end
 
   def update
@@ -511,7 +538,9 @@ class Window_PokemonOptionFusionMoves < Window_PokemonOption
       if old_index < @options.length
         @optvalues[self.index] = @optvalues[old_index]
       else
-        # Coming from Confirm — preserve whatever the destination row already had
+        # Coming from confirm -> go to unselected one (makes it easier to quickly swap between the two)
+        current = @optvalues[self.index] || 0
+        @optvalues[self.index] = current == 0 ? 1 : 0
       end
       refresh
     end
