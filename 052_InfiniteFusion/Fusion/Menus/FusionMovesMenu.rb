@@ -16,8 +16,15 @@ class FusionMovesOptionsScene < PokemonOption_Scene
     @index_vertical = 0
     @index_horizontal = 0
 
+
+
     @selBaseColor = Color.new(48, 96, 216)
     @selShadowColor = Color.new(32, 32, 32)
+
+    @counterBaseColor = pbColor(:LIGHT_TEXT_MAIN_COLOR)
+    @counterShadowColor = pbColor(:LIGHT_TEXT_SHADOW_COLOR)
+    @counterFullBaseColor = pbColor(:GREEN)
+    @counterFullShadowColor = pbColor(:DARKGREEN)
 
     @maxMovesNb = [listUniqueAvailableMoves.length, 4].min
   end
@@ -38,12 +45,16 @@ class FusionMovesOptionsScene < PokemonOption_Scene
     @sprites["textbox"].baseColor = Color.new(64, 64, 64) # dark gray text
     @sprites["textbox"].shadowColor = Color.new(168, 168, 168) # lighter shadow
 
+    if isDarkMode
+      @sprites["textbox"].baseColor, @sprites["textbox"].shadowColor = @sprites["textbox"].shadowColor, @sprites["textbox"].baseColor
+    end
+
     addBackgroundPlane(@sprites, "bg_moves", "Fusion/movesOverlay", @viewport)
     addBackgroundPlane(@sprites, "bg_stats", "Fusion/statsOverlay", @viewport)
     @sprites["bg_stats"].visible = false
 
     @sprites["counter"] = Window_UnformattedTextPokemon.newWithSize(
-      _INTL("0 / {1}", @maxMovesNb), 336, 228, Graphics.width, 84, @viewport)
+      _INTL("0 / {1}", @maxMovesNb), 386, 226, Graphics.width, 84, @viewport)
     @sprites["counter"].setSkin("Graphics/Windowskins/invisible")
 
     showPokemonIcons
@@ -53,6 +64,15 @@ class FusionMovesOptionsScene < PokemonOption_Scene
   def updateCounter
     count = @selected_moves.length
     @sprites["counter"].text = _INTL("{1} / {2}", count, @maxMovesNb)
+    if count == @maxMovesNb
+      @sprites["counter"].baseColor = @counterFullBaseColor
+      @sprites["counter"].shadowColor = @counterFullShadowColor
+    else
+      @sprites["counter"].baseColor = @counterBaseColor
+      @sprites["counter"].shadowColor = @counterShadowColor
+
+    end
+
   end
 
   def getSelectedMoves
@@ -65,11 +85,11 @@ class FusionMovesOptionsScene < PokemonOption_Scene
   def showPokemonIcons
 
     @sprites["pokeicon_1"] = PokemonIconSprite.new(@head_species.species, @viewport)
-    @sprites["pokeicon_1"].x = 240
+    @sprites["pokeicon_1"].x = 264
     @sprites["pokeicon_1"].y = 50
 
     @sprites["pokeicon_2"] = PokemonIconSprite.new(@body_species.species, @viewport)
-    @sprites["pokeicon_2"].x = 364
+    @sprites["pokeicon_2"].x = 388
     @sprites["pokeicon_2"].y = 50
 
     @sprites["pokecursor"] = IconSprite.new(0, 0, @viewport)
@@ -136,11 +156,11 @@ class FusionMovesOptionsScene < PokemonOption_Scene
       [_INTL("Type"), 20, start_y, 0, label_base_color, label_shadow_color],
       [_INTL("Category"), 20, start_y + (gap_height * 1), 0, label_base_color, label_shadow_color],
       [_INTL("Power"), 20, start_y + (gap_height * 2), 0, label_base_color, label_shadow_color],
-      [_INTL("{1}", damage), 140, start_y + (gap_height * 2), 0, value_base_color, value_shadow_color],
+      [_INTL("{1}", damage), 148, start_y + (gap_height * 2), 0, value_base_color, value_shadow_color],
       [_INTL("Accuracy"), 20, start_y + (gap_height * 3), 0, label_base_color, label_shadow_color],
-      [_INTL("{1}%", accuracy), 140, start_y + (gap_height * 3), 0, value_base_color, value_shadow_color],
+      [_INTL("{1}%", accuracy), 148, start_y + (gap_height * 3), 0, value_base_color, value_shadow_color],
       [_INTL("PP"), 20, start_y + (gap_height * 4), 0, label_base_color, label_shadow_color],
-      [_INTL("{1}", pp), 140, start_y + (gap_height * 4), 0, value_base_color, value_shadow_color]
+      [_INTL("{1}", pp), 148, start_y + (gap_height * 4), 0, value_base_color, value_shadow_color]
     ]
 
     imagepos = []
@@ -174,22 +194,22 @@ class FusionMovesOptionsScene < PokemonOption_Scene
 
     textpos = [
       [_INTL("HP"), 20, start_y, 0, label_base_color, label_shadow_color],
-      [_INTL("{1}", @fused_pokemon.totalhp), 150, start_y, 0, label_base_color, label_shadow_color],
+      [_INTL("{1}", @fused_pokemon.totalhp), 158, start_y, 0, label_base_color, label_shadow_color],
 
       [_INTL("Attack"), 20, start_y + (gap_height * 1), 0, label_base_color, label_shadow_color],
-      [_INTL("{1}", @fused_pokemon.attack), 150, start_y + (gap_height * 1), 0, label_base_color, label_shadow_color],
+      [_INTL("{1}", @fused_pokemon.attack), 158, start_y + (gap_height * 1), 0, label_base_color, label_shadow_color],
 
       [_INTL("Defense"), 20, start_y + (gap_height * 2), 0, label_base_color, label_shadow_color],
-      [_INTL("{1}", @fused_pokemon.defense), 150, start_y + (gap_height * 2), 0, label_base_color, label_shadow_color],
+      [_INTL("{1}", @fused_pokemon.defense), 158, start_y + (gap_height * 2), 0, label_base_color, label_shadow_color],
 
       [_INTL("Sp. Attack"), 20, start_y + (gap_height * 3), 0, label_base_color, label_shadow_color],
-      [_INTL("{1}", @fused_pokemon.spatk), 150, start_y + (gap_height * 3), 0, value_base_color, value_shadow_color],
+      [_INTL("{1}", @fused_pokemon.spatk), 158, start_y + (gap_height * 3), 0, value_base_color, value_shadow_color],
 
       [_INTL("Sp. Defense"), 20, start_y + (gap_height * 4), 0, label_base_color, label_shadow_color],
-      [_INTL("{1}", @fused_pokemon.spdef), 150, start_y + (gap_height * 4), 0, value_base_color, value_shadow_color],
+      [_INTL("{1}", @fused_pokemon.spdef), 158, start_y + (gap_height * 4), 0, value_base_color, value_shadow_color],
 
       [_INTL("Speed"), 20, start_y + (gap_height * 5), 0, label_base_color, label_shadow_color],
-      [_INTL("{1}", @fused_pokemon.speed), 150, start_y + (gap_height * 5), 0, value_base_color, value_shadow_color],
+      [_INTL("{1}", @fused_pokemon.speed), 158, start_y + (gap_height * 5), 0, value_base_color, value_shadow_color],
 
     ]
     @sprites["overlay"].bitmap.clear
@@ -346,13 +366,16 @@ class FusionMovesOptionsScene < PokemonOption_Scene
 
         @index_vertical = @sprites["option"].index
         @index_horizontal = @sprites["option"][@index_vertical] || 0
+
         if Input.trigger?(Input::USE)
           # Confirm
           if @index_vertical == @PokemonOptions.length
             if @selected_moves.length > 0 && validateSelectedMoves
               echoln @maxMovesNb
               if @selected_moves.length < @maxMovesNb && listUniqueAvailableMoves.length > @selected_moves.length
-                if pbConfirmMessage(_INTL("You have only selected #{@selected_moves.length} move(s). Are you sure you want to continue?"))
+                nb_more = @maxMovesNb - @selected_moves.length
+                plural_s = nb_more > 1 ? "s" : ""
+                if pbConfirmMessage(_INTL("You can still select \\C[1]{1}\\C[0] additional move{2}. Are you sure you want to continue?", nb_more, plural_s))
                   break
                 end
               else
@@ -502,7 +525,7 @@ class Window_PokemonOptionFusionMoves < Window_PokemonOption
         [base_color.blue - 60, 0].max
       )
       pbDrawShadowText(self.contents, 216, rect.y, optionwidth, rect.height,
-                       _INTL("Confirm"), base_color, shadow_color)
+                       _INTL("     Confirm"), base_color, shadow_color)
       return
     end
 
