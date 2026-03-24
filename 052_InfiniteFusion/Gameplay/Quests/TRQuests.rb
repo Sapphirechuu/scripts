@@ -5,7 +5,7 @@ def isWearingTeamRocketOutfit()
   return false if !$game_switches[SWITCH_JOINED_TEAM_ROCKET]
   wearing_rocket_clothes = false
   TEAM_ROCKET_CLOTHES.each do |clothes|
-    wearing_rocket_clothes = true if wearing_rocket_clothes if isWearingClothes(clothes)
+    wearing_rocket_clothes = true if isWearingClothes(clothes)
   end
   return wearing_rocket_clothes && isWearingHat(HAT_TEAM_ROCKET)
 end
