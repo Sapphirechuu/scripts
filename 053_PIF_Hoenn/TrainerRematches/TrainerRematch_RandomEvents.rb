@@ -123,7 +123,9 @@ def catch_new_team_pokemon(trainer)
     trainer_highest_level = get_trainer_highest_level(trainer)
     species = wild_pokemon[0]
     level = [wild_pokemon[1], trainer_highest_level].min
-    trainer.currentTeam << Pokemon.new(species,level)
+
+    original_trainer =pbLoadTrainer(trainer.trainerType,trainer.trainerName,0)
+    trainer.currentTeam << Pokemon.new(species,level,original_trainer)
     trainer.log_catch_event(wild_pokemon[0])
   end
   return trainer
@@ -171,8 +173,9 @@ def unfuse_random_team_pokemon(trainer)
   level = calculateUnfuseLevelOldMethod(pokemon_to_unfuse,false)
 
   trainer.currentTeam.delete(pokemon_to_unfuse)
-  trainer.currentTeam.push(Pokemon.new(body_pokemon,level))
-  trainer.currentTeam.push(Pokemon.new(head_pokemon,level))
+  original_trainer =pbLoadTrainer(trainer.trainerType,trainer.trainerName,0)
+  trainer.currentTeam.push(Pokemon.new(body_pokemon,level,original_trainer))
+  trainer.currentTeam.push(Pokemon.new(head_pokemon,level,original_trainer))
   trainer.log_unfusion_event(pokemon_to_unfuse.species, body_pokemon, head_pokemon)
   return trainer
 end
@@ -186,7 +189,8 @@ def fuse_random_team_pokemon(trainer)
   head_pokemon = pokemon_to_fuse[1]
   fusion_species = getFusedPokemonIdFromSymbols(body_pokemon.species,head_pokemon.species)
   level = (body_pokemon.level + head_pokemon.level)/2
-  fused_pokemon = Pokemon.new(fusion_species,level)
+  original_trainer =pbLoadTrainer(trainer.trainerType,trainer.trainerName,0)
+  fused_pokemon = Pokemon.new(fusion_species,level,original_trainer)
 
   trainer.currentTeam.delete(body_pokemon)
   trainer.currentTeam.delete(head_pokemon)
