@@ -338,6 +338,7 @@ class OverworldPokemonEvent < Game_Event
   end
 
   def pokemon_can_be_repelled
+    return false if @part_of_pokeradar_chain
     return $Trainer.party[0].level > @pokemon.level && !@pokemon.shiny?
   end
 
