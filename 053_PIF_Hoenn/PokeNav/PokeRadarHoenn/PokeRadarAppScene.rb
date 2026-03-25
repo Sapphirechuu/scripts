@@ -263,7 +263,7 @@ class PokeRadarAppScene < PokeNavAppScene
     case options[chosen]
     when cmd_scan
       energy_needed = get_energy_for_scan(species)
-      if true # Settings::POKERADAR_BATTERY_STEPS - $PokemonGlobal.pokeradarBattery >= energy_needed
+      if Settings::POKERADAR_BATTERY_STEPS - $PokemonGlobal.pokeradarBattery >= energy_needed
         $PokemonGlobal.pokeradarBattery += energy_needed
         displayTextElements
         @exiting = true
