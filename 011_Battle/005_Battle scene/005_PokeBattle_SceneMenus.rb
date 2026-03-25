@@ -249,7 +249,6 @@ class FightMenuDisplay < BattleMenuBase
       type_path = "Graphics/Pictures/types"
       if isDarkMode
         button_path += "_dark"
-        type_path += "_dark"
       end
       @buttonBitmap  = AnimatedBitmap.new(button_path)
       @typeBitmap    = AnimatedBitmap.new(type_path)
