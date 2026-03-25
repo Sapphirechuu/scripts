@@ -436,7 +436,7 @@ def update_pokeradar_overworld_ui
 end
 
 def spawn_pokeradar_pokemon(species, level)
-  max_attempts = 10
+  max_attempts = 20
   return unless species && level
   pbWait(20)
   playAnimation(Settings::POKERADAR_LIGHT_ANIMATION_RED_ID, $game_player.x, $game_player.y)
