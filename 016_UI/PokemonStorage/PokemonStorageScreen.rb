@@ -14,6 +14,7 @@ class PokemonStorageScreen
     @pbHeldPokemon = nil
     @command = 0
     @filterProc = nil
+    @saveWhenPlaceDown=false
   end
 
   def setFilter(filterProc)
@@ -190,8 +191,6 @@ class PokemonStorageScreen
         end
         pokemon = @storage[selected[0], selected[1]]
         next if !pokemon
-        echoln selected
-
         if @filterProc.call(pokemon)
           command = pbShowCommands(_INTL("{1} is selected.", pokemon.name), [
             _INTL("Choose"),
@@ -386,7 +385,7 @@ class PokemonStorageScreen
       return false
     end
 
-    if @storage[box].is_a?(StorageTransferBox)
+    if @storage[box].is_a?(StorageTransferBox) && @storage[box].can_use_transfer_box?
       unless verifyTransferBoxAutosave
         return
       end
@@ -464,12 +463,14 @@ class PokemonStorageScreen
     @heldpkmn = @storage[box, index]
     @storage.pbDelete(box, index)
     @scene.pbRefresh
+    if @storage[box].is_a?(StorageTransferBox)
+      @saveWhenPlaceDown = true
+    end
   end
 
   def pbPlace(selected)
     box = selected[0]
     index = selected[1]
-
     if @storage[box].is_a?(StorageTransferBox)
       if @heldpkmn.owner.name == "RENTAL"
         pbMessage(_INTL("This Pokémon cannot be transferred."))
@@ -505,6 +506,10 @@ class PokemonStorageScreen
     end
     @scene.pbRefresh
     @heldpkmn = nil
+    if @saveWhenPlaceDown
+      @saveWhenPlaceDown = false
+      Game.save()
+    end
   end
 
   def pbSwap(selected)
@@ -543,6 +548,10 @@ class PokemonStorageScreen
     tmp = @storage[box, index]
     @storage[box, index] = @heldpkmn
     @heldpkmn = tmp
+    if @saveWhenPlaceDown
+      @saveWhenPlaceDown = false
+      Game.save()
+    end
     @scene.pbRefresh
     return true
   end

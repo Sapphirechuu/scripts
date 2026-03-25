@@ -242,6 +242,9 @@ class PokemonStorageScreen
     @scene.animate_hold_multi(box, final_selected, selected_index) # animation
     @multiheldpkmn = new_held
     @storage.pbDeleteMulti(box, final_selected)
+    if @storage[box].is_a?(StorageTransferBox)
+      @saveWhenPlaceDown = true
+    end
     @scene.pbRefresh
   end
 
@@ -303,6 +306,11 @@ class PokemonStorageScreen
         @storage.party.push(pokemon)
       end
     end
+    if @saveWhenPlaceDown
+      @saveWhenPlaceDown = false
+      Game.save()
+    end
+
     @scene.pbRefresh
     @multiheldpkmn = []
   end
