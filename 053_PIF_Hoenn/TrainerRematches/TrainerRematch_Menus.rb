@@ -60,6 +60,8 @@ def postBattleActionsMenu(trainer=nil)
   rematchSingleCommand = _INTL("Rematch (Single)")
   rematchDoubleCommand = _INTL("Rematch (Double)")
 
+  viewTeamCommand = _INTL("View Team")
+
   tradeCommand = _INTL("Trade Offer")
   partnerCommand = _INTL("Partner up")
   cancelCommand = _INTL("See ya!")
@@ -84,7 +86,7 @@ def postBattleActionsMenu(trainer=nil)
   end
   options << tradeCommand if trainer.friendship_level >= FRIENDSHIP_LEVEL_FOR_TRADE
   #options << partnerCommand if trainer.friendship_level >= 3
-
+  options << viewTeamCommand
   options << updateTeamDebugCommand if $DEBUG
   options << resetTrainerDebugCommand if $DEBUG
   options << setFriendshipDebugCommand if $DEBUG
@@ -99,6 +101,11 @@ def postBattleActionsMenu(trainer=nil)
   when rematchCommand
     doPostBattleAction(:BATTLE,trainer)
     try_give_gift(trainer)
+  when viewTeamCommand
+    pbFadeOutIn {
+      screen = ContactsAppInfoPageScreen.new
+      screen.view_trainer_team(trainer.id)
+    }
   when rematchSingleCommand
     doPostBattleAction(:BATTLE,trainer,false)
   when rematchDoubleCommand
@@ -127,6 +134,7 @@ def postBattleActionsMenu(trainer=nil)
     $PokemonGlobal.nextBattleBack=nil
     return
   end
+  $PokemonGlobal.nextBattleBack=nil
 end
 
 def try_give_gift(trainer)

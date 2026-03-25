@@ -171,8 +171,8 @@ class FusionQuiz
     else
       pbSEPlay("Applause", 80)
       pbMessage(_INTL("Wow! A perfect round! You get {1} more points!\\wtnp[15]", perfect_round_points))
-      show_fusion_picture(false)
       pbMessage(_INTL("Let's see what this Pokémon looked like...\\wtnp[20]"))
+      show_fusion_picture(false)
       fusion_name= GameData::Species.get(fusionOf(@head_id,@body_id)).real_name
       pbMessage(_INTL("It's... \\C[1]{1}\\C[0]!",fusion_name))
 
