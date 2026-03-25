@@ -24,6 +24,70 @@ def npcTrade(npcPokemon_species, nickname, trainerName, playerPokemonProc)
   pbStartTrade(chosen_position, npcPokemon_species, nickname, trainerName, 0)
 end
 
+def floorHole(mapBelow, frames_for_fall=8, bikeOnly=true)
+  return unless mapBelow
+  return if $game_player.moving?
+
+  event = this_event()
+  event.instance_variable_set(:@idle_frames, 0) unless event.instance_variable_defined?(:@idle_frames)
+  event.instance_variable_set(:@idle_frames, event.instance_variable_get(:@idle_frames) + 1)
+
+  frames_for_fall = 0 if bikeOnly && !$PokemonGlobal.bicycle
+
+  if event.instance_variable_get(:@idle_frames) >= frames_for_fall
+    event.instance_variable_set(:@idle_frames, 0)
+
+    # Find a passable landing tile on the target map
+    target_x, target_y = findPassableLanding(mapBelow, $game_player.x, $game_player.y)
+    return unless target_x
+
+    pbSEPlay("Slash")
+    playAnimation(Settings::EXCLAMATION_ANIMATION_ID, $game_player.x, $game_player.y)
+    event.direction_fix = false
+    event.turn_left
+
+    pbWait(4)
+    pbFadeOutIn {
+      $game_temp.player_new_map_id = mapBelow
+      $game_temp.player_new_x = target_x
+      $game_temp.player_new_y = target_y
+      pbCancelVehicles
+      $scene.transfer_player
+      $game_map.autoplay
+      $game_map.refresh
+    }
+    pbWait(8)
+  end
+end
+
+# Loads the target map and spirals outward from (start_x, start_y)
+# until a passable tile is found. Returns [x, y] or [nil, nil].
+def findPassableLanding(map_id, start_x, start_y, max_radius=10)
+  # Load the target map data without switching to it
+  map_data = load_data(sprintf("Data/Map%03d.rxdata", map_id))
+  target_map = Game_Map.new
+  target_map.setup(map_id)
+
+  # Check exact position first
+  if target_map.passableStrict?(start_x, start_y, 2)
+    return [start_x, start_y]
+  end
+
+  # Spiral outward: check ring by ring
+  1.upto(max_radius) do |radius|
+    (-radius..radius).each do |dx|
+      (-radius..radius).each do |dy|
+        next unless dx.abs == radius || dy.abs == radius  # Only check the outer ring
+        x = start_x + dx
+        y = start_y + dy
+        next unless target_map.valid?(x, y)
+        return [x, y] if target_map.passableStrict?(x, y, 2)
+      end
+    end
+  end
+
+  return [nil, nil]
+end
 
 BASIC_SHIRTS = {
 :GRASS => "basicgrass",
