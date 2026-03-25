@@ -28,6 +28,17 @@ def pbDayCareGetLevelGain(index, nameVariable, levelVariable)
   return true
 end
 
+def getDayCarePokemonNames(nameVariable1, nameVariable2)
+  pokemon1 = $PokemonGlobal.daycare[0][0]
+  pokemon2 = $PokemonGlobal.daycare[1][0]
+  deposited = []
+  deposited << pokemon1 if pokemon1
+  deposited << pokemon2 if pokemon2
+
+  pbSet(nameVariable1,deposited[0].name) if deposited[0]
+  pbSet(nameVariable2,deposited[1].name) if deposited[1]
+end
+
 def pbDayCareGetCost(index)
   pkmn = $PokemonGlobal.daycare[index][0]
   return 0 if !pkmn

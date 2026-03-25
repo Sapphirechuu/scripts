@@ -13,6 +13,14 @@ def get_base_sprite_path(is_fusion, shiny=false)
   return base_path
 end
 
+def getRoamingSprite(species_data,shiny=false)
+  landPath = getOverworldLandPath(species_data,shiny)
+  return landPath if landPath
+
+  flyingPath = getOverworldFlyingPath(species_data,shiny)
+  return flyingPath if flyingPath
+end
+
 def getOverworldLandPath(species_data,shiny=false)
   species = species_data.species
   is_fusion = isSpeciesFusion(species)

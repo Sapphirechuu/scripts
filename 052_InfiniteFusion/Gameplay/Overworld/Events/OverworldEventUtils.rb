@@ -638,7 +638,11 @@ def setDayCareOverworlds(land_event_ids = [], water_event_ids = [])
     pbSetSelfSwitch(event.id, "A", true, day_care_map)
     $game_map.refresh
 
-    event.character_name = getOverworldLandPath(day_care_pokemon.species_data, day_care_pokemon.isShiny?)
+    overworldPath = getRoamingSprite(day_care_pokemon.species_data, day_care_pokemon.isShiny?)
+    is_flying = overworldPath.include?("_fly")
+    event.step_anime = true if is_flying
+    echoln overworldPath
+    event.character_name = overworldPath if overworldPath
     if swimming
       event.forced_bush_depth = 20
       event.step_anime = true

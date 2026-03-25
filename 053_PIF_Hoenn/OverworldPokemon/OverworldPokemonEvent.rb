@@ -159,6 +159,7 @@ class OverworldPokemonEvent < Game_Event
     end
   end
 
+
   def initialize_water_sprite
     if @flying_sprite
       @character_name = @flying_sprite
