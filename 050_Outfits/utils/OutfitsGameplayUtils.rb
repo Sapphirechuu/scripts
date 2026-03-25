@@ -36,7 +36,7 @@ def unlockHat(outfit_id)
 end
 
 def obtainClothes(outfit_id)
-  echoln "obtained new clothes: " + outfit_id
+  echoln "obtained new clothes: #{outfit_id}"
   outfit = get_clothes_by_id(outfit_id)
   if !outfit
     pbMessage(_INTL("The clothes {1} are invalid.", outfit_id))

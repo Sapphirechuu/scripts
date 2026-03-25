@@ -201,7 +201,7 @@ def generateTrainerTradeOffer(trainer)
   else
     wanted_types_string = wanted_types.map { |type|
       type_name = GameData::Type.get(type).real_name
-      "- \\C[1]#{type_name}\\C[0]"
+      "\\C[1]#{type_name}\\C[0]"
     }.join(", ")
 
     trainerClassName = GameData::TrainerType.get(trainer.trainerType).real_name
