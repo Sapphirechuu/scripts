@@ -161,6 +161,8 @@ class Pokemon
     echoln("Hat: #{@hat}")
     echoln("Hat X: #{@hat_x}")
     echoln("Hat Y: #{@hat_y}")
+    @pif_sprite.dump_info
+
     echoln("Steps to Hatch: #{@steps_to_hatch}")
     echoln("HP: #{@hp}")
     echoln("Status: #{@status}")

@@ -222,8 +222,6 @@ def generateTrainerTradeOffer(trainer)
     end
 
     pif_sprite = BattleSpriteLoader.new.get_pif_sprite_from_species(offered_pokemon.species)
-    pif_sprite.dump_info()
-
     message = _INTL("{1} {2} is offering {3} (Level {4}) for your {5}.", trainerClassName, trainer.trainerName, offered_pokemon.name, offered_pokemon.level, chosen_pokemon.name)
     showPokemonInPokeballWithMessage(pif_sprite, message)
 

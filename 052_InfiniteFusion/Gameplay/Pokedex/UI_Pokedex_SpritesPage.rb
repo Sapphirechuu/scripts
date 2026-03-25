@@ -268,10 +268,9 @@ class PokemonPokedexInfo_Scene
       return if !$PokemonGlobal.alt_sprite_substitutions[species_id]
       current_sprite = $PokemonGlobal.alt_sprite_substitutions[species_id]
     end
-
     index = @selected_index
     for alt in altsList
-      if alt == current_sprite.alt_letter
+      if alt.alt_letter == current_sprite.alt_letter
         @selected_index = index
         return
       end

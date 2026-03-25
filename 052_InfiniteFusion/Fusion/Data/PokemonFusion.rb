@@ -1304,11 +1304,11 @@ def calculateFusedPokemonLevel(lv1, lv2, superSplicers)
   return lv1
 end
 
-def pbShowPokedex(species)
+def pbShowPokedex(pokemon)
   pbFadeOutIn {
     scene = PokemonPokedexInfo_Scene.new
     screen = PokemonPokedexInfoScreen.new(scene)
-    screen.pbDexEntry(species)
+    screen.pbDexEntry(pokemon)
   }
 end
 
