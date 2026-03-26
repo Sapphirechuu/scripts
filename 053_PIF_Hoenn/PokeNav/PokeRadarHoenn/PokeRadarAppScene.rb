@@ -451,14 +451,18 @@ def update_pokeradar_overworld_ui
     species = $PokemonTemp.pokeradar[0]
     $PokemonTemp.pokeradar_ui.dispose if $PokemonTemp.pokeradar_ui
     $PokemonTemp.pokeradar_ui = PokeRadar_UI.new([species], [], [])
-    $PokemonTemp.pokeradar_ui.set_text(_INTL("PokéRadar Chain: {1}", current_chain), 72, 12)
+    if current_chain >= 2
+      $PokemonTemp.pokeradar_ui.set_text(_INTL("PokéRadar Chain: {1}", current_chain), 72, 12, pbColor(:GREEN), pbColor(:DARKGREEN))
+    else
+      $PokemonTemp.pokeradar_ui.set_text(_INTL("PokéRadar Chain: {1}", current_chain), 72, 12)
+    end
   else
     $PokemonTemp.pokeradar_ui.dispose if $PokemonTemp.pokeradar_ui
   end
 
 end
 
-def spawn_ow_pokemon_with_radar(species, level)
+def spawn_pokeradar_pokemon(species, level)
   max_attempts = 50
   return unless species && level
 

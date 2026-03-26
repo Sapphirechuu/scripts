@@ -34,13 +34,15 @@ class PokeRadar_UI
     displayRare()
   end
 
-  def set_text(text,x,y)
+  def set_text(text,x,y,baseColor=nil,shadowColor=nil)
+    baseColor = pbColor(:DARK_TEXT_MAIN_COLOR) unless baseColor
+    shadowColor = pbColor(:DARK_TEXT_SHADOW_COLOR) unless shadowColor
     @sprites["text"]=BitmapSprite.new(Graphics.width,Graphics.height,@viewport)
     @sprites["text"].x=x
     @sprites["text"].y=y
     pbSetSystemFont(@sprites["text"].bitmap)
     #@sprites["text"].bitmap.font.size=26
-    pbDrawShadowText(@sprites["text"].bitmap,x,y,-1,-1, text,pbColor(:DARK_TEXT_MAIN_COLOR),pbColor(:DARK_TEXT_SHADOW_COLOR))
+    pbDrawShadowText(@sprites["text"].bitmap,x,y,-1,-1, text,baseColor,shadowColor)
   end
 
   def set_background_visible(value)
