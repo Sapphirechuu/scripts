@@ -49,7 +49,7 @@ class Pokenav
 
   def install_app(app_id)
     return unless Pokenav::AVAILABLE_APPS.keys.include?(app_id)
-    @installed_apps << app_id
+    @installed_apps << app_id unless @installed_apps.include?(app_id)
     app_name = AVAILABLE_APPS[app_id]
     pbMEPlay("match_call")
     pbMessage(_INTL("The \\C[3]{1} App\\C[0] was installed in the PokéNav!", app_name))
