@@ -327,6 +327,7 @@ class Game_Map
 
   # Just a copy of playerPassable? without the ledges
   def OWPokemonPassable?(x, y, d, self_event = nil)
+    return false if x== $game_player.x && y == $game_player.y
     bit = (1 << (d / 2 - 1)) & 0x0f
     for i in [2, 1, 0]
       tile_id = data[x, y, i]
