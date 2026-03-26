@@ -458,44 +458,44 @@ def update_pokeradar_overworld_ui
 
 end
 
-def spawn_pokeradar_pokemon(species, level)
+def spawn_ow_pokemon_with_radar(species, level)
   max_attempts = 50
   return unless species && level
+
   pbWait(20)
   playAnimation(Settings::POKERADAR_LIGHT_ANIMATION_RED_ID, $game_player.x, $game_player.y)
   pbWait(10)
-  current_attempt = 0
+
+  spawned_events = nil
   radius = 4
-  while current_attempt < max_attempts
+
+  max_attempts.times do |current_attempt|
     echoln "attempt #{current_attempt}/#{max_attempts}"
-    spawned_events = spawn_ow_pokemon(species, level, 1, 4)
-    if current_attempt % 10 == 0
-      radius += 1
-    end
-    break if spawned_events && spawned_events.length > 0
-    current_attempt += 1
+    radius += 1 if current_attempt > 0 && current_attempt % 10 == 0
+    spawned_events = spawn_ow_pokemon(species, level, 1, radius)
+    break if spawned_events&.length.to_i > 0
   end
-  if spawned_events && spawned_events.length > 0
+
+  if spawned_events&.length.to_i > 0
     event = spawned_events[0]
     grass = $PokemonTemp.pokeradar[3]
+
     if grass[3] == 2
       pbSEPlay("shiny", 60)
       playAnimation(Settings::SPARKLE_SHORT_ANIMATION_ID, event.x, event.y)
       event.make_shiny
     end
-    event.behavior_roaming = :look_around
-    if event.pokemon.shiny?
-      event.behavior_noticed = :curious
-    else
-      event.behavior_noticed = :flee
-    end
+
+    event.behavior_roaming    = :look_around
+    event.behavior_noticed    = event.pokemon.shiny? ? :curious : :flee
     event.turn_away_from_player
     playAnimation(Settings::POKERADAR_LIGHT_ANIMATION_RED_ID, event.x, event.y)
   else
-    echoln "failed to spawn"
+    echoln "failed to spawn after #{max_attempts} attempts"
     pbPokeRadarCancel
     pbMessage(_INTL("The Pokéradar scan failed... Try again somewhere else"))
   end
+
   update_pokeradar_overworld_ui
 end
 

@@ -228,34 +228,15 @@ def generateTrainerTradeOffer(trainer)
     if pbConfirmMessage(_INTL("Trade away {1} for {2} {3}'s {4}?", chosen_pokemon.name, trainerClassName, trainer.trainerName, offered_pokemon.name))
       pbStartTrade(chosen_index, offered_pokemon, offered_pokemon.name, trainer.trainerName, 0)
       updated_party = trainer.currentTeam
-      trainer.increase_friendship(10) if offered_pokemon.hasType?(trainer.favorite_type)
+      trainer.increase_friendship(10) if  GameData::Type.exists?(trainer.favorite_type) && offered_pokemon.hasType?(trainer.favorite_type)
       updated_party.delete(offered_pokemon)
       updated_party << chosen_pokemon.clone
       trainer.previous_trade_timestamp = Time.now
       trainer.increase_friendship(20)
-
       return trainer
     end
   end
   return trainer
-
-  # todo
-  #
-  # NPC says "I'm looking for X or Y tyﬂpe Pokemon (prefered Pokemon can be determined when initializing from a pool of types that depends on the trainer class)
-  # Also possible to pass a list of specific Pokemon in trainers.txt that the trainer will ask for instead if it's defined
-  #
-  # you select one of your Pokemon and he gives you one for it
-  # prioritize recently caught pokemon
-  # prioritive weaker Pokemon
-  #
-  # Assign a score to each Pokemon in trainer's team. calculate the same score for trainer's pokemon - select which
-  # one is closer
-  #
-  # NPC says "I can offer A in exchange for your B.
-  # -Yes -> Trade, update trainer team to put the player's pokemon in there
-  #         Cannot trade again with the same trainer for 5 minutes
-  #         "You just traded with this trainer. Wait a bit before you make another offer
-  # -No
   trainer.set_pending_action(false) if trainer
   return trainer
 end
