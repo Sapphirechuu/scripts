@@ -179,7 +179,7 @@ define_quest("petalburg_berry",:FIELD_QUEST,_INTL("Berry Contest"), _INTL("Take 
 
 
     #Route 116
-define_quest("route116_glasses",:FIELD_QUEST,_INTL("Lost glasses"), _INTL("A trainer has lost their glasses, help him find them!"),_INTL("Route 116"),"NPC_Hoenn_BugManiac")
+define_quest("route116_glasses",:FIELD_QUEST,_INTL("Lost glasses"), _INTL("A trainer has lost their glasses, help him find them!"),_INTL("Route 116"),"NPC_Hoenn_Collector_NoGlasses")
 
 #Route 104 (South)
 define_quest("route104_rivalWeather",:FIELD_QUEST,_INTL("Weather Watch"), _INTL("Help your rival with fieldwork and find a Pokémon that only appears when it's windy!"),_INTL("Route 104"),"rival")
