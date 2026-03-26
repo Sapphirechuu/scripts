@@ -45,6 +45,7 @@ class Pokenav
     @installed_apps = [:MAP, :QUESTS, :DAYNIGHT, :REARRANGE]
     @last_opened_challenges = nil
     @viewed_trainers = []
+    @exiting = false
   end
 
   def install_app(app_id)
@@ -137,11 +138,11 @@ class PokemonPokegearScreen
   end
 
   def openPokeRadarApp
-    pbFadeOutIn {
-      scene = PokeRadarAppScene.new
-      screen = PokeRadarAppScreen.new(scene)
-      screen.pbStartScreen(@scene)
-    }
+      pbFadeOutIn {
+        scene = PokeRadarAppScene.new
+        screen = PokeRadarAppScreen.new(scene)
+        screen.pbStartScreen(@scene)
+      }
   end
 
   def openGuessThatFusionApp

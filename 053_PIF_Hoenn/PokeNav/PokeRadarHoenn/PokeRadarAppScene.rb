@@ -291,6 +291,8 @@ class PokeRadarAppScene < PokeNavAppScene
         level = rand(min_level..max_level)
         pbWait(16)
         pbMessage(_INTL("Scanning for {1}...\\wtnp[5]", GameData::Species.get(species).real_name))
+        $game_temp.pokenav_overworld_encounters = $PokemonSystem.overworld_encounters
+        $PokemonSystem.overworld_encounters = true
         possible_tiles = getTerrainTilesNearPlayer(getTerrainType, 3)
         position = possible_tiles.sample
         echoln possible_tiles

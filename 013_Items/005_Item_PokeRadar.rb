@@ -35,11 +35,11 @@ def pbCanUsePokeRadar?
   # Debug
   return true if $DEBUG && Input.press?(Input::CTRL)
   # Can't use Radar if it isn't fully charged
-  if $PokemonGlobal.pokeradarBattery && $PokemonGlobal.pokeradarBattery > 0
-    pbMessage(_INTL("The battery has run dry!\nFor it to recharge, you need to walk another {1} steps.",
-                    $PokemonGlobal.pokeradarBattery))
-    return false
-  end
+  # if $PokemonGlobal.pokeradarBattery && $PokemonGlobal.pokeradarBattery > 0
+  #   pbMessage(_INTL("The battery has run dry!\nFor it to recharge, you need to walk another {1} steps.",
+  #                   $PokemonGlobal.pokeradarBattery))
+  #   return false
+  # end
   return true
 end
 
@@ -115,6 +115,8 @@ def pbPokeRadarCancel
     $PokemonTemp.pokeradar_ui = nil
   end
   $PokemonTemp.pokeradar = nil
+  $PokemonSystem.overworld_encounters = $game_temp.pokenav_overworld_encounters
+  $game_temp.pokenav_overworld_encounters = nil
 end
 
 def listPokemonInCurrentRoute(encounterType, onlySeen = false, onlyUnseen = false, include_weather = false)

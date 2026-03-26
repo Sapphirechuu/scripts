@@ -3,6 +3,7 @@
 #===============================================================================
 class Game_Temp
   attr_accessor :pokenav_last_index
+  attr_accessor :pokenav_overworld_encounters
 end
 
 
@@ -131,6 +132,7 @@ class PokemonPokegear_Scene
     @index = 0
     @held_index
     @rearranging = false
+
     if $game_temp.pokenav_last_index
       @index = $game_temp.pokenav_last_index
     end
