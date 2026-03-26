@@ -455,8 +455,8 @@ end
 #===============================================================================
 
 def hasUnclaimedMysteryGift?
-  for i in $Trainer.mystery_gifts
-    return true if i.length>=1
+  for gift in $Trainer.mystery_gifts
+    return true if gift.length>1
   end
   return false
 end
