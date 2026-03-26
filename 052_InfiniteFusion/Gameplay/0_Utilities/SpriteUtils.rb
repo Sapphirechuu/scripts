@@ -159,13 +159,13 @@ def initialize_species_blacklist(species)
   black_list = []
   main_sprite_letters = list_main_sprites_letters_species(species)
   unless $PokemonSystem.include_alt_sprites_in_random
-    @available.each_with_index do |alt_letter, index|
-      unless main_sprite_letters.include?(@available[index])
+    @available.each_with_index do |pif_sprite, index|
+      alt_letter = pif_sprite.alt_letter
+      unless main_sprite_letters.include?(@available[index].alt_letter)
         black_list << alt_letter
       end
     end
   end
   $PokemonGlobal.sprites_blacklist[species] = black_list
-  echoln black_list
   return black_list
 end

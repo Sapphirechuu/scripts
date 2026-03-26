@@ -232,7 +232,7 @@ class PokemonPokedexInfo_Scene
         setBlacklistIconEnabled(iconName)
       end
     else
-      if species_blacklist.include?(sprite)
+      if species_blacklist.include?(sprite.alt_letter)
         setBlacklistIconDisabled(iconName)
       else
         setBlacklistIconEnabled(iconName)
@@ -566,7 +566,7 @@ class PokemonPokedexInfo_Scene
     species_blacklist = $PokemonGlobal.sprites_blacklist[@species_id]
     species_blacklist ||= initialize_species_blacklist(@species_id)
 
-    selected_letter = @available[@selected_index]
+    selected_letter = @available[@selected_index].alt_letter
 
     total = @available.length
     blacklisted = species_blacklist.length
