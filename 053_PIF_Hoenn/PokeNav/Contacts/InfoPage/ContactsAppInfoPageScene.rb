@@ -311,6 +311,7 @@ class ContactsAppInfoPageScene < PokeNavAppScene
 
   def click(button_id)
     super
+    echoln @trainer.id
     cmd_team = _INTL("View Team")
     cmd_cancel = _INTL("Cancel")
     commands = []

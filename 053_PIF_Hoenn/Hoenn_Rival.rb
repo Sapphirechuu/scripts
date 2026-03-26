@@ -283,7 +283,8 @@ end
 
 def rivalTrade
   trainer = getRebattledTrainerFromKey(BATTLED_TRAINER_RIVAL_KEY)
-  doPostBattleAction(:TRADE,trainer)
+  trainer = doNPCTrainerTrade(trainer)
+  updateRebattledTrainerWithKey(BATTLED_TRAINER_RIVAL_KEY,trainer)
 end
 
 def hoennRivalBattle(loseDialog = "...", canLose = false, items = [])
