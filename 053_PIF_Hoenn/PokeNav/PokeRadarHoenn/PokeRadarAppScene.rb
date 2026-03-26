@@ -54,11 +54,19 @@ class PokeRadarAppScene < PokeNavAppScene
     else
       buttons = showWildPokemonList
       super(buttons)
-      hover(@buttons[0]&.id)
-      if @unseenPokemon.empty? && @seenPokemon.empty?
-        showEmpty
-      end
+      showSelectedPokemonInfo
     end
+    showHeaderInfo
+  end
+
+  def showSelectedPokemonInfo
+    hover(@buttons[@index]&.id)
+    if @unseenPokemon.empty? && @seenPokemon.empty?
+      showEmpty
+    end
+  end
+
+  def showHeaderInfo
     showBattery
     showHeaderName
     showAreaName
@@ -97,7 +105,7 @@ class PokeRadarAppScene < PokeNavAppScene
   end
 
   def showEmpty
-    Kernel.pbDisplayText(_INTL("No Pokémon found nearby."), Graphics.width / 2, Graphics.height / 2, nil, @text_color_base, @text_color_shadow)
+    Kernel.pbDisplayText(_INTL("No wild Pokémon found nearby."), Graphics.width / 2, Graphics.height / 2, nil, @text_color_base, @text_color_shadow)
   end
 
   def showCurrentScanningTarget
@@ -241,6 +249,8 @@ class PokeRadarAppScene < PokeNavAppScene
     cmd_cancel = _INTL("Cancel")
     options << cmd_stop_scan
     options << cmd_cancel
+    Kernel.pbClearText()
+    showHeaderInfo
     chosen = pbMessage(_INTL("You are currently scanning for {1}.", species_name), options, options.length)
     case options[chosen]
     when cmd_stop_scan
@@ -248,6 +258,7 @@ class PokeRadarAppScene < PokeNavAppScene
       pbEndScene
       pbStartScene(@pokenav_main_menu_scene)
     else
+      showCurrentScanningTarget
       return
     end
 
@@ -259,6 +270,8 @@ class PokeRadarAppScene < PokeNavAppScene
     cmd_cancel = _INTL("Cancel")
     options << cmd_scan
     options << cmd_cancel
+    Kernel.pbClearText()
+    showHeaderInfo
     chosen = pbMessage(_INTL("What would you like to do?"), options, options.length)
     case options[chosen]
     when cmd_scan
@@ -290,9 +303,13 @@ class PokeRadarAppScene < PokeNavAppScene
         end
       else
         pbPokeRadarCancel
+        Kernel.pbClearText()
+        showHeaderInfo
         pbMessage(_INTL("The battery is not charged enough for this scan!"))
+        showSelectedPokemonInfo
       end
     else
+      showSelectedPokemonInfo
       return
     end
   end
@@ -330,7 +347,11 @@ class PokeRadarAppScene < PokeNavAppScene
   end
 
   def click_unseen
+    return unless @unseenPokemon.any?
+    Kernel.pbClearText()
+    showHeaderInfo
     pbMessage(_INTL('You need to encounter the Pokémon before you can scan for it.'))
+    hover_unseen
   end
 
   def hover_seen(species)
