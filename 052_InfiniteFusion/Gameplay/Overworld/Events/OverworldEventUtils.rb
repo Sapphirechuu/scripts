@@ -541,6 +541,10 @@ def this_event()
   return $game_map.events[@event_id]
 end
 
+def get_event(id)
+  return $game_map.events[id]
+end
+
 def select_tv_show_quests(episode = 0)
   all_episodes = [
     [],

@@ -109,6 +109,7 @@ BASIC_SHIRTS = {
 :DRAGON => "basicdragon",
 :DARK => "basicdark",
 }
+
 def basicTypeShirts(event_id, nb_owned_for_reward = 5)
   GameData::Type.each do |type|
     nb_owned = 0

@@ -326,6 +326,9 @@ def mauville_info_desk
   end
 end
 
+def inputColorCode(codeVariable)
+  return ColorCodeDoor.new(codeVariable).inputColorCode
+end
 
 
 

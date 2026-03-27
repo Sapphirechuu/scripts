@@ -109,8 +109,6 @@ class PokeRadarAppScene < PokeNavAppScene
   end
 
   def showCurrentScanningTarget
-    echoln @text_color_base
-    echoln @text_color_shadow
     scanningPokemon = $PokemonTemp.pokeradar[0]
     icon_path = pbCheckPokemonIconFiles(scanningPokemon)
     bmp = load_bitmap(icon_path, false)
@@ -293,7 +291,6 @@ class PokeRadarAppScene < PokeNavAppScene
         pbMessage(_INTL("Scanning for {1}...\\wtnp[5]", GameData::Species.get(species).real_name))
         possible_tiles = getTerrainTilesNearPlayer(getTerrainType, 3)
         position = possible_tiles.sample
-        echoln possible_tiles
         if position
           set_pokeradar_data(species, level, position)
           spawn_pokeradar_pokemon(species, level)
