@@ -86,7 +86,7 @@ class OverworldPokemonEvent < Game_Event
 
   def make_shiny
     @pokemon.shiny = true
-    @pokemon.natural_shiny = true
+    @pokemon.radar_shiny = true
     species_data = GameData::Species.get(@species)
     initialize_sprite(@terrain, species_data)
   end
