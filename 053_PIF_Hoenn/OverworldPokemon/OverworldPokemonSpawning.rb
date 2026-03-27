@@ -12,13 +12,14 @@
 # Can either spawn naturally or be static
 
 def should_spawn_overworld_pokemon?
+  echoln can_spawn_overworld_pokemon?
   return false unless can_spawn_overworld_pokemon?
   return false unless $PokemonGlobal.stepcount % (5 + ($PokemonTemp.overworld_pokemon_on_map.length * 5)) == 0
   return rand(100) > 25 # true
 end
 
 def can_spawn_overworld_pokemon?
-  return false unless $PokemonSystem.overworld_encounters
+  return false unless $PokemonSystem.overworld_encounters || $PokemonTemp.pokeradar
   return false if $PokemonTemp.prevent_ow_encounters
   return true
 end
@@ -106,7 +107,6 @@ def spawn_random_overworld_pokemon_group(wild_pokemon = nil, radius = 10, max_gr
   if $PokemonTemp.overworld_pokemon_on_map.length >= Settings::OVERWORLD_POKEMON_LIMIT
     despawn_overworld_pokemon($PokemonTemp.overworld_pokemon_on_map[0], terrain)
   end
-  echoln wild_pokemon
   return unless wild_pokemon
   species = wild_pokemon[0]
   number_to_spawn = get_overworld_pokemon_group_size(species, max_group_size)

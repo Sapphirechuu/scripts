@@ -115,8 +115,6 @@ def pbPokeRadarCancel
     $PokemonTemp.pokeradar_ui = nil
   end
   $PokemonTemp.pokeradar = nil
-  $PokemonSystem.overworld_encounters = $game_temp.pokenav_overworld_encounters
-  $game_temp.pokenav_overworld_encounters = nil
 end
 
 def listPokemonInCurrentRoute(encounterType, onlySeen = false, onlyUnseen = false, include_weather = false)
@@ -285,7 +283,7 @@ end
 # Event handlers
 ################################################################################
 EncounterModifier.register(proc { |encounter|
-  next encounter if $PokemonSystem.overworld_encounters
+  next encounter if Settings::HOENN
   if GameData::EncounterType.get($PokemonTemp.encounterType).type != :land ||
     $PokemonGlobal.partner # $PokemonGlobal.bicycle || $PokemonGlobal.partner
     pbPokeRadarCancel
@@ -324,7 +322,7 @@ EncounterModifier.register(proc { |encounter|
 
 Events.onWildPokemonCreate += proc { |_sender, e|
   pokemon = e[0]
-  next if $PokemonSystem.overworld_encounters # pokeradar shininess is handled in spawn_pokeradar_pokemon for overworld pokemon pokeradar
+  next if Settings::HOENN # pokeradar shininess is handled in spawn_pokeradar_pokemon for pokenav pokeradar
   next if !$PokemonTemp.pokeradar
   grasses = $PokemonTemp.pokeradar[3]
   next if !grasses
@@ -350,10 +348,10 @@ Events.onWildBattleEnd += proc { |_sender, e|
       $PokemonTemp.pokeradar[0] = species
       $PokemonTemp.pokeradar[1] = level
       $PokemonTemp.pokeradar[2] += 1
-      # $PokemonTemp.pokeradar[2] = 40 if $PokemonTemp.pokeradar[2] > 40
-      if $PokemonSystem.overworld_encounters
+      if Settings::HOENN
         continue_pokeradar_app_chain
       else
+        $PokemonTemp.pokeradar[2] = 40 if $PokemonTemp.pokeradar[2] > 40
         pbPokeRadarHighlightGrass(false)
       end
     else

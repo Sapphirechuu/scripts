@@ -3,7 +3,6 @@
 #===============================================================================
 class Game_Temp
   attr_accessor :pokenav_last_index
-  attr_accessor :pokenav_overworld_encounters
 end
 
 
@@ -262,7 +261,6 @@ class PokemonPokegear_Scene
       @sprites["button#{i}"].set_command(cmd)
     end
   end
-
 
 
   # def refresh_apps
