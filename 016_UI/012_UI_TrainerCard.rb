@@ -102,7 +102,7 @@ class PokemonTrainerCard_Scene
     elsif @page == 1
       textPositions << [_INTL("Glimmer Coins"), 34, 106, 0, baseColor, shadowColor]
       textPositions << [_INTL("{1}", $Trainer.cosmetics_money.to_s_formatted), 302, 106, 1, baseColor, shadowColor]
-      textPositions << [_INTL("Clothes/hats"), 34, 154, 0, baseColor, shadowColor]
+      textPositions << [_INTL("Clothes / Hats"), 34, 154, 0, baseColor, shadowColor]
       textPositions << [sprintf("%d/%d", $Trainer.unlocked_clothes.length, $Trainer.unlocked_hats.length), 302, 154, 1, baseColor, shadowColor]
     end
 
