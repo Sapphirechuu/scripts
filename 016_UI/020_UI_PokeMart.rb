@@ -301,6 +301,7 @@ class PokemonMart_Scene
     @sprites["itemwindow"].refresh
     @sprites["itemtextwindow"] = Window_UnformattedTextPokemon.newWithSize("",
                                                                            64, Graphics.height - 96 - 16, Graphics.width - 64, 128, @viewport)
+
     pbPrepareWindow(@sprites["itemtextwindow"])
     @sprites["itemtextwindow"].baseColor = Color.new(248, 248, 248)
     @sprites["itemtextwindow"].shadowColor = Color.new(0, 0, 0)

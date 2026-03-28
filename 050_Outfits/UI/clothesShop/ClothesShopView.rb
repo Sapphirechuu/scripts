@@ -19,6 +19,7 @@ class ClothesShopView < PokemonMart_Scene
 
     @sprites["trainerPreview"].show()
     @sprites["moneywindow"].visible = false if !@adapter.isShop?
+    @sprites["itemwindow"].setAllowPageJump(false)
 
     Kernel.pbDisplayText(@adapter.toggleText, 80, 200, 99999) if @adapter.toggleText
 
@@ -138,12 +139,12 @@ class ClothesShopView < PokemonMart_Scene
         if itemwindow.item != olditem
           displayNewItem(itemwindow)
         end
-        if Input.trigger?(Input::X) #X button
+        if Input.trigger?(Input::L) #X button
           @adapter.switchVersion(itemwindow.item, -1)
           updateTrainerPreview()
         end
 
-        if Input.trigger?(Input::Y)  #Y button
+        if Input.trigger?(Input::R)  #Y button
           switchItemVersion(itemwindow)
         end
         if Input.trigger?(Input::SPECIAL) #Z button
