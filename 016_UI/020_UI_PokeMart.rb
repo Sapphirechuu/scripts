@@ -620,6 +620,10 @@ class PokemonMartScreen
     @adapter = adapter
   end
 
+  def set_price_overrides(value)
+    @price_overrides = value
+  end
+
   def pbConfirm(msg)
     return @scene.pbConfirm(msg)
   end
@@ -703,7 +707,6 @@ class PokemonMartScreen
         end
         if extra_item
           item_name = GameData::Item.get(extra_item).real_name
-          echoln extra_item
           if @adapter.addItem(GameData::Item.get(extra_item))
             pbDisplayPaused(_INTL("I'll throw in a {1}, too.", item_name))
           end
