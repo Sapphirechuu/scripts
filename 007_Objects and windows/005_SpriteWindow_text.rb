@@ -1131,7 +1131,7 @@ class Window_DrawableCommand < SpriteWindow_SelectableEx
       tmpbitmap = BitmapWrapper.new(1, 1)
       pbSetSystemFont(tmpbitmap)
       for i in commands
-        width = [width, tmpbitmap.text_size(i).width].max
+        width = [width, tmpbitmap.text_size(toUnformattedText(i)).width].max
       end
       # one 16 to allow cursor
       width += 16 + 16 + SpriteWindow_Base::TEXTPADDING
@@ -1372,7 +1372,7 @@ class Window_AdvancedCommandPokemon < Window_DrawableCommand
     dims = []
     getAutoDims(commands, dims, width)
     self.width = dims[0]
-    self.height = dims[1] - 6
+    self.height = dims[1]# - 6
   end
 
   def itemCount
