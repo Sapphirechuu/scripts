@@ -21,7 +21,7 @@ class ClothesShopView < PokemonMart_Scene
     @sprites["moneywindow"].visible = false if !@adapter.isShop?
     @sprites["itemwindow"].setAllowPageJump(false)
 
-    Kernel.pbDisplayText(@adapter.toggleText, 80, 200, 99999) if @adapter.toggleText
+    Kernel.pbDisplayText(@adapter.toggleText, 100, 260, 99999) if @adapter.toggleText
 
   end
 
