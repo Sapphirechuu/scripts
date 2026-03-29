@@ -126,8 +126,8 @@ module Game
             pokemon.exp_when_fused_body=nil
             pokemon.exp_gained_since_fused=nil
             pokemon.level = 5
+            pokemon.pif_sprite =nil
 
-            echoln pokemon.owner.id
             pokemon.owner.id = $Trainer.id
             pokemon.ot=$Trainer.name
             pokemon.obtain_method = 0
