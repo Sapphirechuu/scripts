@@ -102,6 +102,7 @@ class OverworldPokemonEvent < Game_Event
     behavior = POKEMON_BEHAVIOR_DATA[species][behavior_type]
     if @terrain == :Water
       behavior = :random_dive if behavior == :random_burrow
+      behavior = :random if behavior == :water_skip
     else
       behavior = :random if behavior == :random_dive
     end
@@ -459,15 +460,17 @@ class OverworldPokemonEvent < Game_Event
       self.move_frequency = 6
       return
     end
-    return unless @behavior_noticed
-    case @behavior_noticed
+
+    effective_behavior = @behavior_noticed || @behavior_roaming  #fallback on @behavior_roaming if no @behavior_noticed
+
+    case effective_behavior
     when :random
       @move_type = MOVE_TYPE_RANDOM
     when :still
       @move_type = MOVE_TYPE_FIXED
-    when :curious # slowly walk towards player until close, then look at them
+    when :curious
       @move_type = MOVE_TYPE_CURIOUS
-    when :semi_aggressive # slowly walks towards player until battle
+    when :semi_aggressive
       @move_type = MOVE_TYPE_TOWARDS_PLAYER
     when :aggressive
       @move_type = MOVE_TYPE_TOWARDS_PLAYER
@@ -476,11 +479,13 @@ class OverworldPokemonEvent < Game_Event
       @move_type = MOVE_TYPE_AWAY_PLAYER
       self.move_frequency = 6
     when :flee, :flee_flying, :teleport_away
-      flee(@behavior_noticed)
+      flee(effective_behavior)
     else
-      set_custom_move_route(OW_BEHAVIOR_MOVE_ROUTES[:noticed][@behavior_noticed])
+      category = @behavior_noticed ? :noticed : :roaming
+      set_custom_move_route(OW_BEHAVIOR_MOVE_ROUTES[category][effective_behavior])
     end
-    @step_anime = true unless @behavior_noticed == :still
+
+    @step_anime = true unless effective_behavior == :still
     @move_speed = @noticed_move_speed
   end
 

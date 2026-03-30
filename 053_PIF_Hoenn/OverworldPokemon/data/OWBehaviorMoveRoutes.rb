@@ -105,6 +105,19 @@ OW_BEHAVIOR_MOVE_ROUTES = {
 
     ],
 
+    :water_skip => [
+      RPG::MoveCommand.new(PBMoveRoute::ChangeFreq, [3]),
+      RPG::MoveCommand.new(PBMoveRoute::TurnRandom),
+      RPG::MoveCommand.new(PBMoveRoute::TurnRandom),
+      RPG::MoveCommand.new(PBMoveRoute::ChangeFreq, [6]),
+
+      RPG::MoveCommand.new(PBMoveRoute::PlayAnimation, [PUDDLE_ANIMATION_ID]),
+      RPG::MoveCommand.new(PBMoveRoute::Forward),
+      RPG::MoveCommand.new(PBMoveRoute::Forward),
+      RPG::MoveCommand.new(PBMoveRoute::PlayAnimation, [PUDDLE_ANIMATION_ID]),
+      RPG::MoveCommand.new(PBMoveRoute::End)
+    ],
+
   },
 
   :noticed => {

@@ -21,5 +21,5 @@ Events.onStepTakenFieldMovement += proc { |_sender, e|
 }
 
 def isWaterTerrain?(tag)
-  return [5, 6, 17, 7, 9, 16].include?(tag)
+  return [5, 6, 7, 9, 16, 27].include?(tag)
 end
