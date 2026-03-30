@@ -46,7 +46,12 @@ end
 # e.g.
 # [[:TWIN_1,"Gina",12],[:TWIN_2, "Mia", 13]]
 def pbMultiTrainerBattle(trainers_array,canLose=false, outcomeVar=1)
-  case trainers_array.size
+  battle_size = trainers_array.size
+  if $Trainer.party.size < battle_size
+    battle_size = $Trainer.party.size
+  end
+
+  case battle_size
   when 1
     trainer_id =  trainers_array[0][0]
     trainer_name =  trainers_array[0][1]
