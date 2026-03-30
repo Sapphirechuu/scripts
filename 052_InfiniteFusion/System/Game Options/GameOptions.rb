@@ -53,7 +53,7 @@ class PokemonGameOption_Scene < PokemonOption_Scene
             @randomizer_menu = true
             openRandomizerMenu()
           },
-          _INTL("<icon=#{ICON_RANDOMIZER}> Set how the game should be randomized.")
+          _INTL("<icon=#{ICON_RANDOMIZER}> Set how to randomize the game.")
         )
       end
     end
