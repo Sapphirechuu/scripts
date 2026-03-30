@@ -251,7 +251,6 @@ class PokeBattle_Move
   #=============================================================================
   def pbEffectivenessMessage(user,target,numTargets=1)
     return if target.damageState.disguise
-    echoln target.damageState.typeMod
     if Effectiveness.extremely_effective?(target.damageState.typeMod)
       if numTargets>1
         @battle.pbDisplay(_INTL("It's extremely effective on {1}!",target.pbThis(true)))
