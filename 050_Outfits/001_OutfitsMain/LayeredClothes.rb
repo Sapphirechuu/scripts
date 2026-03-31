@@ -152,7 +152,6 @@ def generate_front_trainer_sprite_bitmap(allowEasterEgg=true, pokeball = nil,
                                          clothes_id = nil, hat_id = nil, hat2_id=nil, hair_id = nil,
                                          skin_tone_id = nil, hair_color = nil, hat_color = nil, clothes_color = nil,
                                          hat2_color = nil, is_trainer=true)
-
   clothes_id = $Trainer.clothes if !clothes_id && is_trainer
   hat_id = $Trainer.hat if !hat_id && is_trainer
   hat2_id = $Trainer.hat2 if !hat2_id && is_trainer

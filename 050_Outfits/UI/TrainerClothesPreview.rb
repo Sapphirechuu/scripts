@@ -1,7 +1,7 @@
 class TrainerClothesPreview
   attr_writer :pokeball, :clothes, :hat, :hat2, :hair, :skin_tone, :hair_color, :hat_color,:hat2_color, :clothes_color
 
-  def initialize(x = 0, y = 0, windowed = true, pokeball = nil)
+  def initialize(x = 0, y = 0, windowed = true, pokeball = nil, is_trainer = true)
     @playerBitmap = nil
     @playerSprite = nil
     @x_pos = x
@@ -9,6 +9,7 @@ class TrainerClothesPreview
     @windowed = windowed
 
     @pokeball = pokeball
+    @is_trainer = is_trainer
     resetOutfits()
   end
 
@@ -28,6 +29,10 @@ class TrainerClothesPreview
     end
   end
 
+  def set_trainer(value)
+    @is_trainer = value
+  end
+
   def resetOutfits()
     @clothes = $Trainer.clothes
     @hat = $Trainer.hat
@@ -41,12 +46,14 @@ class TrainerClothesPreview
   end
 
   def show()
+    echoln @is_trainer
     @playerBitmap = generate_front_trainer_sprite_bitmap(false,
                                                          @pokeball,
                                                          @clothes,
                                                          @hat,@hat2, @hair,
                                                          @skin_tone,
-                                                         @hair_color, @hat_color, @clothes_color, @hat2_color)
+                                                         @hair_color, @hat_color, @clothes_color, @hat2_color,
+                                                         @is_trainer)
     initialize_preview()
   end
 
