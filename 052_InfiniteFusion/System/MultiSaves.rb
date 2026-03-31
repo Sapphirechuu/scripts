@@ -492,7 +492,7 @@ class PokemonLoadScreen
         commands[cmd_new_game_plus = commands.length] = _INTL('New Game +')
       end
       commands[cmd_options = commands.length] = _INTL('Options')
-      commands[cmd_language = commands.length] = _INTL('Language') if Settings::LANGUAGES.length >= 2
+      commands[cmd_language = commands.length] = _INTL('Language') if Settings::LANGUAGES.length >= 2 && Settings::KANTO
       commands[cmd_discord = commands.length] = _INTL('Discord')
       commands[cmd_wiki = commands.length] = _INTL('Wiki')
       commands[cmd_savefile = commands.length] = _INTL('Savefile management') if show_continue
@@ -898,7 +898,7 @@ module Game
     # Set resize factor
     pbSetResizeFactor([$PokemonSystem.screensize, 4].min)
     # Set language (and choose language if there is no save file)
-    if Settings::LANGUAGES.length >= 2
+    if Settings::LANGUAGES.length >= 2 && Settings::KANTO
       $PokemonSystem.language = pbChooseLanguage if save_data.empty?
       pbLoadMessages('Data/' + Settings::LANGUAGES[$PokemonSystem.language][1])
     end
