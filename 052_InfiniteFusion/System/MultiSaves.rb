@@ -493,8 +493,16 @@ class PokemonLoadScreen
       end
       commands[cmd_options = commands.length] = _INTL('Options')
       commands[cmd_language = commands.length] = _INTL('Language') if Settings::LANGUAGES.length >= 2 && Settings::KANTO
-      commands[cmd_discord = commands.length] = _INTL('Discord')
-      commands[cmd_wiki = commands.length] = _INTL('Wiki')
+
+
+      cmd_links = {}
+      Settings::MAIN_MENU_LINKS.each do |key, value|
+        cmd_links[commands.length] = value
+        commands[commands.length] = _INTL(key)
+      end
+
+      # commands[cmd_discord = commands.length] = _INTL('Discord')
+      # commands[cmd_wiki = commands.length] = _INTL('Wiki')
       commands[cmd_savefile = commands.length] = _INTL('Savefile management') if show_continue
       commands[cmd_debug = commands.length] = _INTL('Debug') if $DEBUG
       commands[cmd_quit = commands.length] = _INTL('Quit Game')
@@ -516,6 +524,11 @@ class PokemonLoadScreen
         # Inner loop is used for going to other menus and back and stuff (vanilla)
         command = @scene.pbChoose(commands, cmd_continue)
         pbPlayDecisionSE if command != cmd_quit
+
+        echoln cmd_links
+        echoln cmd_links.keys
+        echoln command
+
 
         case command
         when cmd_continue
@@ -541,10 +554,6 @@ class PokemonLoadScreen
           initialize_alt_sprite_substitutions()
           @save_data[:player].new_game_plus_unlocked = true
           return
-        when cmd_discord
-          openUrlInBrowser(Settings::DISCORD_URL)
-        when cmd_wiki
-          openUrlInBrowser(Settings::WIKI_URL)
         when cmd_mystery_gift
           pbFadeOutIn { pbDownloadMysteryGift(@save_data[:player]) }
         when cmd_options
@@ -586,7 +595,11 @@ class PokemonLoadScreen
           @selected_file = SaveData.get_next_slot(save_file_list, @selected_file)
           break # to outer loop
         else
-          pbPlayBuzzerSE
+          if cmd_links.key?(command)
+            openUrlInBrowser(cmd_links[command])
+          else
+            pbPlayBuzzerSE
+          end
         end
       end
     end
