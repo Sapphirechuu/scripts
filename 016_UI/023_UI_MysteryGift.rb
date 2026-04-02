@@ -429,6 +429,11 @@ def pbMysteryGiftReadFromJson(json_string,trainer)
     quantity = gift_data[:quantity] || 0
     name = gift_data[:name]
     enabled = gift_data[:enabled]
+    kanto_only = gift_data[:kanto_only] || false
+    hoenn_only = gift_data[:hoenn_only] || false
+
+    next if kanto_only && !Settings::KANTO
+    next if hoenn_only && !Settings::HOENN
     next unless enabled
 
     if pokemon
