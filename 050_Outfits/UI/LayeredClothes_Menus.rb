@@ -63,6 +63,7 @@ def selectHairColor
   $game_map.update
   display_outfit_preview()
   hat = $Trainer.hat
+  hat2 = $Trainer.hat2
   commands = ["Swap base color", "Shift up", "Shift down", "Toggle hat", "Remove dye", "Confirm", "Never Mind"]
   previous_input = 0
 
@@ -89,8 +90,10 @@ def selectHairColor
       pbSEPlay("GUI storage put down", 80, 100)
       if hat == $Trainer.hat
         $Trainer.hat = nil
+        $Trainer.hat2 = nil
       else
         $Trainer.hat = hat
+        $Trainer.hat2 = hat2
       end
       display_outfit_preview()
     when 4 #Reset
@@ -109,6 +112,7 @@ def selectHairColor
   end
   hide_outfit_preview()
   $Trainer.hat = hat
+  $Trainer.hat2 = hat2
   $game_switches[SWITCH_SELECTING_CLOTHES]=false
   $game_map.update
   return ret
