@@ -85,6 +85,38 @@ def spawn_ow_pokemon(species, level, max_quantity = 1, radius = 10, coordinates 
   return spawn_random_overworld_pokemon_group(wild_pokemon, radius, max_quantity, coordinates)
 end
 
+#Bypasses map limit
+def spawn_pokemon_group(species, min_level, max_level, quantity=1, radius=10, min_distance=3, max_attempts=10)
+  spawn_count=0
+  (1..quantity).each {
+    attempts = 0
+    position = find_spawn_position(radius, min_distance)
+    unless position
+      while attempts <= max_attempts
+        position = find_spawn_position(radius, min_distance)
+        attempts += 1
+        break if position
+      end
+      next unless position
+    end
+    offset_x = rand(-2..2)
+    offset_y = rand(-2..2)
+    new_position = [position[0] + offset_x, position[1] + offset_y]
+    terrain = get_spawning_terrain
+    begin
+      if can_spawn_pokemon_there(new_position[0], new_position[1], terrain)
+        level = rand(min_level..max_level)
+        wild_pokemon = [species, level]
+        spawn_overworld_pokemon(wild_pokemon, new_position, terrain)
+        spawn_count+=1
+        echoln spawn_count
+      end
+    rescue Exception => e
+      echoln e.message
+    end
+  }
+end
+
 def spawn_random_overworld_pokemon_group(wild_pokemon = nil, radius = 10, max_group_size = 4, position = nil, terrain = nil)
   return unless $PokemonEncounters && $PokemonGlobal
   unless wild_pokemon && position
@@ -128,7 +160,18 @@ def spawn_random_overworld_pokemon_group(wild_pokemon = nil, radius = 10, max_gr
   return spawned_events
 end
 
-def find_spawn_position(radius)
+def get_spawning_terrain
+  if ($PokemonGlobal.surfing || $PokemonGlobal.boat) && $PokemonEncounters.has_water_encounters?
+    terrain = :Water
+  elsif $PokemonEncounters.has_cave_encounters?
+    terrain = :Cave
+  elsif $PokemonEncounters.has_land_encounters?
+    position, terrain = find_random_tall_grass_coordinates_near_player(5, 5, 3, max_nb_tries = 10)
+  end
+  return terrain
+end
+
+def find_spawn_position(radius, min_distance=1)
   if ($PokemonGlobal.surfing || $PokemonGlobal.boat) && $PokemonEncounters.has_water_encounters?
     terrain = :Water
     position = find_random_surfable_coordinates_near_player(radius, radius, 3, max_nb_tries = 10)
@@ -138,18 +181,17 @@ def find_spawn_position(radius)
   elsif $PokemonEncounters.has_land_encounters?
     position, terrain = find_random_tall_grass_coordinates_near_player(radius, radius, 3, max_nb_tries = 10)
   end
+  return unless position
 
-  attempts = 0
-  max_attempts = 10
-  while attempts < max_attempts
-    offset_x = rand(-radius..radius)
-    offset_y = rand(-radius..radius)
-    new_position = [position[0] + offset_x, position[1] + offset_y]
-    echoln new_position
-    if can_spawn_pokemon_there(new_position[0], new_position[1], terrain)
-      return new_position
-    end
-    attempts += 1
+  player_x = $game_player.x
+  player_y = $game_player.y
+
+  dx = position[0] - player_x
+  dy = position[1] - player_y
+  distance = Math.sqrt(dx * dx + dy * dy)
+
+  if distance >= min_distance && can_spawn_pokemon_there(position[0], position[1], terrain)
+    return position
   end
   return nil
 end

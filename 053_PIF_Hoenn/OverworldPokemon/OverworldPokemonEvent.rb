@@ -21,6 +21,8 @@ class OverworldPokemonEvent < Game_Event
     @level = level
     @behavior_roaming = behavior_roaming if behavior_roaming
     @behavior_noticed = behavior_noticed if behavior_noticed
+
+
     @terrain = terrain
     @disguised = false
     species_data = GameData::Species.get(@species)
@@ -105,6 +107,11 @@ class OverworldPokemonEvent < Game_Event
       behavior = :random if behavior == :water_skip
     else
       behavior = :random if behavior == :random_dive
+    end
+
+    if species == :WHISMUR && isWearingHat(HAT_TRUMPET)
+      echoln "YEAH"
+      behavior = :uproar
     end
     return behavior
   end

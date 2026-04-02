@@ -105,6 +105,17 @@ OW_BEHAVIOR_MOVE_ROUTES = {
 
     ],
 
+    :uproar => [
+      RPG::MoveCommand.new(PBMoveRoute::ChangeFreq, [6]),
+      RPG::MoveCommand.new(PBMoveRoute::TurnRandom),
+      RPG::MoveCommand.new(PBMoveRoute::PlayAnimation, [DUST_ANIMATION_ID]),
+      RPG::MoveCommand.new(PBMoveRoute::Forward),
+      RPG::MoveCommand.new(PBMoveRoute::Forward),
+      RPG::MoveCommand.new(PBMoveRoute::Forward),
+      RPG::MoveCommand.new(PBMoveRoute::Wait, [4]),
+      RPG::MoveCommand.new(PBMoveRoute::End)
+    ],
+
     :water_skip => [
       RPG::MoveCommand.new(PBMoveRoute::ChangeFreq, [3]),
       RPG::MoveCommand.new(PBMoveRoute::TurnRandom),
@@ -168,6 +179,17 @@ OW_BEHAVIOR_MOVE_ROUTES = {
       RPG::MoveCommand.new(PBMoveRoute::Opacity, [0]),
       RPG::MoveCommand.new(PBMoveRoute::PlayAnimation, [EXPLODE_ANIMATION]),
       RPG::MoveCommand.new(PBMoveRoute::Script, ["self.despawn"]),
+      RPG::MoveCommand.new(PBMoveRoute::End)
+    ],
+
+    :uproar => [
+      RPG::MoveCommand.new(PBMoveRoute::ChangeFreq, [6]),
+      RPG::MoveCommand.new(PBMoveRoute::TurnRandom),
+      RPG::MoveCommand.new(PBMoveRoute::PlayAnimation, [DUST_ANIMATION_ID]),
+      RPG::MoveCommand.new(PBMoveRoute::Forward),
+      RPG::MoveCommand.new(PBMoveRoute::Forward),
+      RPG::MoveCommand.new(PBMoveRoute::Forward),
+      RPG::MoveCommand.new(PBMoveRoute::Wait, [4]),
       RPG::MoveCommand.new(PBMoveRoute::End)
     ],
   }

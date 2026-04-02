@@ -525,11 +525,6 @@ class PokemonLoadScreen
         command = @scene.pbChoose(commands, cmd_continue)
         pbPlayDecisionSE if command != cmd_quit
 
-        echoln cmd_links
-        echoln cmd_links.keys
-        echoln command
-
-
         case command
         when cmd_continue
           @scene.pbEndScene
