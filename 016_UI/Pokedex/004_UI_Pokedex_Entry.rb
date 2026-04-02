@@ -251,6 +251,7 @@ class PokemonPokedexInfo_Scene
   end
 
   def drawPageInfo(reloading = false)
+    @entry_author = nil
     pbUpdateDummyPokemon
     @sprites["background"].setBitmap("Graphics/Pictures/Pokedex/bg_info")
     overlay = @sprites["overlay"].bitmap
@@ -268,17 +269,13 @@ class PokemonPokedexInfo_Scene
     species_data = GameData::Species.get_species_form(@species, @form)
     # Write various bits of text
     indexText = "???"
-    # if @dexlist[@index][4] > 0
     indexNumber = @dexlist[@index][4]
     indexNumber -= 1 if @dexlist[@index][5]
     indexNumber = GameData::Species.get(@species).id_number
     indexText = sprintf("%03d", indexNumber)
     # end
     textpos = [
-      ["#{indexText}  #{species_data.name}",
-       246, 36, 0, Color.new(248, 248, 248), Color.new(0, 0, 0)],
-      [_INTL("Height"), 314, 152, 0, base, shadow],
-      [_INTL("Weight"), 314, 184, 0, base, shadow]
+      ["#{indexText}  #{species_data.name}", 246, 36, 0, Color.new(248, 248, 248), Color.new(0, 0, 0)],
     ]
     if $Trainer.owned?(@species)
       # Write the category
@@ -286,23 +283,23 @@ class PokemonPokedexInfo_Scene
       # Write the height and weight
       height = species_data.height
       weight = species_data.weight
+
+      weight_value = species_data.weight / 10
+      weight_unit = _INTL("kg")
+      height_value = species_data.weight / 10
+      height_unit = _INTL("m")
       if System.user_language[3..4] == "US" # If the user is in the United States
-        inches = (height / 0.254).round
-        pounds = (weight / 0.45359).round
-        textpos.push([_ISPRINTF("{1:d}'{2:02d}\"", inches / 12, inches % 12), 460, 152, 1, base, shadow])
-        textpos.push([_ISPRINTF("{1:4.1f} lbs.", pounds / 10.0), 494, 184, 1, base, shadow])
-      else
-        textpos.push([_ISPRINTF("{1:.1f} m", height / 10.0), 470, 152, 1, base, shadow])
-        textpos.push([_ISPRINTF("{1:.1f} kg", weight / 10.0), 482, 184, 1, base, shadow])
+        weight_value = (weight / 0.45359).round / 10 #Pounds
+        weight_unit = _INTL("lbs")
+        height_value = (height / 0.254).round / 12 #Inches
+        height_unit = _INTL("\"")
       end
-      # Draw the Pokédex entry text
-      # drawTextEx(overlay, 40, 244, Graphics.width - (40 * 2), 4, # overlay, x, y, width, num lines
-      #            species_data.pokedex_entry, base, shadow)
-      #
-      #
-      #$PokemonSystem.use_generated_dex_entries=true if $PokemonSystem.use_generated_dex_entries ==nil
+      height_text = _INTL("{1} {2}",height_value,height_unit)
+      weight_text = _INTL("{1} {2}",weight_value,weight_unit)
+      textpos.push(["#{height_text}", 224, 102, 0, base, shadow])
+      textpos.push(["#{weight_text}", 224, 124, 0, base, shadow])
+
       drawEntryText(overlay, species_data, reloading)
-      echoln species_data.name
       # Draw the footprint
       footprintfile = GameData::Species.footprint_filename(@species, @form)
       if footprintfile
@@ -319,20 +316,26 @@ class PokemonPokedexInfo_Scene
       type2_number = GameData::Type.get(type2).id_number
       type1rect = Rect.new(0, type1_number * 32, 96, 32)
       type2rect = Rect.new(0, type2_number * 32, 96, 32)
-      overlay.blt(296, 120, @typebitmap.bitmap, type1rect)
-      overlay.blt(396, 120, @typebitmap.bitmap, type2rect) if type1 != type2
+      overlay.blt(300, 120, @typebitmap.bitmap, type1rect)
+      overlay.blt(400, 120, @typebitmap.bitmap, type2rect) if type1 != type2
     else
       # Write the category
       textpos.push([_INTL("????? Pokémon"), 246, 68, 0, base, shadow])
-      # Write the height and weight
-      if System.user_language[3..4] == "US" # If the user is in the United States
-        textpos.push([_INTL("???'??\""), 460, 152, 1, base, shadow])
-        textpos.push([_INTL("????.? lbs."), 494, 184, 1, base, shadow])
-      else
-        textpos.push([_INTL("????.? m"), 470, 152, 1, base, shadow])
-        textpos.push([_INTL("????.? kg"), 482, 184, 1, base, shadow])
-      end
     end
+
+    sprite_author = "Japeal"
+    unless @displayed_pif_sprite.type == :AUTOGEN
+      echoln @displayed_pif_sprite&.to_filename
+      sprite_author = getSpriteCredits(@displayed_pif_sprite&.to_filename(false))
+    end
+    dex_author = @entry_author if @entry_author
+    unless dex_author
+      dex_author = _INTL("Auto-generated")
+      dex_author = _INTL("Game Freak") unless @species > NB_POKEMON
+    end
+    textpos.push([_INTL("Sprite: {1}",sprite_author), 224, 156, 0, base, shadow])
+    textpos.push([_INTL("Entry:  {1}",dex_author), 224, 188, 0, base, shadow]) if $Trainer.owned?(@species)
+
     # Draw all text
     pbDrawTextPositions(overlay, textpos)
     # Draw all images
@@ -352,9 +355,11 @@ class PokemonPokedexInfo_Scene
     end
 
     if species_data.is_fusion
-      customEntry = getCustomEntryText(species_data)
+      customEntry, entryAuthor = getCustomEntryText(species_data)
       if customEntry
         entryText = customEntry
+        @entry_text = entryText
+        @entry_author = entryAuthor
         baseColor = baseCustom
         shadowColor = shadowCustom
       else
@@ -421,6 +426,8 @@ class PokemonPokedexInfo_Scene
     return !sprite_path.include?(Settings::CUSTOM_BATTLERS_FOLDER)
   end
 
+  #Returns array
+  # [text, author]
   def getCustomEntryText(species_data)
     spriteLoader = BattleSpriteLoader.new
     if @displayed_pif_sprite
@@ -432,7 +439,7 @@ class PokemonPokedexInfo_Scene
     possibleCustomEntries = getCustomDexEntry(pif_sprite)
     if possibleCustomEntries && possibleCustomEntries.length > 0
       customEntry = possibleCustomEntries.sample
-      customEntry = customEntry.gsub(Settings::CUSTOM_ENTRIES_NAME_PLACEHOLDER, species_data.name)
+      customEntry[0] = customEntry[0].gsub(Settings::CUSTOM_ENTRIES_NAME_PLACEHOLDER, species_data.name)
     end
     return customEntry
   end
@@ -444,7 +451,7 @@ class PokemonPokedexInfo_Scene
 
     entries = parsed_data.select { |entry| entry["sprite"] == sprite }
     if entries.any?
-      return entries.map { |entry| entry["entry"] }
+      return entries.map { |entry| [entry["entry"], entry["author"]] }
     else
       echoln "No custom entry found for sprite " + sprite.to_s
       return nil

@@ -63,15 +63,17 @@ def equals(other_pif_sprite)
 end
 
 # little hack for old methods that expect a filename for a sprite
-def to_filename()
+def to_filename(with_extension = true)
   case @type
   when :CUSTOM
-    return "#{@head_id}.#{@body_id}#{@alt_letter}.png"
+    filename= "#{@head_id}.#{@body_id}#{@alt_letter}"
   when :AUTOGEN
-    return "#{@head_id}.#{@body_id}.png"
+    filename = "#{@head_id}.#{@body_id}"
   when :BASE
-    return "#{@head_id}#{@alt_letter}.png"
+    filename = "#{@head_id}#{@alt_letter}"
   end
+  filename += ".png" if with_extension
+  return filename
 end
 
 def setup_from_spritename(spritename, type)
