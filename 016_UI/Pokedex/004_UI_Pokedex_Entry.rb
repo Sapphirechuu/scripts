@@ -2,7 +2,7 @@
 #
 #===============================================================================
 class PokemonPokedexInfo_Scene
-  def pbStartScene(dexlist, index, region, pokemon = nil, fromSummary=false)
+  def pbStartScene(dexlist, index, region, pokemon = nil, fromSummary = false)
     @fromSummary = fromSummary
     @pokemon = pokemon
     @endscene = false
@@ -289,13 +289,13 @@ class PokemonPokedexInfo_Scene
       height_value = species_data.weight / 10
       height_unit = _INTL("m")
       if System.user_language[3..4] == "US" # If the user is in the United States
-        weight_value = (weight / 0.45359).round / 10 #Pounds
+        weight_value = (weight / 0.45359).round / 10 # Pounds
         weight_unit = _INTL("lbs")
-        height_value = (height / 0.254).round / 12 #Inches
+        height_value = (height / 0.254).round / 12 # Inches
         height_unit = _INTL("\"")
       end
-      height_text = _INTL("{1} {2}",height_value,height_unit)
-      weight_text = _INTL("{1} {2}",weight_value,weight_unit)
+      height_text = _INTL("{1} {2}", height_value, height_unit)
+      weight_text = _INTL("{1} {2}", weight_value, weight_unit)
       textpos.push(["#{height_text}", 224, 102, 0, base, shadow])
       textpos.push(["#{weight_text}", 224, 124, 0, base, shadow])
 
@@ -331,10 +331,11 @@ class PokemonPokedexInfo_Scene
     dex_author = @entry_author if @entry_author
     unless dex_author
       dex_author = _INTL("Auto-generated")
+      dex_author = _INTL("None") unless $PokemonSystem.use_generated_dex_entries
       dex_author = _INTL("Game Freak") unless @species > NB_POKEMON
     end
-    textpos.push([_INTL("Sprite: {1}",sprite_author), 224, 156, 0, base, shadow])
-    textpos.push([_INTL("Entry:  {1}",dex_author), 224, 188, 0, base, shadow]) if $Trainer.owned?(@species)
+    textpos.push([_INTL("Sprite: {1}", sprite_author), 224, 156, 0, base, shadow])
+    textpos.push([_INTL("Entry:  {1}", dex_author), 224, 188, 0, base, shadow]) if $Trainer.owned?(@species)
 
     # Draw all text
     pbDrawTextPositions(overlay, textpos)
@@ -426,13 +427,14 @@ class PokemonPokedexInfo_Scene
     return !sprite_path.include?(Settings::CUSTOM_BATTLERS_FOLDER)
   end
 
-  #Returns array
+  # Returns array
   # [text, author]
   def getCustomEntryText(species_data)
     spriteLoader = BattleSpriteLoader.new
     if @displayed_pif_sprite
       pif_sprite = @displayed_pif_sprite
-    else  #fallback - should never go through here in theory
+    else
+      # fallback - should never go through here in theory
       pif_sprite = spriteLoader.get_pif_sprite_from_species(species_data)
     end
     return nil if pif_sprite.type != :CUSTOM
@@ -622,7 +624,7 @@ class PokemonPokedexInfo_Scene
   end
 
   def pbGoToPrevious
-    @displayed_pif_sprite=nil
+    @displayed_pif_sprite = nil
     @entry_page = 0
     @randomEntryText = nil
     newindex = @index
@@ -636,7 +638,7 @@ class PokemonPokedexInfo_Scene
   end
 
   def pbGoToNext
-    @displayed_pif_sprite=nil
+    @displayed_pif_sprite = nil
     @entry_page = 0
     @randomEntryText = nil
     newindex = @index
@@ -649,8 +651,6 @@ class PokemonPokedexInfo_Scene
     end
   end
 
-
-
   def updateBlacklistIconVisibility
     visible = (@page == 3 && @selecting_sprites && @selecting_blacklist)
     visible = false unless $PokemonSystem.random_sprites
@@ -661,21 +661,18 @@ class PokemonPokedexInfo_Scene
   ].each do |base|
       next unless @sprites["#{base}_blacklistEnabled"]
 
-      @sprites["#{base}_blacklistEnabled"].visible  &&= visible
+      @sprites["#{base}_blacklistEnabled"].visible &&= visible
       @sprites["#{base}_blacklistDisabled"].visible &&= visible
-      @sprites["#{base}_blacklistAutogen"].visible  &&= visible
+      @sprites["#{base}_blacklistAutogen"].visible &&= visible
     end
   end
-
 
   def updateBlackListInstructionIcons
     visible = (@page == 3 && @fromSummary && !@selecting_sprites)
     visible = false unless $PokemonSystem.random_sprites
-    @sprites["downarrow"].visible   = visible
+    @sprites["downarrow"].visible = visible
     @sprites["blacklistIcon"].visible = visible
   end
-
-
 
   def pbScene
     Pokemon.play_cry(@species, @form)
@@ -707,7 +704,7 @@ class PokemonPokedexInfo_Scene
       elsif Input.trigger?(Input::DOWN)
         dorefresh = handleVerticalInput(1)
 
-      elsif Input.trigger?(Input::RIGHT)  && @page == 3 && @fromSummary
+      elsif Input.trigger?(Input::RIGHT) && @page == 3 && @fromSummary
         pbPlayDecisionSE
         pbChooseAlt
         dorefresh = true
@@ -763,7 +760,6 @@ class PokemonPokedexInfo_Scene
     end
     return dorefresh
   end
-
 
   def pbSceneBrief
     Pokemon.play_cry(@species, @form)
