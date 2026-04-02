@@ -196,10 +196,12 @@ def findLastHairVersion(hairId)
 end
 
 def isWearingClothes(outfitId)
+  return false unless $Trainer
   return $Trainer.clothes == outfitId
 end
 
 def isWearingHat(outfitId)
+  return false unless $Trainer
   return $Trainer.hat == outfitId || $Trainer.hat2 == outfitId
 end
 

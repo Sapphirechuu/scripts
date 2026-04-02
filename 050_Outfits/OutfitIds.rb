@@ -136,6 +136,7 @@ HAT_GRADUATION = "professorhat"
 
 HAT_NURSE_BLANK = "nursejoy"
 HAT_NURSE = "nursejoyhat"
+HAT_TRUMPET = "trumpet"
 
 HAT_GYM_REWARD_1 = Settings::KANTO ? "brockpan" : "aronmask"
 HAT_GYM_REWARD_2 = Settings::KANTO ? "starmieclip" : "brawlyshades"
