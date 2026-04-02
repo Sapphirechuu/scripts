@@ -306,17 +306,29 @@ def downloadMysteryGifts(url,sprites, viewport, trainer)
           break
         else
           gift=pending[command]
+
+          echoln gift
+          echoln gift[1]
+
           sprites["msgwindow"].visible=false
-          if gift[1]==0
+          if gift[2].is_a?(Pokemon)
             sprite=PokemonSprite.new(viewport)
             sprite.setOffset(PictureOrigin::Center)
             sprite.setPokemonBitmap(gift[2])
             sprite.x=Graphics.width/2
             sprite.y=-sprite.bitmap.height/2
-          else
+          elsif gift[2].is_a?(Symbol) #Item
             sprite=ItemIconSprite.new(0,0,gift[2],viewport)
             sprite.x=Graphics.width/2
             sprite.y=-sprite.height/2
+          elsif gift[2].is_a?(Hat)
+            sprite=IconSprite.new(0,0,viewport)
+            sprite.setBitmap(getTrainerSpriteHatFilename(gift[2].id))
+            sprite.zoom_x = 2
+            sprite.zoom_y = 2
+            sprite.x=80
+          elsif gift[2].is_a?(Clothes)
+            sprite = showOutfitPicture(gift[2].id)
           end
           distanceDiff = 8*20/Graphics.frame_rate
           loop do
@@ -412,10 +424,11 @@ def pbMysteryGiftReadFromJson(json_string,trainer)
     end
     pokemon= gift_data[:pokemon]
     item = gift_data[:item] || nil
+    hat = gift_data[:hat] || nil
+    clothes = gift_data[:clothes] || nil
     quantity = gift_data[:quantity] || 0
     name = gift_data[:name]
     enabled = gift_data[:enabled]
-
     next unless enabled
 
     if pokemon
@@ -423,8 +436,12 @@ def pbMysteryGiftReadFromJson(json_string,trainer)
     elsif item
       gift_content = item.to_sym
       quantity = quantity.to_i
+    elsif hat
+      gift_content = Hat.new(hat,nil,nil,nil)
+    elsif clothes
+      gift_content = Clothes.new(clothes,nil,nil,nil)
     else
-          next
+      next
     end
 
     echoln id
@@ -480,7 +497,9 @@ def pbReceiveMysteryGift(id)
     return false
   end
   gift=$Trainer.mystery_gifts[index]
-  if gift[1]==0   # Pokémon
+  echoln gift
+  echoln gift[1]
+  if gift[2].is_a?(Pokemon)   # Pokémon
     gift[2].personalID = rand(2**16) | rand(2**16) << 16
     gift[2].calc_stats
     time=pbGetTimeNow
@@ -499,7 +518,7 @@ def pbReceiveMysteryGift(id)
       $Trainer.mystery_gifts[index]=[id]
       return true
     end
-  elsif gift[1]>0   # Item
+  elsif gift[2].is_a?(Symbol)   # Item
     item=gift[2]
     qty=gift[1]
     if $PokemonBag.pbCanStore?(item,qty)
@@ -521,6 +540,14 @@ def pbReceiveMysteryGift(id)
       $Trainer.mystery_gifts[index]=[id]
       return true
     end
+  elsif gift[2].is_a?(Hat)
+    obtainHat(gift[2].id)
+    $Trainer.mystery_gifts[index]=[id]
+    return true
+  elsif gift[2].is_a?(Clothes)
+    obtainClothes(gift[2].id)
+    $Trainer.mystery_gifts[index]=[id]
+    return true
   end
   return false
 end
