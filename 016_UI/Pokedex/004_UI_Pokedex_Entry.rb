@@ -332,7 +332,7 @@ class PokemonPokedexInfo_Scene
     unless dex_author
       dex_author = _INTL("Auto-generated")
       dex_author = _INTL("None") unless $PokemonSystem.use_generated_dex_entries
-      dex_author = _INTL("Game Freak") unless @species > NB_POKEMON
+      dex_author = _INTL("Game Freak") unless getDexNumberForSpecies(@species) > NB_POKEMON
     end
     textpos.push([_INTL("Sprite: {1}", sprite_author), 224, 156, 0, base, shadow])
     textpos.push([_INTL("Entry:  {1}", dex_author), 224, 188, 0, base, shadow]) if $Trainer.owned?(@species)
