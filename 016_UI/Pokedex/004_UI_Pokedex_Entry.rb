@@ -278,20 +278,17 @@ class PokemonPokedexInfo_Scene
       ["#{indexText}  #{species_data.name}", 246, 36, 0, Color.new(248, 248, 248), Color.new(0, 0, 0)],
     ]
     if $Trainer.owned?(@species)
-      # Write the category
+      # Category
       textpos.push([_INTL("{1} Pokémon", species_data.category), 246, 68, 0, base, shadow])
-      # Write the height and weight
-      height = species_data.height
-      weight = species_data.weight
-
-      weight_value = species_data.weight / 10
+      #Weighty / Height
+      weight_value = species_data.weight / 10.0
       weight_unit = _INTL("kg")
-      height_value = species_data.weight / 10
+      height_value = species_data.height / 10.0
       height_unit = _INTL("m")
       if System.user_language[3..4] == "US" # If the user is in the United States
-        weight_value = (weight / 0.45359).round / 10 # Pounds
+        weight_value = (weight_value / 0.45359).round / 10 # Pounds
         weight_unit = _INTL("lbs")
-        height_value = (height / 0.254).round / 12 # Inches
+        height_value = (height_value / 0.254).round / 12 # Inches
         height_unit = _INTL("\"")
       end
       height_text = _INTL("{1} {2}", height_value, height_unit)
@@ -300,13 +297,7 @@ class PokemonPokedexInfo_Scene
       textpos.push(["#{weight_text}", 224, 124, 0, base, shadow])
 
       drawEntryText(overlay, species_data, reloading)
-      # Draw the footprint
-      footprintfile = GameData::Species.footprint_filename(@species, @form)
-      if footprintfile
-        footprint = RPG::Cache.load_bitmap("", footprintfile)
-        overlay.blt(226, 138, footprint, footprint.rect)
-        footprint.dispose
-      end
+
       # Show the owned icon
       imagepos.push(["Graphics/Pictures/Pokedex/icon_own", 212, 44])
       # Draw the type icon(s)
