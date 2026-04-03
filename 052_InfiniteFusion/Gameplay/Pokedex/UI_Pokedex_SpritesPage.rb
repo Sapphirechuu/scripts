@@ -242,7 +242,7 @@ class PokemonPokedexInfo_Scene
   end
 
   def load_pif_sprite(pif_sprite)
-    animated_bitmap = @spritesLoader.load_pif_sprite_directly(pif_sprite)
+    animated_bitmap = @spritesLoader.load_pif_sprite_directly(pif_sprite) if pif_sprite
     return animated_bitmap.bitmap if animated_bitmap
     return nil
   end
