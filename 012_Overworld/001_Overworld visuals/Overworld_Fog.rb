@@ -3,6 +3,7 @@ Events.onSpritesetCreate += proc { |_sender, e|
   spriteset = e[0]
   new_map_id = spriteset.map.map_id
   old_map_id = $Trainer.last_visited_map
+  next unless isOutdoor(new_map_id)
 
   old_w = old_map_id ? $game_weather.get_map_weather_type(old_map_id) : :None
   new_w = $game_weather.get_map_weather_type(new_map_id)
