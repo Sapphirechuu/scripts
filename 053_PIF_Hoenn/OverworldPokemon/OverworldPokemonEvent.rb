@@ -110,7 +110,6 @@ class OverworldPokemonEvent < Game_Event
     end
 
     if species == :WHISMUR && isWearingHat(HAT_TRUMPET)
-      echoln "YEAH"
       behavior = :uproar
     end
     return behavior

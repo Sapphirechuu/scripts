@@ -48,7 +48,6 @@ class Spriteset_Map
 
   def update_fog_fade
     return if @fog_target_opacity.nil?
-
     if @current_fog_opacity < @fog_target_opacity
       @current_fog_opacity = [@current_fog_opacity + @fog_fade_speed, @fog_target_opacity].min
     elsif @current_fog_opacity > @fog_target_opacity
