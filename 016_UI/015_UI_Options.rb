@@ -4,6 +4,7 @@
 class PokemonSystem
   attr_accessor :textspeed
   attr_accessor :battlescene
+  attr_accessor :nobattlemovement
   attr_accessor :battlestyle
   attr_accessor :frame
   attr_accessor :textskin

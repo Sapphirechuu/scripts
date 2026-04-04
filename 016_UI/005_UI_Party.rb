@@ -141,7 +141,12 @@ class PokemonPartyBlankPanel < SpriteWrapper
     super(viewport)
     self.x = (index % 2) * Graphics.width / 2
     self.y = 16 * (index % 2) + 96 * (index / 2)
-    @panelbgsprite = AnimatedBitmap.new("Graphics/Pictures/Party/panel_blank")
+    if isDarkMode
+      path = "Graphics/Pictures/Party/panel_blank_dark"
+    else
+      path = "Graphics/Pictures/Party/panel_blank"
+    end
+    @panelbgsprite = AnimatedBitmap.new(path)
     self.bitmap = @panelbgsprite.bitmap
     @text = nil
   end
