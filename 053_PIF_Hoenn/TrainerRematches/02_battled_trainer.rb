@@ -209,6 +209,10 @@ class BattledTrainer
 
   def loadOriginalTrainerTeam(trainerVersion=0)
     original_trainer = pbLoadTrainer(@trainerType,@trainerName,trainerVersion)
+    echoln @trainerType
+    echoln @trainerName
+    echoln "Trainer Version: #{trainerVersion}"
+    echoln original_trainer
     return if !original_trainer
     echoln "Loading Trainer #{@trainerType}"
     current_party = []

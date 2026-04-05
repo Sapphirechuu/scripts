@@ -221,7 +221,9 @@ define_quest("magma_graffiti",:MAGMA_QUEST,_INTL("Painting the Town Red"), _INTL
 define_quest("magma_song",:MAGMA_QUEST,_INTL("The Magma Theme Song"), _INTL("Help compose lyrics to the official Team Magma theme song!"),_INTL("Magma Camp"),"NPC_Hoenn_Magma_Grunt_F")
 
 #Team Aqua - Route 108
-define_quest("aqua_help_grunts",:AQUA_QUEST,_INTL("Grunt work!"), _INTL("Help 3 grunts in the Team Aqua Camp, then report back to Shelly!"),_INTL("Aqua Camp"),"NPC_Hoenn_Aqua_Exec_M")
+define_quest("aqua_camp_attack",:AQUA_QUEST,_INTL("Under Attack!"), _INTL("Defend the Team Aqua Camp from Team Magma!"),_INTL("Aqua Camp"),"NPC_Hoenn_Aqua_Exec_F")
+define_quest("aqua_wailmer_eggs",:AQUA_QUEST,_INTL("Egg Hunt"), _INTL("Collect Wailmer Eggs for Shelly."),_INTL("Aqua Camp"),"NPC_Hoenn_Aqua_Exec_F")
+define_quest("aqua_help_grunts",:AQUA_QUEST,_INTL("Grunt work!"), _INTL("Help 3 grunts in the Team Aqua Camp, then report back to Shelly!"),_INTL("Aqua Camp"),"NPC_Hoenn_Aqua_Exec_F")
 define_quest("aqua_carvanha",:AQUA_QUEST,_INTL("Grunt work!"), _INTL("You were given 2 Zubats and a Geodude. Fuse all three of them into Water-type Pokémon."),_INTL("Aqua Camp"),"NPC_Hoenn_Aqua_Grunt_F")
 define_quest("aqua_graffiti",:AQUA_QUEST,_INTL("Painting the Town Blue"), _INTL("Team Magma painted their logo on various walls in Slateport City. Cover them up with the Team Aqua logo instead!"),_INTL("Aqua Camp"),"NPC_Hoenn_Aqua_Grunt_M")
 define_quest("aqua_song",:AQUA_QUEST,_INTL("The Aqua Theme Song"), _INTL("Help compose lyrics to the official Team Aqua theme song!"),_INTL("Aqua Camp"),"NPC_Hoenn_Aqua_Grunt_F")
