@@ -669,9 +669,15 @@ class PokemonBattlerSprite < RPG::Sprite
       end
     elsif !$PokemonSystem.nobattlemovement
       idle_period = Graphics.frame_rate * 4
-      amplitude = 1
-      phase_offset = @index * Math::PI * 0.7
-      @spriteYExtra = (Math.sin((frameCounter * 2 * Math::PI / idle_period) + phase_offset) * amplitude).round
+      amplitude = 2
+      phase_offset = (@index * idle_period * 0.7 / (2 * Math::PI)).round  # frame offset instead of radian offset
+      t = (frameCounter + phase_offset) % idle_period
+      half = idle_period / 2.0
+      if t < half
+        @spriteYExtra = ((t / half) * amplitude * 2 - amplitude).round
+      else
+        @spriteYExtra = (amplitude - ((t - half) / half) * amplitude * 2).round
+      end
     end
 
     self.x = self.x
