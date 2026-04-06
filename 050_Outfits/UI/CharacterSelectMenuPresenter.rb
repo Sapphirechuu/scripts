@@ -38,6 +38,7 @@ class CharacterSelectMenuPresenter
     @options = [OPTION_NAME, OPTION_GENDER, OPTION_AGE, OPTION_SKIN, OPTION_HAIR, OPTION_CONFIRM]
 
     @trainerPreview = TrainerClothesPreview.new(300, 80, false, "POKEBALL")
+    @trainerPreview.show()
     @closed = false
     @current_index = 0
     @view.setMaxIndex(@options.length - 1)
@@ -78,7 +79,7 @@ class CharacterSelectMenuPresenter
   end
 
   def main()
-    @trainerPreview.show()
+    #@trainerPreview.show()
     pbSEPlay("GUI naming tab swap start", 80, 100)
     @current_index = 0
     loop do
