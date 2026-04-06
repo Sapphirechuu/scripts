@@ -195,7 +195,7 @@ class CharacterSelectMenuPresenter
   end
 
   def close_menu
-    @trainerPreview.erase()
+    @trainerPreview.erase
     Kernel.pbClearNumber()
     Kernel.pbClearText()
     pbDisposeSpriteHash(@view.sprites)

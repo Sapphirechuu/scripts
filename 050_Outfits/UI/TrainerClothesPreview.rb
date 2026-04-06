@@ -46,7 +46,6 @@ class TrainerClothesPreview
   end
 
   def show()
-    echoln @is_trainer
     @playerBitmap = generate_front_trainer_sprite_bitmap(false,
                                                          @pokeball,
                                                          @clothes,
