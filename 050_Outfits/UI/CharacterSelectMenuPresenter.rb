@@ -39,7 +39,7 @@ class CharacterSelectMenuPresenter
 
     @trainerPreview = TrainerClothesPreview.new(300, 80, false, "POKEBALL")
     @trainerPreview.show()
-    @closed = false
+    @closed = falsez
     @current_index = 0
     @view.setMaxIndex(@options.length - 1)
     @rival = false
