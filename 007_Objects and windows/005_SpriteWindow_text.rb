@@ -876,7 +876,6 @@ class SpriteWindow_Selectable < SpriteWindow_Base
       elsif Input.repeat?(Input::RIGHT) && !@allow_arrows_jump
         scroll_right()
       elsif (Input.repeat?(Input::JUMPUP) && @allow_page_jump) || (Input.repeat?(Input::LEFT) && @allow_arrows_jump)
-        echoln @allow_page_jump
         jump_up()
       elsif (Input.repeat?(Input::JUMPDOWN) && @allow_page_jump) || (Input.repeat?(Input::RIGHT) && @allow_arrows_jump)
         jump_down()

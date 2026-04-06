@@ -9,9 +9,9 @@ class ContactsAppScreen
   UNLISTABLE_TRAINER_TYPES = [:TEAM_AQUA_GRUNT_M, :TEAM_AQUA_GRUNT_F,
                               :TEAM_MAGMA_GRUNT_M, :TEAM_MAGMA_GRUNT_F,
                               :TEAM_MAGMAQUA_GRUNT_M, :TEAM_MAGMAQUA_GRUNT_F,
-                              :TEAM_AQUA_EXEC_M, :TEAM_AQUA_EXEC_F,
-                              :TEAM_MAGMA_EXEC_M, :TEAM_MAGMA_EXEC_F,
-                              :TEAM_AQUA_BOSS, :TEAM_MAGMA_BOSS
+                              #:TEAM_AQUA_EXEC_M, :TEAM_AQUA_EXEC_F,
+                              #:TEAM_MAGMA_EXEC_M, :TEAM_MAGMA_EXEC_F,
+                              #:TEAM_AQUA_BOSS, :TEAM_MAGMA_BOSS
   ]
 
   def pbStartScreen(main_menu_scene, screen)

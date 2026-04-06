@@ -755,6 +755,9 @@ class PokemonMartScreen
 end
 
 def replaceShopStockWithRandomized(stock)
+  unless $PokemonGlobal.randomItemsHash
+    pbShuffleItems
+  end
   if $PokemonGlobal.randomItemsHash != nil
     newStock = []
     for item in stock
@@ -774,10 +777,11 @@ end
 #
 #===============================================================================
 def pbPokemonMart(stock, speech_welcome = nil, cantsell = false, speech_bye=nil, speech_what_else=nil)
+  stock = [] unless stock
+  stock = [] unless stock.is_a?(Array)
   if $game_switches[SWITCH_RANDOM_ITEMS_GENERAL] && $game_switches[SWITCH_RANDOM_SHOP_ITEMS]
     stock = replaceShopStockWithRandomized(stock)
   end
-  stock = [] unless stock
   for i in 0...stock.length
     stock[i] = GameData::Item.get(stock[i])&.id
     stock[i] = nil if GameData::Item.get(stock[i])&.is_important? && $PokemonBag.pbHasItem?(stock[i])
