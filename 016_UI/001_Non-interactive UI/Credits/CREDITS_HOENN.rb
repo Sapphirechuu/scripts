@@ -119,11 +119,6 @@ Spacemotion<s>Speedialga
 ThatsSoWitty Thurpok<s>TyranitarDark
 UltimoSpriter<s>WesleyFG
 
-<title>Public use music:    
-Pokeli, TailDoll666100
-Kazune Sawatari, sentsinkantéun,
-Nanashima, CharizardTheMaster, The Zame Jack 
-
 {INSERTS_PLUGIN_CREDITS_DO_NOT_REMOVE}
 
 <title>"Pokémon Essentials" was created by:
