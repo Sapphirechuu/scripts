@@ -173,6 +173,8 @@ def purchaseDyeKitMenu(hats_kit_price = 0, clothes_kit_price = 0)
   end
   pbCallBub(2, @event_id)
   pbMessage(_INTL("You can use \\C[1]Dye Kits\\C[0] at any time when you change clothes."))
+  msgwindow.dispose
+  goldwindow.dispose
 end
 
 def purchaseWindowAnimation(price, msgwindow,goldwindow)
