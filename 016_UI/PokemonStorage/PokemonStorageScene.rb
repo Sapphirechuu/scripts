@@ -686,14 +686,18 @@ class PokemonStorageScene
 
   def pbChooseBox(msg)
     commands = []
+    boxIndices = []
     for i in 0...@storage.maxBoxes
       box = @storage[i]
       if box
+        next if box.is_a?(StorageTransferBox)
         commands.push(_INTL("{1} ({2}/{3})", box.name, box.nitems, box.length))
+        boxIndices.push(i)
       end
     end
-
-    return pbShowCommands(msg, commands, @storage.currentBox)
+    defaultIndex = boxIndices.index(@storage.currentBox) || 0
+    cmdIndex = pbShowCommands(msg, commands, defaultIndex)
+    return cmdIndex >= 0 ? boxIndices[cmdIndex] : -1
   end
 
   def pbBoxName(helptext, minchars, maxchars)

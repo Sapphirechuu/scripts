@@ -49,7 +49,7 @@ end
 
 def setFog(intensity)
   current_weather = $game_weather.current_weather[$game_map.map_id]
-  if current_weather[0] == :Fog
+  if current_weather && current_weather[0] == :Fog
     starting_intensity = current_weather[1]
   else
     starting_intensity =0

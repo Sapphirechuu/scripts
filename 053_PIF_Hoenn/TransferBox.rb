@@ -54,11 +54,35 @@ class StorageTransferBox < PokemonBox
   end
 
   def []=(i,value)
+    return unless value.is_a?(Pokemon)
+    return if check_is_duplicate(value)
     @pokemon[i] = value
     if can_use_transfer_box?
       saveTransferBox()
       Game.save()
     end
+  end
+
+
+  # If you have a pokemon has the same id as the one you're trying to deposit /withdraw, then
+  # blocked
+  def check_is_duplicate(box_pokemon)
+    return false unless box_pokemon.is_a?(Pokemon)
+    used_ids = []
+    $Trainer.party.each { |pokemon|
+      used_ids << pokemon.personalID
+    }
+    $PokemonStorage.boxes.each { |box|
+      box.pokemon.each { |pokemon|
+        used_ids << pokemon.personalID if pokemon.is_a?(Pokemon)
+      }
+    }
+    if used_ids.count(box_pokemon.personalID) > 1
+      pbPlayBuzzerSE
+      pbMessage(_INTL("This Pokémon cannot be transferred."))
+      return true
+    end
+    return false
   end
 
   def saveTransferBox
@@ -103,3 +127,17 @@ def verifyTransferBoxAutosave()
   end
   return true
 end
+
+
+
+# class PokemonStorageScreen
+#   alias pokemonStorageScreen_pbWithdraw pbWithdraw
+#   def pbWithdraw(pokemon,heldpkmn)
+#     box = @storage[@storage.currentBox]
+#     if box.is_a?(StorageTransferBox) && box.can_use_transfer_box?
+#       return unless check_withdrawable(pokemon)
+#     end
+#     pokemonStorageScreen_pbWithdraw(pokemon,heldpkmn)
+#   end
+# end
+

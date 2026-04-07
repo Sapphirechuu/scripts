@@ -14,7 +14,7 @@ class PokemonStorageScreen
     @pbHeldPokemon = nil
     @command = 0
     @filterProc = nil
-    @saveWhenPlaceDown=false
+    @saveWhenPlaceDown = false
   end
 
   def setFilter(filterProc)
@@ -39,8 +39,7 @@ class PokemonStorageScreen
     end
   end
 
-
-  #TODO: Open party screen by default.
+  # TODO: Open party screen by default.
   # Handle when player chooses a Pokemon from their party instead of a box
   def choosePokemon
     command = COMMAND_SELECT_POKEMON
@@ -170,7 +169,7 @@ class PokemonStorageScreen
   def pcSelectCommand
     @scene.choseFromParty = true
     loop do
-      selected =  @scene.pbSelectBox(@storage.party)
+      selected = @scene.pbSelectBox(@storage.party)
       if selected == nil
         next if pbConfirm(_INTL("Continue Box operations?"))
         break
@@ -384,8 +383,9 @@ class PokemonStorageScreen
       pbDisplay(_INTL("Your party's full!"))
       return false
     end
-
     if @storage[box].is_a?(StorageTransferBox) && @storage[box].can_use_transfer_box?
+      pokemon = $PokemonStorage[*selected]
+      return if @storage[box].check_is_duplicate(pokemon)
       unless verifyTransferBoxAutosave
         return
       end
@@ -449,6 +449,8 @@ class PokemonStorageScreen
     index = selected[1]
 
     if @storage[box].is_a?(StorageTransferBox)
+      pokemon = $PokemonStorage[*selected]
+      return if @storage[box].check_is_duplicate(pokemon)
       unless verifyTransferBoxAutosave
         return
       end
@@ -476,6 +478,8 @@ class PokemonStorageScreen
         pbMessage(_INTL("This Pokémon cannot be transferred."))
         return
       end
+      pokemon = $PokemonStorage[*selected]
+      return if @storage[box].check_is_duplicate(pokemon)
       unless verifyTransferBoxAutosave
         return
       end
@@ -525,6 +529,9 @@ class PokemonStorageScreen
         pbMessage(_INTL("This Pokémon cannot be transferred."))
         return
       end
+      pokemon = $PokemonStorage[*selected]
+      return if @storage[box].check_is_duplicate(pokemon)
+
       unless verifyTransferBoxAutosave
         return
       end
