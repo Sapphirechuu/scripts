@@ -77,6 +77,11 @@ class StorageTransferBox < PokemonBox
         used_ids << pokemon.personalID if pokemon.is_a?(Pokemon)
       }
     }
+    $PokemonGlobal.daycare.each { |daycare_data|
+      pokemon = daycare_data[0]
+      used_ids << pokemon.personalID if pokemon
+    }
+
     if used_ids.count(box_pokemon.personalID) > 1
       pbPlayBuzzerSE
       pbMessage(_INTL("This Pokémon cannot be transferred."))
