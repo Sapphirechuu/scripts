@@ -93,8 +93,6 @@ def postBattleActionsMenu(trainer=nil)
   options << printTrainerTeamDebugCommand if $DEBUG
 
   options << cancelCommand
-
-  echoln trainer.nb_rematches
   trainer = applyTrainerRandomEvents(trainer) if trainer.nb_rematches >=1
   showPrerematchDialog
   choice = optionsMenu(options,options.find_index(cancelCommand),options.find_index(cancelCommand))

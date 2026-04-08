@@ -45,7 +45,6 @@ def applyTrainerRandomEvents(trainer,event_type=nil)
   if selected_event.nil? && trainer.nb_rematches == 1
     selected_event = event_pool.sample until selected_event
   end
-  echoln selected_event
   if selected_event
     echoln "Trying to do random event: #{selected_event}"
   end
