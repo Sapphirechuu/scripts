@@ -169,7 +169,7 @@ class PokemonStorageScreen
       scene.pbDisplay(_INTL("It won't have any effect."))
       return
     end
-    if Kernel.pbConfirmMessageSerious(_INTL("Should {1} be reversed?", pokemon.name))
+    if Kernel.pbConfirmMessage(_INTL("Should {1} be reversed?", pokemon.name))
       reverseFusion(pokemon)
       $PokemonBag.pbDeleteItem(:DNAREVERSER) if $PokemonBag.pbQuantity(:INFINITEREVERSERS) <= 0
     end
