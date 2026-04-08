@@ -161,7 +161,7 @@ class GenOneStyle
     @selector_pos = 0 #1: left, 0:right
 
     # sound file for playing the title screen BGM
-    bgm = Settings::KANTO ? "Pokemon Red-Blue Opening" : "title"
+    bgm = Settings::KANTO ? "Pokemon Red-Blue Opening" : "title_screen"
     @skip = false
     # speed of the effect movement
     @speed = 16
