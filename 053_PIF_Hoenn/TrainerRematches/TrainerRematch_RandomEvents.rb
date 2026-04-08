@@ -31,24 +31,24 @@ def applyTrainerRandomEvents(trainer,event_type=nil)
   unfuse_chance = unfuse_chance_for_number_in_team[trainer.currentTeam.length]
   fuse_chance = fuse_chance_for_number_in_team[trainer.currentTeam.length]
 
-  # Weighted chances out of 100
+  # Chances out of 100
   weighted_events = [
-    [:CATCH,   catch_chance],
-    [:FUSE,    fuse_chance],
+    [:CATCH,   catch_chance],     #Depends on nb of pokemon in team. 40% if only 1, then DECREASES with the nb.
+    [:FUSE,    fuse_chance],      #Depends on nb of pokemon in team. 40% if 2, then INCREASES with the nb.
     [:REVERSE, 10],
-    [:UNFUSE,  unfuse_chance]
+    [:UNFUSE,  unfuse_chance]   #Depends on nb of pokemon in team. 20% if 1 or 2, 10% if 3 or 4. .
   ]
-
-  # Create a flat array of events based on weight
   event_pool = weighted_events.flat_map { |event, weight| [event] * weight }
-
   selected_event = event_pool.sample
   selected_event = event_type if event_type
+  #Random event guaranteed after 1st rematch only (can still fail if they don't have the requirements tho)
+  if selected_event.nil? && trainer.nb_rematches == 1
+    selected_event = event_pool.sample until selected_event
+  end
+  echoln selected_event
   if selected_event
     echoln "Trying to do random event: #{selected_event}"
   end
-
-
   return trainer if selected_event.nil?
   original_team = trainer.currentTeam.clone
 

@@ -94,7 +94,8 @@ def postBattleActionsMenu(trainer=nil)
 
   options << cancelCommand
 
-  trainer = applyTrainerRandomEvents(trainer)
+  echoln trainer.nb_rematches
+  trainer = applyTrainerRandomEvents(trainer) if trainer.nb_rematches >=1
   showPrerematchDialog
   choice = optionsMenu(options,options.find_index(cancelCommand),options.find_index(cancelCommand))
   case options[choice]
@@ -148,6 +149,7 @@ def try_give_gift(trainer)
 end
 
 #leave event_type empty for random
+# Used in quest, called from event
 def forceRandomRematchEventOnTrainer(event_type=nil)
   event = pbMapInterpreter.get_character(0)
   map_id = $game_map.map_id if map_id.nil?

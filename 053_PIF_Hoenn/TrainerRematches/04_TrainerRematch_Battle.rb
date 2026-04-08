@@ -80,7 +80,7 @@ def generateTrainerRematch(trainer, allow_double = true)
   updated_trainer.set_pending_action(false)
   updated_trainer = evolveRebattledTrainerPokemon(updated_trainer)
   trainer.increase_friendship(5)
-
+  trainer.nb_rematches +=1
   # partner
   if partner
     updated_partner_trainer = makeRebattledTrainerTeamGainExp(partner, player_won)
