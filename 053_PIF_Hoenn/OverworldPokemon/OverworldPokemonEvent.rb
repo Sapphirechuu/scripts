@@ -70,6 +70,7 @@ class OverworldPokemonEvent < Game_Event
     end
 
     initialize_sprite(@terrain, species_data)
+    @disguised_sprite = @roaming_sprite if @disguised
     @is_flying = @character_name == @flying_sprite
     @is_swimming = false
     @step_anime = @is_flying
@@ -158,6 +159,7 @@ class OverworldPokemonEvent < Game_Event
     @noticed_sprite = getOverworldNoticedPath(species_data, @pokemon.shiny?)
     @noticed_sprite = @flying_sprite if !@noticed_sprite && @flying_sprite
     @roaming_sprite = @land_sprite
+    @roaming_sprite = @disguised_sprite if @disguised_sprite && @disguised
 
     if terrain == :Water
       initialize_water_sprite
