@@ -1,4 +1,4 @@
-#Clothes
+# Clothes
 CLOTHES_TEAM_ROCKET_MALE = "rocketm"
 CLOTHES_TEAM_ROCKET_FEMALE = "rocketf"
 
@@ -11,21 +11,21 @@ CLOTHES_EMERALD = "emeraldSPE"
 CLOTHES_PIKACHU_ONESIE = "pikaonesie"
 
 CLOTHES_GLITCH = "glitzerset"
-CLOTHES_BREEDER="PKMBreeder"
+CLOTHES_BREEDER = "PKMBreeder"
 
-CLOTHES_FOSSIL_M ="sado"
-CLOTHES_FOSSIL_F ="sada"
+CLOTHES_FOSSIL_M = "sado"
+CLOTHES_FOSSIL_F = "sada"
 
-CLOTHES_TREVENANT= "trevenantforestkingcloak"
+CLOTHES_TREVENANT = "trevenantforestkingcloak"
 
 CLOTHES_WAITRESS = "maid"
 CLOTHES_WAITER = "butler"
 
-CLOTHES_LASS_YELLOW ="lass"
-CLOTHES_LASS_BLUE ="lass2"
+CLOTHES_LASS_YELLOW = "lass"
+CLOTHES_LASS_BLUE = "lass2"
 
-CLOTHES_ROCKET_WHITE_M ="RocketJames"
-CLOTHES_ROCKET_WHITE_F ="RocketJessie"
+CLOTHES_ROCKET_WHITE_M = "RocketJames"
+CLOTHES_ROCKET_WHITE_F = "RocketJessie"
 CLOTHES_POLICE = "policeuniform"
 
 DEFAULT_OUTFIT_MALE = "red"
@@ -38,7 +38,6 @@ CLOTHES_MAY = "mayRS"
 CLOTHES_TEAM_MAGMA_M = "magmaRSE"
 CLOTHES_TEAM_MAGMA_F = "magmarsef"
 
-
 CLOTHES_TEAM_AQUA_M = "teamaquaM"
 CLOTHES_TEAM_AQUA_F = "teamaquaF"
 
@@ -46,16 +45,14 @@ CLOTHES_ADVENTURER_M = "adventurer_m"
 CLOTHES_ADVENTURER_F = "adventurer_f"
 CLOTHES_VETERAN = "VeteranM"
 
-CLOTHES_NURSE    = "nursejoy"
+CLOTHES_NURSE = "nursejoy"
 
-
-#Hats
+# Hats
 HAT_TEAM_ROCKET = "rocketcap"
 HAT_POSTMAN = "postman"
 HAT_PIDGEY_NEST = "pidgey"
 HAT_SWABLU_NEST = "swablu"
 HAT_ZIGZAGOON_NEST = "zigzaghat"
-
 
 HAT_PIKACHUM_NEST = "pikhatchum"
 HAT_PIKACHUF_NEST = "pikhatchuf"
@@ -74,7 +71,6 @@ HAT_EEVEE_EARS = "eeveeears"
 HAT_PARASHROOM = "parashroom"
 HAT_AERODACTYL = "aerodactylSkull"
 HAT_TYRUNT = "tyruntmask"
-
 
 HAT_DUSKULL_MASK = "duskullmask"
 HAT_SLEEPMASK = "sleepmask"
@@ -98,18 +94,18 @@ HAT_SANTA = "santa"
 HAT_QMARKS = "glitzerset"
 HAT_SUDOWOODO = "sudowoodohorns"
 HAT_SPROUT = "sprout"
-HAT_TREVENANT="trevenantforestkingcrown"
+HAT_TREVENANT = "trevenantforestkingcrown"
 HAT_CHEF = "cheftoque"
 HAT_CLOWN = "clownnose"
 HAT_WHITE_HAND = "whitehand"
 
-HAT_BREEDER_1="breedervisor"
-HAT_BREEDER_2="breederbandana"
-HAT_BREEDER_2_2="PKMBreeder"
+HAT_BREEDER_1 = "breedervisor"
+HAT_BREEDER_2 = "breederbandana"
+HAT_BREEDER_2_2 = "PKMBreeder"
 
-HAT_BREEDER_3="egg"
+HAT_BREEDER_3 = "egg"
 
-HAT_BREEDEROUTFIT="PKMBreeder"
+HAT_BREEDEROUTFIT = "PKMBreeder"
 
 HAT_WAITRESS = "maid"
 
@@ -155,6 +151,13 @@ HAT_GYM_REWARD_14 = "prycemask"
 HAT_GYM_REWARD_15 = "mortyHeadband"
 HAT_GYM_REWARD_16 = "magnemitepin"
 
+HAT_DESIGNER_KANTO = "red"
+HAT_DESIGNER_JOHTO = "gold"
+HAT_DESIGNER_HOENN = HAT_ASH
+HAT_DESIGNER_SINNOH = "dawnDPP"
+HAT_DESIGNER_UNOVA = "hilbert"
+HAT_DESIGNER_KALOS = "serena"
+HAT_DESIGNER_ALOLA = "seleneUSUM"
 
 HAT_TEAM_MAGMA = "magmaRSE"
 HAT_TEAM_AQUA = "aquaRSE"
@@ -167,7 +170,7 @@ HAT_LEAF = "leaf"
 
 HAT_VIKING = "hornedhelm"
 HAT_CROWN = "crown"
-#Hairstyles
+# Hairstyles
 HAIR_RED = "red"
 HAIR_LEAF = "leaf"
 
@@ -182,22 +185,21 @@ HAIR_BROCK = "brock"
 HAIR_MISTY1 = "mistyRBY"
 HAIR_MISTY2 = "mistyGSC"
 
-HAIR_SURGE = "surge"  #does not exist yet
+HAIR_SURGE = "surge" # does not exist yet
 HAIR_ERIKA = "erika"
-HAIR_KOGA = "koga"  #does not exist yet
+HAIR_KOGA = "koga" # does not exist yet
 HAIR_JANINE = "janine"
 HAIR_SABRINA = "sabrinaGSC"
-HAIR_BLAINE = "blaine" #does not exist yet
-HAIR_GIOVANNI = "giovanni" #does not exist yet
+HAIR_BLAINE = "blaine" # does not exist yet
+HAIR_GIOVANNI = "giovanni" # does not exist yet
 HAIR_WHITNEY = "whitney"
 HAIR_KURT = "kurt"
 HAIR_FALKNER = "falkner"
 HAIR_CLAIR = "clair"
-HAIR_CHUCK = "chuck" #does not exist yet
-HAIR_PRYCE = "pryce" #does not exist yet
-HAIR_MORTY = "morty" #does not exist yet
-HAIR_JASMINE = "jasmine" #does not exist yet
-
+HAIR_CHUCK = "chuck" # does not exist yet
+HAIR_PRYCE = "pryce" # does not exist yet
+HAIR_MORTY = "morty" # does not exist yet
+HAIR_JASMINE = "jasmine" # does not exist yet
 
 HAIR_ROXANNE = "roxanne"
 HAIR_BRAWLY = "brawly"
@@ -205,15 +207,15 @@ HAIR_WATTSON = "wattson"
 
 HAIR_HOOH = "ho-oh"
 HAIR_CRESSELIA = "lunarbob"
-HAIR_LYCANROC="lycanrocshorthair"
-HAIR_HAPPINY="happinysuit"
-HAIR_LATIAS="SpecialLatias"
-HAIR_GARDEVOIR="gardevoir"
-HAIR_EEVEE="eeveetail"
-HAIR_LEAFEON="leafeonbob"
-HAIR_ORICORIO="oricoriopuffs"
-HAIR_TYRANITAR="tyranaspikes"
-HAIR_TORCHIC="torchictuft"
+HAIR_LYCANROC = "lycanrocshorthair"
+HAIR_HAPPINY = "happinysuit"
+HAIR_LATIAS = "SpecialLatias"
+HAIR_GARDEVOIR = "gardevoir"
+HAIR_EEVEE = "eeveetail"
+HAIR_LEAFEON = "leafeonbob"
+HAIR_ORICORIO = "oricoriopuffs"
+HAIR_TYRANITAR = "tyranaspikes"
+HAIR_TORCHIC = "torchictuft"
 
 HAIR_BRENDAN = "brendan"
 HAIR_MAY = "may"

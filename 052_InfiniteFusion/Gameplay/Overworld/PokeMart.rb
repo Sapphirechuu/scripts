@@ -232,3 +232,35 @@ def get_mart_exclusive_items_hoenn(city)
   end
   return items_list
 end
+
+
+
+def regional_clothes_shop(regionTag)
+  selector = OutfitSelector.new
+  list = selector.generate_clothes_choice(
+    baseOptions = false,
+    additionalIds = [],
+    additionalTags = [regionTag],
+    filterOutTags = [])
+  clothesShop(list)
+end
+
+def regional_hats_shop(regionTag)
+  selector = OutfitSelector.new
+  list = selector.generate_hats_choice(
+    baseOptions = false,
+    additionalIds = [],
+    additionalTags = [regionTag],
+    filterOutTags = [])
+  hatShop(list)
+end
+
+def regional_hairstyle_shop(regionTag)
+  selector = OutfitSelector.new
+  list = selector.generate_hairstyle_choice(
+    baseOptions = false,
+    additionalIds = [],
+    additionalTags = [regionTag],
+    filterOutTags = [])
+  hairShop(list)
+end

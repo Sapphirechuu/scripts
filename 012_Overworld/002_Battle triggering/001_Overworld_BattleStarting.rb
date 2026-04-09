@@ -758,6 +758,14 @@ def pbMoveTutorBattle(trainerID, trainerName, moves, scaleLevel=true, event_id=n
   return res
 end
 
+def scaledLevelBattle(trainerId,trainerName,event_id=nil, map_id=nil)
+  $game_switches[Settings::OVERRIDE_BATTLE_LEVEL_SWITCH] = true
+  pbSet(Settings::OVERRIDE_BATTLE_LEVEL_VALUE_VAR, $Trainer.highest_level_pokemon_in_party)
+  res = pbTrainerBattle(trainerId, trainerName, nil, false, 0, false, 1, nil, nil, event_id, map_id)
+  $game_switches[Settings::OVERRIDE_BATTLE_LEVEL_SWITCH] = false
+  $game_switches[SWITCH_DONT_RANDOMIZE] = false
+  return res
+end
 
 # def pbTrainerBattle(trainerID, trainerName,endSpeech=nil,
 #                     doubleBattle=false, trainerPartyID=0,
