@@ -248,3 +248,7 @@ define_quest("route111_winstrate",:FIELD_QUEST,_INTL("The Winstrate Family"), _I
 #Verdanturf
 define_quest("verdanturf_shroomish",:FIELD_QUEST,_INTL("A Lost Shroomish"), _INTL("A girl lost her Shroomish and needs your help to find it."),_INTL("Verdanturf Town"),"NPC_Hoenn_Schoolgirl")
 define_quest("verdanturf_nurse",:FIELD_QUEST,_INTL("The Bored Nurse"), _INTL("The Pokémon Center's nurse challenged you to a battle. Meet her in the meadow behind the Pokémon Center."),_INTL("Verdanturf Town"),"NPC_Hoenn_Nurse")
+
+#Rusturf Tunnel
+define_quest("rusturf_trumpet",:FIELD_QUEST,_INTL("Uproar in B Flat"), _INTL("A trumpet player is cornered in Rusturf Tunnel. Find a way to help him!"),_INTL("Rusturf Tunnel"),"NPC_Hoenn_trumpet_playing")
+define_quest("evergrande_trumpet",:FIELD_QUEST,_INTL("The Trumpet Festival!"), _INTL("Find the 4 Hoenn Trumpeters and join the Trumpet Festival in Evergrande City"),_INTL("Evergrande City"),"NPC_Hoenn_trumpet_playing")

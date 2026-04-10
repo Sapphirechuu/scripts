@@ -12,9 +12,9 @@ class ContactsAppScreen
                               :TEAM_AQUA_EXEC_M, :TEAM_AQUA_EXEC_F,
                               :TEAM_MAGMA_EXEC_M, :TEAM_MAGMA_EXEC_F,
                               :TEAM_AQUA_BOSS, :TEAM_MAGMA_BOSS,
-                              :DESIGNER_KANTO, :DESIGNER_JOHTO,
-                              :DESIGNER_SINNOH, :DESIGNER_UNOVA,
-                              :DESIGNER_KALOS, :DESIGNER_ALOLA,
+                              :ADVENTURER_KANTO, :ADVENTURER_JOHTO,
+                              :ADVENTURER_SINNOH, :ADVENTURER_UNOVA,
+                              :ADVENTURER_KALOS, :ADVENTURER_ALOLA,
   ]
 
   def pbStartScreen(main_menu_scene, screen)

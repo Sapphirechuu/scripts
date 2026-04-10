@@ -460,6 +460,9 @@ def select_hat()
   return selected_hat_id
 end
 
+def has_trumpet_hat?
+  return $Trainer.unlocked_hats.include?(HAT_TRUMPET)
+end
 def canPutHatOnPokemon(pokemon)
   return !pokemon.egg? && !pokemon.isTripleFusion? && $game_switches[SWITCH_UNLOCKED_POKEMON_HATS]
 end
