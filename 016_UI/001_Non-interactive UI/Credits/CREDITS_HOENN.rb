@@ -108,6 +108,13 @@ with their respective authors' consent:
 Pokémon Destination Project
 Adapted by Payapon
 
+<title>Pokémon Overworld sprites
+Nintendo<s>Bulbapedia.Bulbagarden.net
+Dewitty<s>Chocosrawloid
+Kymontonian<s>milomilotic11
+Neo-Spriteman<s>hamsterskull
+Sparta<s>pokewiki.de 
+
 <title>Public use tileset graphics:
 Alucus BoOmxBiG<s>chimcharsfireworkd
 EpicDay<s>EternalTakai
