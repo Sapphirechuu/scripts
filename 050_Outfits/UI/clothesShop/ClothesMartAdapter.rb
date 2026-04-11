@@ -22,6 +22,7 @@ class ClothesMartAdapter < OutfitsMartAdapter
 
   def getDescription(item)
     return DEFAULT_DESCRIPTION if !item.description
+
     return item.description
   end
 

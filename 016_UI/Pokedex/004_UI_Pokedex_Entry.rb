@@ -285,13 +285,18 @@ class PokemonPokedexInfo_Scene
       weight_unit = _INTL("kg")
       height_value = species_data.height / 10.0
       height_unit = _INTL("m")
-      if System.user_language[3..4] == "US" # If the user is in the United States
-        weight_value = (weight_value / 0.45359).round / 10 # Pounds
+      if System.user_language[3..4] == "US"
+        weight_value = ((weight_value / 0.45359) * 10).round / 10.0  # e.g. 13.2
         weight_unit = _INTL("lbs")
-        height_value = (height_value / 0.254).round / 12 # Inches
-        height_unit = _INTL("\"")
+
+        total_inches = (height_value / 0.0254).round
+        feet = total_inches / 12
+        inches = total_inches % 12
+        height_text = _INTL("{1}'{2}\"", feet, inches)
+        height_unit = ""
+      else
+        height_text = _INTL("{1} {2}", height_value, height_unit)
       end
-      height_text = _INTL("{1} {2}", height_value, height_unit)
       weight_text = _INTL("{1} {2}", weight_value, weight_unit)
       textpos.push(["#{height_text}", 224, 102, 0, base, shadow])
       textpos.push(["#{weight_text}", 224, 124, 0, base, shadow])
