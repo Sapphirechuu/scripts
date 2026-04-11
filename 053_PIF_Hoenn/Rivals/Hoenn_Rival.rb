@@ -128,6 +128,20 @@ def get_rival_starter_type()
   end
 end
 
+def get_other_starter
+  case get_rival_starter_type()
+  when :GRASS
+    return obtainStarter(1)
+  when :FIRE
+    return obtainStarter(2)
+  when :WATER
+    return obtainStarter(0)
+  else
+    # fallback, should not happen
+    return obtainStarter(0)
+  end
+end
+
 # Rival catches a Pokemon the same type as the player's starter and fuses it with their starter
 def updateRivalTeamForSecondBattle()
 
