@@ -454,7 +454,7 @@ class PokemonFusionScene
   end
 
   # NEW FUSION ANIMATION (WIP)
-  def pbGenerateMetafiles(nb_seconds,ellipse_center_x,ellipse_center_y,ellipse_major_axis_length,ellipse_minor_axis_length)
+  def pbGenerateMetafiles(nb_seconds, ellipse_center_x, ellipse_center_y, ellipse_major_axis_length, ellipse_minor_axis_length)
     sprite_head = SpriteMetafile.new
     sprite_body = SpriteMetafile.new
     sprite_fused = SpriteMetafile.new
@@ -471,21 +471,21 @@ class PokemonFusionScene
     sprite_head_angle = 0
     sprite_body_angle = Math::PI
 
-    #Spinning
-    angle_incr = 0.1 #speed basically
+    # Spinning
+    angle_incr = 0.1 # speed basically
     acceleration = 2
     sprite_head.opacity = 255
     sprite_body.opacity = 255
     sprite_fused.tone = Tone.new(255, 255, 255)
-    crossfade_start_frame = duration * 0.9  # last 10% of the spin
+    crossfade_start_frame = duration * 0.9 # last 10% of the spin
 
     for j in 0...duration
       if j % 20 == 0
         ellipse_major_axis_length -= 10 if ellipse_minor_axis_length > 100
         ellipse_major_axis_length -= 18 if ellipse_minor_axis_length > 40
         ellipse_minor_axis_length -= 5 if ellipse_minor_axis_length > 10
-        angle_incr += 0.02*acceleration
-        acceleration+=0.01
+        angle_incr += 0.02 * acceleration
+        acceleration += 0.01
       end
 
       sprite_head.x = ellipse_center_x + ellipse_major_axis_length * Math.cos(sprite_head_angle)
@@ -497,14 +497,13 @@ class PokemonFusionScene
       sprite_head_angle += angle_incr
       sprite_body_angle += angle_incr
 
+      sprite_head.mirror = sprite_head.y < ellipse_center_y
+      sprite_body.mirror = sprite_body.y < ellipse_center_y
 
-      sprite_head.mirror= sprite_head.y <  ellipse_center_y
-      sprite_body.mirror= sprite_body.y <  ellipse_center_y
+      # sprite_body.mirror if sprite_body_angle == 0 || sprite_body_angle == Math::PI
 
-      #sprite_body.mirror if sprite_body_angle == 0 || sprite_body_angle == Math::PI
-
-      update_sprite_color(sprite_body,j)
-      update_sprite_color(sprite_head,j)
+      update_sprite_color(sprite_body, j)
+      update_sprite_color(sprite_head, j)
 
       if j >= crossfade_start_frame
         sprite_fused.opacity = [sprite_fused.opacity + 16, 255].min
@@ -521,7 +520,6 @@ class PokemonFusionScene
       sprite_fused.update
       sprite_body.update
     end
-
 
     # Guarantee clean state regardless of how many passes the loop made
     sprite_fused.x = ellipse_center_x
@@ -541,7 +539,7 @@ class PokemonFusionScene
     end
 
     # Short fade: white cocoon bursts into fused sprite
-    fade_frames = Graphics.frame_rate / 4  # 0.25 seconds
+    fade_frames = Graphics.frame_rate / 4 # 0.25 seconds
     fade_frames.times do |j|
       progress = j.to_f / fade_frames
       sprite_head.opacity = 0
@@ -572,7 +570,6 @@ class PokemonFusionScene
     sprite.tone = Tone.new(new_tone, new_tone, new_tone)
   end
 
-
   def generateConfettiMetaFile(start_frame_offset, nb_particles = 30)
     @confetti_metafiles = []
 
@@ -588,10 +585,10 @@ class PokemonFusionScene
       particle.z = 20
 
       # Burst outward in all directions
-      angle = (2 * Math::PI / nb_particles) * i + rand * 0.5  # evenly spread + slight randomness
-      speed = rand(8) + 5  # 5 to 12 px/frame initial burst speed
+      angle = (2 * Math::PI / nb_particles) * i + rand * 0.5 # evenly spread + slight randomness
+      speed = rand(8) + 5 # 5 to 12 px/frame initial burst speed
       vel_x = Math.cos(angle) * speed
-      vel_y = Math.sin(angle) * speed - rand(4)  # bias upward slightly
+      vel_y = Math.sin(angle) * speed - rand(4) # bias upward slightly
 
       gravity = 0.4
 
@@ -600,7 +597,7 @@ class PokemonFusionScene
       particle.opacity = 255
       particle.update
 
-      fall_frames = Graphics.frame_rate * 2  # 2 seconds
+      fall_frames = Graphics.frame_rate * 2 # 2 seconds
       cur_x = center_x.to_f
       cur_y = center_y.to_f
       cur_vel_y = vel_y
@@ -807,7 +804,7 @@ class PokemonFusionScene
     splicer_bitmap = _INTL("Graphics/Items/{1}", splicerItem)
     @sprites["dnasplicer"].setBitmap(splicer_bitmap)
 
-    #rsprite1 : left pokemon
+    # rsprite1 : left pokemon
     # rsprite2 : fused pokemon (middle - invisible at first)
     # rsprite3: right pokemon
 
@@ -851,7 +848,6 @@ class PokemonFusionScene
 
     @sprites["rsprite3"].x = ellipse_center_x + ellipse_major_axis_length * Math.cos(Math::PI) + 100
     @sprites["rsprite3"].y = ellipse_center_y + ellipse_minor_axis_length * Math.sin(Math::PI)
-
 
     spin_seconds = 6.2
     pbGenerateMetafiles(spin_seconds, ellipse_center_x, ellipse_center_y, ellipse_major_axis_length, ellipse_minor_axis_length)
@@ -908,25 +904,16 @@ class PokemonFusionScene
 
   def setAbilityAndNatureAndNickname(abilitiesList, naturesList)
     clearUIForMoves
-    if $game_switches[SWITCH_DOUBLE_ABILITIES]
-      scene = FusionSelectOptionsScene.new(nil, naturesList, @pokemon1, @pokemon2)
-      screen = PokemonOptionScreen.new(scene)
-      screen.pbStartScreen
+    scene = FusionSelectOptionsScene.new(abilitiesList, naturesList, @pokemon1, @pokemon2)
+    screen = PokemonOptionScreen.new(scene)
+    screen.pbStartScreen
 
-      @pokemon1.ability = abilitiesList[0]
-      @pokemon1.ability2 = abilitiesList[1]
-    else
-      scene = FusionSelectOptionsScene.new(abilitiesList, naturesList, @pokemon1, @pokemon2)
-      screen = PokemonOptionScreen.new(scene)
-      screen.pbStartScreen
+    selectedAbility = scene.selectedAbility
+    @pokemon1.body_original_ability_index = @pokemon1.ability_index
+    @pokemon1.head_original_ability_index = @pokemon2.ability_index
 
-      selectedAbility = scene.selectedAbility
-      @pokemon1.body_original_ability_index = @pokemon1.ability_index
-      @pokemon1.head_original_ability_index = @pokemon2.ability_index
-
-      @pokemon1.ability = selectedAbility
-      @pokemon1.ability_index = getAbilityIndexFromID(selectedAbility.id, @pokemon1)
-    end
+    @pokemon1.ability = selectedAbility
+    @pokemon1.ability_index = getAbilityIndexFromID(selectedAbility.id, @pokemon1)
 
     @pokemon1.nature = scene.selectedNature
     if scene.hasNickname
@@ -970,13 +957,12 @@ class PokemonFusionScene
     metaplayer3 = SpriteMetafilePlayer.new(@metafile3, @sprites["rsprite3"])
     metaplayer4 = SpriteMetafilePlayer.new(@metafile4, @sprites["dnasplicer"])
 
-
     confetti_players = []
     if @confetti_metafiles
       @confetti_metafiles.each_with_index do |mf, i|
         sprite = IconSprite.new(-100, -100, @viewport)
         if superSplicer
-          colors = ["confetti_white","confetti_green"]
+          colors = ["confetti_white", "confetti_green"]
         else
           colors = ["confetti_white"]
         end
@@ -1073,9 +1059,9 @@ class PokemonFusionScene
       if @pokemon1.shiny?
         @pokemon1.body_shiny = true
       end
-	  
+
       @pokemon1.debug_shiny = true if @pokemon1.debug_shiny || @pokemon2.debug_shiny
-	  @pokemon1.radar_shiny = true if @pokemon1.radar_shiny || @pokemon2.radar_shiny
+      @pokemon1.radar_shiny = true if @pokemon1.radar_shiny || @pokemon2.radar_shiny
 
       setFusionIVs(superSplicer)
       # add to pokedex
@@ -1102,9 +1088,9 @@ class PokemonFusionScene
       removeItem = false
       if @pokemon2.isShiny? || @pokemon1.isShiny?
         @pokemon1.makeShiny
-		if @pokemon1.radar_shiny || @pokemon2.radar_shiny
-		  @pokemon1.radar_shiny = true
-		end
+        if @pokemon1.radar_shiny || @pokemon2.radar_shiny
+          @pokemon1.radar_shiny = true
+        end
         if !(@pokemon1.debug_shiny || @pokemon2.debug_shiny)
           @pokemon1.natural_shiny = true if @pokemon2.natural_shiny
         end
@@ -1216,17 +1202,15 @@ end
 def setFusionMoves(fusedPoke, poke2, selected2ndOption = false)
   combined_moves = tryCombineMovesAutomatically(fusedPoke, poke2)
   if combined_moves
-    fusedPoke.moves=combined_moves
+    fusedPoke.moves = combined_moves
   else
     clearUIForMoves
-    scene = FusionMovesOptionsScene.new(fusedPoke,poke2)
+    scene = FusionMovesOptionsScene.new(fusedPoke, poke2)
     screen = PokemonOptionScreen.new(scene)
     screen.pbStartScreen
     moves = scene.getSelectedMoves
-    fusedPoke.moves=moves
+    fusedPoke.moves = moves
   end
-
-
 
   # bodySpecies = getBodyID(fusedPoke)
   # headSpecies = getHeadID(fusedPoke, bodySpecies)
@@ -1281,6 +1265,7 @@ def tryCombineMovesAutomatically(pokemon1, pokemon2)
   end
   return nil
 end
+
 def setPokemonLevel(pokemon1, pokemon2, superSplicers)
   lv1 = @pokemon1.level
   lv2 = @pokemon2.level

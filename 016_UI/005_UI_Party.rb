@@ -1239,7 +1239,6 @@ class PokemonPartyScreen
   def fuseFromParty(pokemon,partyPosition)
     splicerItem = selectSplicer()
     return unless splicerItem
-    echoln partyPosition
     if pbDNASplicing(pokemon,@scene,splicerItem,partyPosition)
       echoln splicerItem
       $PokemonBag.pbDeleteItem(splicerItem, 1) unless splicerItem == :INFINITESPLICERS || splicerItem == :INFINITESPLICERS2

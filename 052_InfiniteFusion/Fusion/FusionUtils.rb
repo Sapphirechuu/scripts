@@ -2,6 +2,15 @@ def playerHasFusionItems()
   return pbHasItem?(:DNASPLICERS) || pbHasItem?(:SUPERSPLICERS) || pbHasItem?(:INFINITESPLICERS) || pbHasItem?(:INFINITESPLICERS2)
 end
 
+def hasUnfusedPokemonInParty
+  $Trainer.party.each do |pokemon|
+    unless pokemon.isFusion?
+      return true
+    end
+  end
+  return false
+end
+
 def selectSplicer()
   dna_splicers_const = _INTL("DNA Splicers")
   super_splicers_const = _INTL("Super Splicers")

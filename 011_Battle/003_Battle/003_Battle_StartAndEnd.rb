@@ -545,7 +545,6 @@ class PokeBattle_Battle
       pbCancelChoice(b.index) # Restore unused items to Bag
       BattleHandlers.triggerAbilityOnSwitchOut(b.ability, b, true) if b.abilityActive?
     end
-
     return @decision
   end
 
