@@ -72,7 +72,8 @@ class PokemonDataBox < SpriteWrapper
     end
     case sideSize
     when 2
-
+      echoln @spriteX
+      echoln @battler.index
       @spriteX += [-12, 12, 0, 0][@battler.index]
 
       #@spriteY += [-38, -6, 16, 48][@battler.index]    #standard

@@ -65,23 +65,25 @@ class PokeBattle_Battle
       # If opponent side is the problem, shrink it first, then match player to it
       # If player side is the problem (or both), shrink player side
       PBDebug.log("#{@sideSizes[0]}v#{@sideSizes[1]} battle isn't possible; shrinking…")
-      echoln @sideSizes
 
-      if bottleneck[1] && !bottleneck[0]
-        # Player is the bottleneck (or both) — shrink player, then sync opponent down
-        if @sideSizes[1] > 1
-          @sideSizes[1] -= 1
-          @sideSizes[0] = @sideSizes[1] if @sideSizes[0] > @sideSizes[1]
-        else
-          @sideSizes = [1, 2] # player has 1 pokemon, opponent has 2 -> 1v2 (can't do 1v1 because the double battle might be against 2 different trainers)
-          break
-        end
-      else
-        # Opponent is the bottleneck — shrink opponent, then sync player down to match
+      if bottleneck[0] && !bottleneck[1]
+        # Only player side is the bottleneck — shrink it
         @sideSizes[0] -= 1
-        @sideSizes[1] = @sideSizes[0] if @sideSizes[1] > @sideSizes[0]
+        # Never touch opponent side size
+      elsif bottleneck[1] && !bottleneck[0]
+        # Only opponent side is the bottleneck — shrink it
+        @sideSizes[1] -= 1
+        # Sync player down if it now exceeds opponent (can't have player outnumber opponent slots)
+        @sideSizes[0] = @sideSizes[1] if @sideSizes[0] > @sideSizes[1]
+      else
+        # Both sides are bottlenecks — shrink whichever is larger, or player if equal
+        if @sideSizes[1] > @sideSizes[0]
+          @sideSizes[1] -= 1
+        else
+          @sideSizes[0] -= 1
+        end
       end
-      echoln "Trying #{@sideSizes[0]}v#{@sideSizes[1]} battle instead"
+
       PBDebug.log("Trying #{@sideSizes[0]}v#{@sideSizes[1]} battle instead")
       if @sideSizes[0] <= 0 || @sideSizes[1] <= 0
         raise _INTL("Couldn't reduce battle size any further, battle isn't possible")
@@ -259,6 +261,7 @@ class PokeBattle_Battle
     logMsg += "#{@opponent.length} trainer(s))" if trainerBattle?
     PBDebug.log(logMsg)
     pbEnsureParticipants
+    echoln "Final sideSizes: #{@sideSizes[0]}v#{@sideSizes[1]}"
     begin
       pbStartBattleCore
     rescue BattleAbortedException

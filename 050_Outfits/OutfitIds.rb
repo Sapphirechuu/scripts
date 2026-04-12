@@ -126,6 +126,8 @@ HAT_SCRIBBLES3 = "scribbles3"
 HAT_SCRIBBLES4 = "scribbles4"
 
 HAT_CARDBOARD_BOX = "box"
+HAT_SLUDGE = "sludge"
+
 HAT_CAPTAIN = "seacaptain"
 
 HAT_GRADUATION = "professorhat"
