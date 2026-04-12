@@ -332,6 +332,7 @@ def pbBerryPlant
               berryData[7] = ret
               pbMessage(_INTL("The {1} was scattered on the soil.\1", GameData::Item.get(ret).name))
               $PokemonBag.pbDeleteItem(ret)
+
               if pbConfirmMessage(_INTL("Want to plant a Berry?"))
                 pbFadeOutIn {
                   scene = PokemonBag_Scene.new
