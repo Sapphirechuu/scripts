@@ -75,7 +75,6 @@ def printPokemonOnCurrentMap
     event = $game_map.events[key]
     event_names << "[#{event.id}]#{event.name}"
   end
-  echoln event_names
 end
 
 # shortcut for calling from events
