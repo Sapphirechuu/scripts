@@ -907,6 +907,7 @@ class PokemonFusionScene
     scene = FusionSelectOptionsScene.new(abilitiesList, naturesList, @pokemon1, @pokemon2)
     screen = PokemonOptionScreen.new(scene)
     screen.pbStartScreen
+    echoln "message_window_showing after ability select: #{$game_temp.message_window_showing}"
 
     selectedAbility = scene.selectedAbility
     @pokemon1.body_original_ability_index = @pokemon1.ability_index
@@ -1084,7 +1085,6 @@ class PokemonFusionScene
       pbChooseAbility(ability1, ability2) if isPlayerPokemon
 
       setFusionMoves(@pokemon1, @pokemon2, firstOptionSelected) if !noMoves && isPlayerPokemon
-
       removeItem = false
       if @pokemon2.isShiny? || @pokemon1.isShiny?
         @pokemon1.makeShiny

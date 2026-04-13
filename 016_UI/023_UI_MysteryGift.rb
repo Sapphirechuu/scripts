@@ -267,7 +267,6 @@ def pbDownloadMysteryGift(trainer)
   when cmd_code
     code = pbEnterText(_INTL("Enter code to redeem"),1,10)
     url = MysteryGift::PRIVATE_URL + code + ".json"
-    echoln url
     downloadMysteryGifts(url,sprites, viewport, trainer)
   when cmd_cancel
     pbFadeOutAndHide(sprites)
@@ -306,10 +305,6 @@ def downloadMysteryGifts(url,sprites, viewport, trainer)
           break
         else
           gift=pending[command]
-
-          echoln gift
-          echoln gift[1]
-
           sprites["msgwindow"].visible=false
           if gift[2].is_a?(Pokemon)
             sprite=PokemonSprite.new(viewport)
@@ -412,7 +407,7 @@ def pbMysteryGiftReadFromJson(json_string,trainer)
   json_data = JSON.parse(json_string)
   mystery_gifts = []
   importer = SecretBaseImporter.new
-  echoln(json_data)
+  #echoln(json_data)
 
   json_data.each do |key, value|
     id = key.to_s
@@ -448,8 +443,6 @@ def pbMysteryGiftReadFromJson(json_string,trainer)
     else
       next
     end
-
-    echoln id
     gift_array = [id,quantity,gift_content,name]
     mystery_gifts.push(gift_array)
   end
@@ -502,8 +495,6 @@ def pbReceiveMysteryGift(id)
     return false
   end
   gift=$Trainer.mystery_gifts[index]
-  echoln gift
-  echoln gift[1]
   if gift[2].is_a?(Pokemon)   # Pokémon
     gift[2].personalID = rand(2**16) | rand(2**16) << 16
     gift[2].calc_stats
