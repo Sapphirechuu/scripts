@@ -106,6 +106,19 @@ class FusionSelectOptionsScene < PokemonOption_Scene
     return options
   end
 
+  #Same as Option, but without pbRefreshSceneMap
+
+  def pbEndScene
+    pbPlayCloseMenuSE
+    pbFadeOutAndHide(@sprites) { pbUpdate }
+    # Set the values of each option
+    for i in 0...@PokemonOptions.length
+      @PokemonOptions[i].set(@sprites["option"][i])
+    end
+    pbDisposeMessageWindow(@sprites["textbox"])
+    pbDisposeSpriteHash(@sprites)
+    @viewport.dispose
+  end
 
   def isConfirmedOnKeyPress
     return true

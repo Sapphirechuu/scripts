@@ -18,7 +18,7 @@ class Scene_Intro
   def playIntroCinematic
     intro_frames_path = "Graphics\\Pictures\\Intro\\INTRO-%03d"
     intro_bgm = Settings::KANTO ? "INTRO_music_cries" : "intro_part1"
-    max_frames = Settings::KANTO ? 230 : 371
+    max_frames = Settings::KANTO ? 230 : 378
     intro_movie = Movie.new(intro_frames_path,intro_bgm,max_frames,true)
     intro_movie.playInViewPort(@viewport)
   end

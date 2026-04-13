@@ -168,7 +168,7 @@ def promptCaughtPokemonAction(pokemon)
 
     options = []
     options << cmd_swap
-    if playerHasFusionItems && hasUnfusedPokemonInParty
+    if !pokemon.isFusion? && playerHasFusionItems && hasUnfusedPokemonInParty(false)
       options << cmd_fuse
     end
     options << cmd_pc
@@ -211,7 +211,8 @@ def fuseCaughtPokemon(caughtPokemon)
   pbChoosePokemon(1, 2,
                              proc { |poke|
                                !poke.egg? &&
-                                 !(poke.isFusion? rescue false)
+                                 !(poke.isFusion? rescue false) &&
+                                 poke.hp > 0
 
                              })
   partyPosition = pbGet(1)
@@ -222,14 +223,16 @@ def fuseCaughtPokemon(caughtPokemon)
   selected = $Trainer.party[partyPosition].clone
   selectedHead, fusion_pif_sprite = selectFusion(caughtPokemon,selected)
   return false unless selectedHead && fusion_pif_sprite
-  if (pbConfirmMessage(_INTL("Fuse the newly caught {1} with {2}?", caughtPokemon.name, selected.name)))
+  if (pbConfirmMessage(_INTL("Fuse the newly obtained {1} with {2}?", caughtPokemon.name, selected.name)))
     if selectedHead == caughtPokemon
       pbRemovePokemonAt(partyPosition)
       pbAddPokemonSilent(caughtPokemon)
       pbFuse(caughtPokemon, selected, splicerItem, fusion_pif_sprite)
     else
-      pbFuse(selectedHead,caughtPokemon, splicerItem, fusion_pif_sprite)
+      actualPartyPokemon = $Trainer.party[partyPosition]  # real reference, not clone
+      pbFuse(actualPartyPokemon, caughtPokemon, splicerItem, fusion_pif_sprite)
     end
+    $PokemonBag.pbDeleteItem(splicerItem) if splicerItem == :DNASPLICERS || splicerItem == :SUPERSPLICERS
     return true
   end
   return false

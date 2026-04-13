@@ -473,6 +473,19 @@ class FusionMovesOptionsScene < PokemonOption_Scene
     return @selected_moves.length > 0 && @selected_moves.length <= 4
   end
 
+  #Same as Option, but without pbRefreshSceneMap
+  def pbEndScene
+    pbPlayCloseMenuSE
+    pbFadeOutAndHide(@sprites) { pbUpdate }
+    # Set the values of each option
+    for i in 0...@PokemonOptions.length
+      @PokemonOptions[i].set(@sprites["option"][i])
+    end
+    pbDisposeMessageWindow(@sprites["textbox"])
+    pbDisposeSpriteHash(@sprites)
+    @viewport.dispose
+  end
+
 end
 
 class Window_PokemonOptionFusionMoves < Window_PokemonOption
@@ -568,4 +581,5 @@ class Window_PokemonOptionFusionMoves < Window_PokemonOption
       refresh
     end
   end
+
 end

@@ -2,9 +2,12 @@ def playerHasFusionItems()
   return pbHasItem?(:DNASPLICERS) || pbHasItem?(:SUPERSPLICERS) || pbHasItem?(:INFINITESPLICERS) || pbHasItem?(:INFINITESPLICERS2)
 end
 
-def hasUnfusedPokemonInParty
+def hasUnfusedPokemonInParty(allow_fainted=true)
   $Trainer.party.each do |pokemon|
     unless pokemon.isFusion?
+      if !allow_fainted
+        next if pokemon.hp <= 0
+      end
       return true
     end
   end
@@ -31,7 +34,7 @@ def selectSplicer()
     return nil
   end
 
-  cmd = pbShowCommands(_INTL("Use which splicers?"), options)
+  cmd = pbMessage(_INTL("Use which splicers?"), options)
   if cmd == -1
     return nil
   end
