@@ -139,6 +139,7 @@ end
 def try_give_gift(trainer)
   if should_give_item(trainer)
     item = select_gift_item(trainer)
+    echoln item
     showGiftDialog()
     pbReceiveItem(item)
     return true
