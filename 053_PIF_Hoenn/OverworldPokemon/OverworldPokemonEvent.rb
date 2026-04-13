@@ -79,6 +79,7 @@ class OverworldPokemonEvent < Game_Event
     if @terrain == :Water
       set_swimming
     end
+    apply_shiny_rerolls(@pokemon)
 
     if @pokemon.shiny?
       pbSEPlay("shiny", 60)
@@ -124,6 +125,9 @@ class OverworldPokemonEvent < Game_Event
       @step_anime = true
       unless @swimming_sprite
         self.forced_bush_depth = 20
+        self.calculate_bush_depth
+      else
+        self.forced_bush_depth = 8
         self.calculate_bush_depth
       end
       @is_swimming = true

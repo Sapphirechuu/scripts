@@ -29,6 +29,9 @@ Kiwikelly
 Title screen and logo
 Doctor Miawoo
 
+Intro animation:
+Kiwikelly
+
 Custom sprites collecting and handling
 Kiwikelly, Payapon, Thornsoflight, Greystorm
 

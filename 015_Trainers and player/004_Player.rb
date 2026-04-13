@@ -85,6 +85,7 @@ class Player < Trainer
 
   attr_accessor :last_visited_town_map_location
   attr_accessor :last_visited_map
+  attr_accessor :nb_npc_friends
 
 
 

@@ -126,7 +126,6 @@ def spawn_random_overworld_pokemon_group(wild_pokemon = nil, radius = 10, max_gr
       terrain = :Cave
       position = find_random_walkable_coordinates_near_player(radius, radius, 3, max_nb_tries = 10)
     elsif $PokemonEncounters.has_land_encounters?
-      echoln "looking for grass"
       position, terrain = find_random_tall_grass_coordinates_near_player(radius, radius, 3, max_nb_tries = 10)
     end
     encounter_type = getTimeBasedEncounter(terrain)

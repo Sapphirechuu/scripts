@@ -137,11 +137,6 @@ class ContactsAppInfoPageScene < PokeNavAppScene
 
     trainerClassName = GameData::TrainerType.get(@trainer.trainerType).real_name
     trainer_name = "#{trainerClassName} #{@trainer.trainerName}"
-
-    echoln @trainer.trainerType
-    echoln @trainer.trainerName
-    echoln trainer_name
-
     level_sum = 0
     if @trainer.currentTeam.size > 0
       @trainer.currentTeam.each do |pokemon|

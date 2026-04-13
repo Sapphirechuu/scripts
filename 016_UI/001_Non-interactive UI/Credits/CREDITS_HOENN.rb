@@ -30,6 +30,9 @@ Chardub<s>Payapon
 <title>Title screen and logo
 Doctor Miawoo
 
+<title>Intro animation:
+Kiwikelly
+
 <title>Music:
 Pory
 

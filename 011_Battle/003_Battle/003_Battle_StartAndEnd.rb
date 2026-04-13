@@ -139,11 +139,6 @@ class PokeBattle_Battle
           pbCreateBattler(idxBattler, pkmn, idxPkmn)
           ret[side][idxTrainer].push(idxBattler)
           battlerNumber += 1
-
-          echoln ret
-          echoln side
-          echoln idxTrainer
-
           break if ret[side][idxTrainer].length >= requireds[idxTrainer]
         end
       end
