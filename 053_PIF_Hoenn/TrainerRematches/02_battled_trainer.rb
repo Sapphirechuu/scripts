@@ -130,7 +130,7 @@ class BattledTrainer
         $Trainer.nb_npc_friends+=1  #odds of shiny pokemon increases slightly the more NPCs at matx friendship you have
       # when 3
       #   #pbMessage(_INTL("You can now partner up with them!"))
-      # end
+       end
       echoln "#{@trainerName}'s friendship level increased to #{@friendship_level}!"
     end
   end
