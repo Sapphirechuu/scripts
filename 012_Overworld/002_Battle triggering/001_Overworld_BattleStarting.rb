@@ -819,10 +819,18 @@ def pbTrainerBattle(trainerID, trainerName, endSpeech = nil,
     # other triggered trainer event
     if otherEvent.length == 1 && trainer.party.length <= Settings::MAX_PARTY_SIZE
       trainer.lose_text = endSpeech if endSpeech && !endSpeech.empty?
-      $PokemonTemp.waitingTrainer = [trainer, thisEvent.id]
+      $PokemonTemp.waitingTrainer = [trainer, thisEvent.id, trainerID, trainerName]
       return false
     end
   end
+  if $PokemonTemp.waitingTrainer
+    waiting_type = $PokemonTemp.waitingTrainer[2]
+    waiting_name = $PokemonTemp.waitingTrainer[3]
+    if waiting_type == trainerID && waiting_name == trainerName
+      $PokemonTemp.waitingTrainer = nil
+    end
+  end
+
   # Set some battle rules
   setBattleRule("outcomeVar", outcomeVar) if outcomeVar != 1
   setBattleRule("canLose") if canLose
