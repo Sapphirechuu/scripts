@@ -87,6 +87,19 @@ def wally_fuse_pokemon(with_fusion_screen = true)
   level = (body_pokemon.level + head_pokemon.level) / 2
   fused_pokemon = Pokemon.new(fusion_species, level)
 
+
+  if body_pokemon.isShiny? || head_pokemon.isShiny?
+    fused_pokemon.shiny= true
+    if body_pokemon.radar_shiny || head_pokemon.radar_shiny
+      fused_pokemon.radar_shiny = true
+    end
+    if !(body_pokemon.debug_shiny || head_pokemon.debug_shiny)
+      fused_pokemon.natural_shiny = true if fused_pokemon.natural_shiny
+    end
+  end
+
+  echoln fused_pokemon.shiny?
+
   trainer.currentTeam.delete(body_pokemon)
   trainer.currentTeam.delete(head_pokemon)
   trainer.currentTeam.push(fused_pokemon)

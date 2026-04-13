@@ -73,10 +73,11 @@ def sign(message, type = 0)
   pbMessage(formatted_message)
 end
 
-def setEventGraphicsToPokemon(species, eventId)
+def setEventGraphicsToPokemon(species, eventId, shiny=false)
   event = $game_map.events[eventId]
   return if !event
-  event.character_name = "Followers/#{species.to_s}"
+  shiny_folder= shiny ? "Shiny/" : ""
+  event.character_name = "Followers/#{shiny_folder}#{species.to_s}"
   event.refresh
 end
 

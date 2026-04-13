@@ -63,7 +63,7 @@ chansondoree<s>
 
 <title>QA Testing (Demo 1)
 adonis9410<s>casinosluck
-firesword2562<s>lunacharlotte
+firesword2562<s>divinelunaria
 sapphire_chuu<s>vampvixen
 
 <title>Character Customization graphics coordination:
