@@ -154,7 +154,9 @@ class RandomizerTrainerOptionsScene < PokemonOption_Scene
                                   proc { $game_variables[VAR_RANDOMIZER_TRAINER_BST] },
                                   proc { |value|
                                     $game_variables[VAR_RANDOMIZER_TRAINER_BST] = value
-                                  })
+                                  },
+                                  "The higher the number, the more random it is."
+                                  )
     end
     options << EnumOption.new(_INTL("Custom Sprites only"), [_INTL("On"), _INTL("Off")],
                               proc { $game_switches[RANDOM_TEAMS_CUSTOM_SPRITES] ? 0 : 1 },
@@ -212,7 +214,8 @@ class RandomizerWildPokemonOptionsScene < PokemonOption_Scene
                                   proc { $game_variables[VAR_RANDOMIZER_WILD_POKE_BST] },
                                   proc { |value|
                                     $game_variables[VAR_RANDOMIZER_WILD_POKE_BST] = value
-                                  })
+                                  },
+                                  "The higher the number, the more random it is.")
     end
 
     options << EnumOption.new(_INTL("Type"), [_INTL("Global"), _INTL("Area")],
@@ -354,7 +357,8 @@ class RandomizerGymOptionsScene < PokemonOption_Scene
                                   proc { $game_variables[VAR_RANDOMIZER_TRAINER_BST] },
                                   proc { |value|
                                     $game_variables[VAR_RANDOMIZER_TRAINER_BST] = value
-                                  })
+                                  },
+                                  "The higher the number, the more random it is.")
     end
     options << EnumOption.new(_INTL("Custom sprites only"), [_INTL("On"), _INTL("Off")],
                               proc { $game_switches[SWITCH_RANDOM_GYM_CUSTOMS] ? 0 : 1 },

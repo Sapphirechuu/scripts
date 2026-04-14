@@ -99,9 +99,10 @@ Including significant contributions from:
 {SPRITER_CREDITS}
 
 <title>Other custom graphics:
-Kiwikelly<s>Knuckles
-UnworthyPie<s>Doctor Miawoo
-Chardub<s>TCGrunler#4583
+Kiwikelly<s>Payapon
+Knucklese<s>UnworthyPie
+Doctor Miawoo<s>TCGrunler#4583
+Chardub<s>
 
 
 The following free ressources were also used 
@@ -112,7 +113,7 @@ Pokémon Destination Project
 Adapted by Payapon
 
 <title>Pokémon Overworld sprites
-Nintendo<s>Bulbapedia.Bulbagarden.net
+Nintendo<s>Bulbapedia
 Dewitty<s>Chocosrawloid
 Kymontonian<s>milomilotic11
 Neo-Spriteman<s>hamsterskull

@@ -46,16 +46,16 @@ class PokemonGameOption_Scene < PokemonOption_Scene
         _INTL("<icon=#{ICON_CHALLENGE}> Set optional self-imposed challenges.")
       )
 
-      if $game_switches[SWITCH_RANDOMIZED_AT_LEAST_ONCE]
-        options << ButtonOption.new(
-          _INTL("Randomizer Options"),
-          proc {
-            @randomizer_menu = true
-            openRandomizerMenu()
-          },
-          _INTL("<icon=#{ICON_RANDOMIZER}> Set how to randomize the game.")
-        )
-      end
+      # if $game_switches[SWITCH_RANDOMIZED_AT_LEAST_ONCE]
+      #   options << ButtonOption.new(
+      #     _INTL("Randomizer Options"),
+      #     proc {
+      #       @randomizer_menu = true
+      #       openRandomizerMenu()
+      #     },
+      #     _INTL("<icon=#{ICON_RANDOMIZER}> Set how to randomize the game.")
+      #   )
+      # end
     end
     return options
   end
