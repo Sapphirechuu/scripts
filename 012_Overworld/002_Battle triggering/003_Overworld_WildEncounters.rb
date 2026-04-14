@@ -473,7 +473,6 @@ def apply_shiny_rerolls(pokemon)
   end
 
   # NPC friends: 0–2 extra rerolls scaling with friend count (3× at 100 friends)
-  echoln $Trainer.nb_npc_friends
   if $Trainer.nb_npc_friends && $Trainer.nb_npc_friends > 0
     extra_rerolls  = ([[$Trainer.nb_npc_friends, 0].max, 100].min / 100.0) * 2.0
     full_rerolls   = extra_rerolls.floor
