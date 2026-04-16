@@ -192,7 +192,7 @@ DebugMenuCommands.register("testwildbattle", {
   "name"        => _INTL("Test Wild Battle"),
   "description" => _INTL("Start a single battle against a wild Pokémon. You choose the species/level."),
   "effect"      => proc {
-    species = pbChooseSpeciesList
+    species = pbChooseSpeciesList(nil, NB_POKEMON-4)
     if species
       params = ChooseNumberParams.new
       params.setRange(1, GameData::GrowthRate.max_level)
@@ -922,36 +922,35 @@ DebugMenuCommands.register("terraintags", {
 })
 
 
-DebugMenuCommands.register("positionsprites", {
-  "parent"      => "editorsmenu",
-  "name"        => _INTL("Edit Pokémon Sprite Positions"),
-  "description" => _INTL("Reposition Pokémon sprites in battle."),
-  "always_show" => true,
-  "effect"      => proc {
-    pbFadeOutIn {
-      sp = SpritePositioner.new
-      sps = SpritePositionerScreen.new(sp)
-      sps.pbStart
-    }
-  }
-})
-
-DebugMenuCommands.register("autopositionsprites", {
-  "parent"      => "editorsmenu",
-  "name"        => _INTL("Auto-Position All Sprites"),
-  "description" => _INTL("Automatically reposition all Pokémon sprites in battle. Don't use lightly."),
-  "always_show" => true,
-  "effect"      => proc {
-    if pbConfirmMessage(_INTL("Are you sure you want to reposition all sprites?"))
-      msgwindow = pbCreateMessageWindow
-      pbMessageDisplay(msgwindow, _INTL("Repositioning all sprites. Please wait."), false)
-      Graphics.update
-      pbAutoPositionAll
-      pbDisposeMessageWindow(msgwindow)
-    end
-  }
-})
-
+# DebugMenuCommands.register("positionsprites", {
+#   "parent"      => "editorsmenu",
+#   "name"        => _INTL("Edit Pokémon Sprite Positions"),
+#   "description" => _INTL("Reposition Pokémon sprites in battle."),
+#   "always_show" => true,
+#   "effect"      => proc {
+#     pbFadeOutIn {
+#       sp = SpritePositioner.new
+#       sps = SpritePositionerScreen.new(sp)
+#       sps.pbStart
+#     }
+#   }
+# })
+#
+# DebugMenuCommands.register("autopositionsprites", {
+#   "parent"      => "editorsmenu",
+#   "name"        => _INTL("Auto-Position All Sprites"),
+#   "description" => _INTL("Automatically reposition all Pokémon sprites in battle. Don't use lightly."),
+#   "always_show" => true,
+#   "effect"      => proc {
+#     if pbConfirmMessage(_INTL("Are you sure you want to reposition all sprites?"))
+#       msgwindow = pbCreateMessageWindow
+#       pbMessageDisplay(msgwindow, _INTL("Repositioning all sprites. Please wait."), false)
+#       Graphics.update
+#       pbAutoPositionAll
+#       pbDisposeMessageWindow(msgwindow)
+#     end
+#   }
+# })
 DebugMenuCommands.register("animeditor", {
   "parent"      => "editorsmenu",
   "name"        => _INTL("Battle Animation Editor"),

@@ -331,7 +331,7 @@ class FusionQuiz
 
     # Get a list all pokemon in the same egg group
     matching_egg_group = []
-    for num in 1..NB_POKEMON
+    for num in 1..NB_POKEMON-4
       next if pokemon.id_number == num
       next if matching_egg_group.include?(num)
       new_pokemon = ::GameData::Species.get(num)
@@ -345,7 +345,7 @@ class FusionQuiz
     for index in 1..amount_required
       if matching_egg_group[index].nil?
         # If there's not enough pokemon in the list (e.g. for Ditto), get anything
-        new_pokemon = rand(1..NB_POKEMON) until !choices.include?(new_pokemon) && new_pokemon != pokemon.id_number
+        new_pokemon = rand(1..NB_POKEMON-4) until !choices.include?(new_pokemon) && new_pokemon != pokemon.id_number
         choices << new_pokemon
       else
         choices << matching_egg_group[index]
@@ -386,7 +386,7 @@ class FusionQuiz
 
   def prompt_pick_answer_advanced(prompt_message, answer)
     commands = []
-    for dex_num in 1..NB_POKEMON
+    for dex_num in 1..NB_POKEMON-4
       species = getPokemon(dex_num)
       commands.push([dex_num - 1, species.real_name, species.real_name])
     end
