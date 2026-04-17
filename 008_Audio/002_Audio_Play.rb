@@ -306,3 +306,6 @@ def pbPlayCloseMenuSE
     pbSEPlay("GUI menu close",80)
   end
 end
+DATA_PATH = "Audio/SE/Anim/AnimationData/common/"
+DATA_SUFFIX="anim_"
+SHEET_EXT=".dat"

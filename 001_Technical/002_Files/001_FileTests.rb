@@ -118,7 +118,7 @@ end
 # archives.  Returns nil if the path can't be found.
 def pbResolveBitmap(x)
   return nil if !x
-  noext = x.gsub(/\.(bmp|png|gif|jpg|jpeg)$/,"")
+  noext = x.gsub(/\.(bmp|png|gif|jpg|jpeg|dat)$/,"")
   filename = nil
 #  RTP.eachPathFor(x) { |path|
 #    filename = pbTryString(path) if !filename
@@ -127,7 +127,7 @@ def pbResolveBitmap(x)
   RTP.eachPathFor(noext) { |path|
     filename = pbTryString(path+".png") if !filename
     filename = pbTryString(path+".gif") if !filename
-#    filename = pbTryString(path+".jpg") if !filename
+    filename = pbTryString(path+".dat") if !filename
 #    filename = pbTryString(path+".jpeg") if !filename
 #    filename = pbTryString(path+".bmp") if !filename
   }
