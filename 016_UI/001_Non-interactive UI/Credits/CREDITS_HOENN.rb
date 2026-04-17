@@ -113,7 +113,6 @@ Pokémon Destination Project
 Adapted by Payapon
 
 <title>Pokémon Overworld sprites
-Nintendo<s>Bulbapedia
 Dewitty<s>Chocosrawloid
 Kymontonian<s>milomilotic11
 Neo-Spriteman<s>hamsterskull
