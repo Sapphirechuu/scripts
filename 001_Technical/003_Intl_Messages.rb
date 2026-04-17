@@ -533,12 +533,18 @@ class Messages
 
   def saveMessages(filename = nil)
     filename = "Data/messages.dat" if !filename
-    File.open(filename, "wb") { |f| Marshal.dump(@messages, f) }
+    raw = Marshal.dump(@messages)
+    File.open(filename, "wb") { |f| f.write(Encryption.xor(raw)) }
   end
 
   def loadMessageFile(filename)
     begin
-      pbRgssOpen(filename, "rb") { |f| @messages = Marshal.load(f) }
+      raw = File.open(filename, "rb") { |f| f.read }
+      begin
+        @messages = Marshal.load(Encryption.xor(raw))
+      rescue TypeError, ArgumentError
+        @messages = Marshal.load(raw)  # fallback for old unencrypted file
+      end
       if !@messages.is_a?(Array)
         @messages = nil
         raise "Corrupted data"
