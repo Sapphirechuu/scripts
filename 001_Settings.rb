@@ -71,6 +71,8 @@ module Settings
   PLAYER_SURFBASE_FOLDER = 'surf_base/'
   OW_SHINE_ANIMATION_ID = 25
 
+  FEEDBACK_FORM_URL = ""
+
   HTTP_CONFIGS_FILE_URL = "https://raw.githubusercontent.com/infinitefusion/pif-downloadables/refs/heads/master/Settings.rb"
   HTTP_CONFIGS_FILE_PATH = "Data/Scripts/DownloadedSettings.rb"
 
