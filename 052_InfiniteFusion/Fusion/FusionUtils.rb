@@ -241,6 +241,7 @@ def checkIfCustomSpriteExistsByPath(path)
   return true if pbResolveBitmap(path) != nil
 end
 
+
 def customSpriteExistsBodyHead(body, head)
   pathCustom = getCustomSpritePath(body, head)
 

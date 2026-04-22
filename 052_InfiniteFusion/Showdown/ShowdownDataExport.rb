@@ -67,7 +67,12 @@ def exportFusedPokemonForShowdown(pokemon)
   return ret
 end
 
-
+module GameData
+  NAT_DEX_MAPPING[NB_POKEMON+3] = NB_POKEMON-150
+  NAT_DEX_MAPPING[NB_POKEMON+4] = NB_POKEMON-149
+  NAT_DEX_MAPPING[NB_POKEMON+1] = NAT_DEX_MAPPING[NB_POKEMON+3].to_s + "_1"
+  NAT_DEX_MAPPING[NB_POKEMON+2] = NAT_DEX_MAPPING[NB_POKEMON+4].to_s + "_1"
+end
 
 
 def calculateEvLineForShowdown(pokemon)
