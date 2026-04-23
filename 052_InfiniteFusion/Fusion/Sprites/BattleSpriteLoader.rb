@@ -8,7 +8,12 @@ class BattleSpriteLoader
       return AnimatedBitmap.new(pif_sprite.local_path)
     end
     extractor = get_sprite_extractor_instance(pif_sprite.type)
-    return extractor.load_sprite(pif_sprite)
+    bitmap = extractor.load_sprite(pif_sprite)
+    if bitmap
+      return bitmap
+    else
+      return handle_unloaded_sprites(extractor, pif_sprite)
+    end
   end
 
   #random alt
