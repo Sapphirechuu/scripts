@@ -284,6 +284,17 @@ class Pokemon
       @species == GameData::Species.get(check_species).species)
   end
 
+  def get_body_species
+    return @name unless isFusion?
+    body_species = GameData::Species.get(@species)&.get_body_species
+    return GameData::Species.get(body_species)
+  end
+
+  def get_head_species
+    return @name unless isFusion?
+    head_species = GameData::Species.get(@species)&.get_head_species
+    return GameData::Species.get(head_species)
+  end
 
   def hasBodyOf?(check_species)
     if !self.isFusion?

@@ -44,13 +44,18 @@ def wally_update_team_mauville
   updateRebattledTrainerWithKey(BATTLED_TRAINER_WALLY_KEY, trainer)
 end
 
-def get_wally_starter_name(variable=1)
+def get_wally_starter()
   wallyTeam = get_wally_team
   wallyStarter=wallyTeam.last  #starter is the oldest so whatever is at the end
   unless wallyStarter #failsafe
     wallyStarter=wallyTeam[-1]
   end
-  pbSet(1,wallyStarter.name)
+  return wallyStarter
+end
+
+def get_wally_starter_name(variable=1)
+  wallyStarter = get_wally_starter
+  pbSet(variable,wallyStarter.name)
 end
 def wally_battle()
   trainer = $PokemonGlobal.battledTrainers[BATTLED_TRAINER_WALLY_KEY]
