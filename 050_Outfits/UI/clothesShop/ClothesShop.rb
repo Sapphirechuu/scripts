@@ -76,6 +76,8 @@ end
 
 def pokemonHairstylesShop()
   hairShop([HAIR_EEVEE,HAIR_TORCHIC,
+            HAIR_MUDKIP, HAIR_MAWILE,
+            HAIR_ROSERADE_M,HAIR_ROSERADE_F,
             HAIR_LYCANROC, HAIR_HAPPINY,
             HAIR_GARDEVOIR, HAIR_LEAFEON,
             HAIR_ORICORIO,HAIR_TYRANITAR,

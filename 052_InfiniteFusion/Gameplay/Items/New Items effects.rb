@@ -444,6 +444,21 @@ ItemHandlers::UseFromBag.add(:EMERGENCYWHISTLE, proc { |item|
   next 0
 })
 
+
+ItemHandlers::UseFromBag.add(:PRESENT, proc { |item|
+  quantity = $PokemonBag.pbQuantity(item)
+  nb = 1
+  if quantity > 1
+    params = ChooseNumberParams.new
+    params.setRange(1, quantity)
+    params.setDefaultValue(1)
+    nb = pbMessageChooseNumber(_INTL("\How many would you like to open?<br>({1} in bag)", quantity), params)
+  end
+  pbReceiveCosmeticsMoney(500*nb)
+  $PokemonBag.pbDeleteItem(item, nb)
+  next 1
+})
+
 ItemHandlers::UseFromBag.add(:MUSHROOMSPORES, proc { |item|
   if $game_switches[SWITCH_SPORES_REPEL]
     if pbQuantity(:MUSHROOMSPORES) >= 2
