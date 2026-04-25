@@ -77,7 +77,13 @@ def setEventGraphicsToPokemon(species, eventId, shiny=false)
   event = $game_map.events[eventId]
   return if !event
   shiny_folder= shiny ? "Shiny/" : ""
-  event.character_name = "Followers/#{shiny_folder}#{species.to_s}"
+  path = "Followers/#{shiny_folder}#{species.to_s}"
+  if pbResolveBitmap(path)
+    event.character_name = path
+  else
+    path =  "Followers/#{shiny_folder}#{species.to_s}_fly"
+    event.character_name = path
+  end
   event.refresh
 end
 
