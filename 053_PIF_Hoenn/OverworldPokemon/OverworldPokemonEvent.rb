@@ -21,6 +21,8 @@ class OverworldPokemonEvent < Game_Event
     @level = level
     @behavior_roaming = behavior_roaming if behavior_roaming
     @behavior_noticed = behavior_noticed if behavior_noticed
+
+
     @terrain = terrain
     @disguised = false
     species_data = GameData::Species.get(@species)
@@ -68,6 +70,7 @@ class OverworldPokemonEvent < Game_Event
     end
 
     initialize_sprite(@terrain, species_data)
+    @disguised_sprite = @roaming_sprite if @disguised
     @is_flying = @character_name == @flying_sprite
     @is_swimming = false
     @step_anime = @is_flying
@@ -76,6 +79,7 @@ class OverworldPokemonEvent < Game_Event
     if @terrain == :Water
       set_swimming
     end
+    apply_shiny_rerolls(@pokemon)
 
     if @pokemon.shiny?
       pbSEPlay("shiny", 60)
@@ -86,7 +90,7 @@ class OverworldPokemonEvent < Game_Event
 
   def make_shiny
     @pokemon.shiny = true
-    @pokemon.natural_shiny = true
+    @pokemon.radar_shiny = true
     species_data = GameData::Species.get(@species)
     initialize_sprite(@terrain, species_data)
   end
@@ -102,8 +106,13 @@ class OverworldPokemonEvent < Game_Event
     behavior = POKEMON_BEHAVIOR_DATA[species][behavior_type]
     if @terrain == :Water
       behavior = :random_dive if behavior == :random_burrow
+      behavior = :random if behavior == :water_skip
     else
       behavior = :random if behavior == :random_dive
+    end
+
+    if species == :WHISMUR && isWearingHat(HAT_TRUMPET)
+      behavior = :uproar
     end
     return behavior
   end
@@ -116,6 +125,9 @@ class OverworldPokemonEvent < Game_Event
       @step_anime = true
       unless @swimming_sprite
         self.forced_bush_depth = 20
+        self.calculate_bush_depth
+      else
+        self.forced_bush_depth = 8
         self.calculate_bush_depth
       end
       @is_swimming = true
@@ -136,7 +148,6 @@ class OverworldPokemonEvent < Game_Event
   end
 
   def getBehaviorSpecies(species_data)
-    echoln @species
     if isSpeciesFusion(@species)
       return species_data.get_head_species_symbol
     end
@@ -151,6 +162,7 @@ class OverworldPokemonEvent < Game_Event
     @noticed_sprite = getOverworldNoticedPath(species_data, @pokemon.shiny?)
     @noticed_sprite = @flying_sprite if !@noticed_sprite && @flying_sprite
     @roaming_sprite = @land_sprite
+    @roaming_sprite = @disguised_sprite if @disguised_sprite && @disguised
 
     if terrain == :Water
       initialize_water_sprite
@@ -158,6 +170,7 @@ class OverworldPokemonEvent < Game_Event
       initialize_land_sprite
     end
   end
+
 
   def initialize_water_sprite
     if @flying_sprite
@@ -337,6 +350,7 @@ class OverworldPokemonEvent < Game_Event
   end
 
   def pokemon_can_be_repelled
+    return false if @part_of_pokeradar_chain
     return $Trainer.party[0].level > @pokemon.level && !@pokemon.shiny?
   end
 
@@ -457,15 +471,17 @@ class OverworldPokemonEvent < Game_Event
       self.move_frequency = 6
       return
     end
-    return unless @behavior_noticed
-    case @behavior_noticed
+
+    effective_behavior = @behavior_noticed || @behavior_roaming  #fallback on @behavior_roaming if no @behavior_noticed
+
+    case effective_behavior
     when :random
       @move_type = MOVE_TYPE_RANDOM
     when :still
       @move_type = MOVE_TYPE_FIXED
-    when :curious # slowly walk towards player until close, then look at them
+    when :curious
       @move_type = MOVE_TYPE_CURIOUS
-    when :semi_aggressive # slowly walks towards player until battle
+    when :semi_aggressive
       @move_type = MOVE_TYPE_TOWARDS_PLAYER
     when :aggressive
       @move_type = MOVE_TYPE_TOWARDS_PLAYER
@@ -474,11 +490,13 @@ class OverworldPokemonEvent < Game_Event
       @move_type = MOVE_TYPE_AWAY_PLAYER
       self.move_frequency = 6
     when :flee, :flee_flying, :teleport_away
-      flee(@behavior_noticed)
+      flee(effective_behavior)
     else
-      set_custom_move_route(OW_BEHAVIOR_MOVE_ROUTES[:noticed][@behavior_noticed])
+      category = @behavior_noticed ? :noticed : :roaming
+      set_custom_move_route(OW_BEHAVIOR_MOVE_ROUTES[category][effective_behavior])
     end
-    @step_anime = true unless @behavior_noticed == :still
+
+    @step_anime = true unless effective_behavior == :still
     @move_speed = @noticed_move_speed
   end
 

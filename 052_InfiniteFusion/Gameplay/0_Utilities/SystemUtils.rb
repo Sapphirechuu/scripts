@@ -122,3 +122,9 @@ def timeDateGreaterThan(date1, date2)
       date1.day   > date2.day   && date1.month == date2.month && date1.year == date2.year
   )
 end
+
+def transferBoxDisclaimer(event)
+  unless Settings::TRANSFER_BOX_DISCLAIMER_MESSAGE.empty?
+    pbMessage(_INTL(Settings::TRANSFER_BOX_DISCLAIMER_MESSAGE))
+  end
+end

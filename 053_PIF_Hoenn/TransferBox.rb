@@ -11,10 +11,13 @@ end
 
 class StorageTransferBox < PokemonBox
   TRANSFER_BOX_NAME = _INTL("Transfer Box")
+  TRANSFER_BOX_NAME_DISABLED = _INTL("Transfer Box (Off)")
+
   def initialize()
     super(TRANSFER_BOX_NAME,PokemonBox::BOX_SIZE)
     @pokemon = []
     @background = "transfer"
+    @disabled= false
     for i in 0...PokemonBox::BOX_SIZE
       @pokemon[i] = nil
     end
@@ -26,10 +29,19 @@ class StorageTransferBox < PokemonBox
   end
 
   def can_use_transfer_box?
-    return !$game_switches[SWITCH_RANDOMIZED_AT_LEAST_ONCE]
+    return !$game_switches[SWITCH_RANDOMIZED_AT_LEAST_ONCE] && !@disabled
+  end
+
+  def setDisabled
+    unless @disabled
+      @name = TRANSFER_BOX_NAME_DISABLED
+      pbMessage(_INTL("\\C[2]The Transfer Box is disabled because your savefile is flagged as randomized. You can still use it as a normal PC box, but the Pokémon you put in it won't be available in your other savefiles"))
+    end
+    @disabled= true
   end
 
   def loadTransferBoxPokemon
+    echoln "Loading transfer box"
     path = transferBoxSavePath
     if File.exist?(path)
       File.open(path, "rb") do |f|
@@ -42,11 +54,40 @@ class StorageTransferBox < PokemonBox
   end
 
   def []=(i,value)
+    return unless value.is_a?(Pokemon)
+    return if check_is_duplicate(value)
     @pokemon[i] = value
     if can_use_transfer_box?
       saveTransferBox()
       Game.save()
     end
+  end
+
+
+  # If you have a pokemon has the same id as the one you're trying to deposit /withdraw, then
+  # blocked
+  def check_is_duplicate(box_pokemon)
+    return false unless box_pokemon.is_a?(Pokemon)
+    used_ids = []
+    $Trainer.party.each { |pokemon|
+      used_ids << pokemon.personalID
+    }
+    $PokemonStorage.boxes.each { |box|
+      box.pokemon.each { |pokemon|
+        used_ids << pokemon.personalID if pokemon.is_a?(Pokemon)
+      }
+    }
+    $PokemonGlobal.daycare.each { |daycare_data|
+      pokemon = daycare_data[0]
+      used_ids << pokemon.personalID if pokemon
+    }
+
+    if used_ids.count(box_pokemon.personalID) > 1
+      pbPlayBuzzerSE
+      pbMessage(_INTL("This Pokémon cannot be transferred."))
+      return true
+    end
+    return false
   end
 
   def saveTransferBox
@@ -91,3 +132,17 @@ def verifyTransferBoxAutosave()
   end
   return true
 end
+
+
+
+# class PokemonStorageScreen
+#   alias pokemonStorageScreen_pbWithdraw pbWithdraw
+#   def pbWithdraw(pokemon,heldpkmn)
+#     box = @storage[@storage.currentBox]
+#     if box.is_a?(StorageTransferBox) && box.can_use_transfer_box?
+#       return unless check_withdrawable(pokemon)
+#     end
+#     pokemonStorageScreen_pbWithdraw(pokemon,heldpkmn)
+#   end
+# end
+

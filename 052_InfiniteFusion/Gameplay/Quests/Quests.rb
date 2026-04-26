@@ -179,7 +179,7 @@ define_quest("petalburg_berry",:FIELD_QUEST,_INTL("Berry Contest"), _INTL("Take 
 
 
     #Route 116
-define_quest("route116_glasses",:FIELD_QUEST,_INTL("Lost glasses"), _INTL("A trainer has lost their glasses, help him find them!"),_INTL("Route 116"),"NPC_Hoenn_BugManiac")
+define_quest("route116_glasses",:FIELD_QUEST,_INTL("Lost glasses"), _INTL("A trainer has lost their glasses, help him find them!"),_INTL("Route 116"),"NPC_Hoenn_Collector_NoGlasses")
 
 #Route 104 (South)
 define_quest("route104_rivalWeather",:FIELD_QUEST,_INTL("Weather Watch"), _INTL("Help your rival with fieldwork and find a Pokémon that only appears when it's windy!"),_INTL("Route 104"),"rival")
@@ -215,14 +215,18 @@ define_quest("route109_seahouse",:FIELD_QUEST,_INTL("Hot Battles at the Seashore
 define_quest("route109_beachball",:FIELD_QUEST,_INTL("Find a New Beach Ball!"), _INTL("Replace the popped beach ball of the kids playing on the beach"),_INTL("Route 109"),"NPC_Hoenn_Tuber_M")
 
 #Team Magma - Route 103
+define_quest("magma_camp_attack",:MAGMA_QUEST,_INTL("Under Attack!"), _INTL("Defend the Team Magma Camp against Team Aqua!"),_INTL("Magma Camp"),"NPC_Hoenn_Magma_Exec_M")
+define_quest("magma_slugma_eggs",:MAGMA_QUEST,_INTL("Egg Hunt!"), _INTL("Collect Slugma Eggs with Tabitha."),_INTL("Cliffside Sanctuary"),"NPC_Hoenn_Magma_Exec_M")
 define_quest("magma_help_grunts",:MAGMA_QUEST,_INTL("Grunt work!"), _INTL("Help 3 grunts in the Team Magma Camp, then report back to Tabitha!"),_INTL("Magma Camp"),"NPC_Hoenn_Magma_Exec_M")
-define_quest("magma_numel",:MAGMA_QUEST,_INTL("Anti-Water Training!"), _INTL("Fuse Numel in a way that it's no longer weak to the Water type."),_INTL("Magma Camp"),"NPC_Hoenn_Magma_Grunt_M")
+define_quest("magma_numel",:MAGMA_QUEST,_INTL("Anti-Water Training!"), _INTL("Fuse Numel to make it resistant Water-type attacks."),_INTL("Magma Camp"),"NPC_Hoenn_Magma_Grunt_M")
 define_quest("magma_graffiti",:MAGMA_QUEST,_INTL("Painting the Town Red"), _INTL("Team Aqua painted their logo on various walls in Slateport City. Cover them up with the Team Magma logo instead!"),_INTL("Magma Camp"),"NPC_Hoenn_Magma_Grunt_F")
 define_quest("magma_song",:MAGMA_QUEST,_INTL("The Magma Theme Song"), _INTL("Help compose lyrics to the official Team Magma theme song!"),_INTL("Magma Camp"),"NPC_Hoenn_Magma_Grunt_F")
 
 #Team Aqua - Route 108
-define_quest("aqua_help_grunts",:AQUA_QUEST,_INTL("Grunt work!"), _INTL("Help 3 grunts in the Team Aqua Camp, then report back to Shelly!"),_INTL("Aqua Camp"),"NPC_Hoenn_Aqua_Exec_M")
-define_quest("aqua_carvanha",:AQUA_QUEST,_INTL("Grunt work!"), _INTL("You were given 2 Zubats and a Geodude. Fuse all three of them into Water-type Pokémon."),_INTL("Aqua Camp"),"NPC_Hoenn_Aqua_Grunt_F")
+define_quest("aqua_camp_attack",:AQUA_QUEST,_INTL("Under Attack!"), _INTL("Defend the Team Aqua Camp against Team Magma!"),_INTL("Aqua Camp"),"NPC_Hoenn_Aqua_Exec_F")
+define_quest("aqua_wailmer_eggs",:AQUA_QUEST,_INTL("Egg Hunt!"), _INTL("Collect Wailmer Eggs for Shelly."),_INTL("Route 108"),"NPC_Hoenn_Aqua_Exec_F")
+define_quest("aqua_help_grunts",:AQUA_QUEST,_INTL("Grunt work!"), _INTL("Help 3 grunts in the Team Aqua Camp, then report back to Shelly!"),_INTL("Aqua Camp"),"NPC_Hoenn_Aqua_Exec_F")
+define_quest("aqua_carvanha",:AQUA_QUEST,_INTL("Grunt work!"), _INTL("You were given two Zubats and a Geodude. Fuse all three of them into Water-type Pokémon."),_INTL("Aqua Camp"),"NPC_Hoenn_Aqua_Grunt_F")
 define_quest("aqua_graffiti",:AQUA_QUEST,_INTL("Painting the Town Blue"), _INTL("Team Magma painted their logo on various walls in Slateport City. Cover them up with the Team Aqua logo instead!"),_INTL("Aqua Camp"),"NPC_Hoenn_Aqua_Grunt_M")
 define_quest("aqua_song",:AQUA_QUEST,_INTL("The Aqua Theme Song"), _INTL("Help compose lyrics to the official Team Aqua theme song!"),_INTL("Aqua Camp"),"NPC_Hoenn_Aqua_Grunt_F")
 
@@ -244,3 +248,7 @@ define_quest("route111_winstrate",:FIELD_QUEST,_INTL("The Winstrate Family"), _I
 #Verdanturf
 define_quest("verdanturf_shroomish",:FIELD_QUEST,_INTL("A Lost Shroomish"), _INTL("A girl lost her Shroomish and needs your help to find it."),_INTL("Verdanturf Town"),"NPC_Hoenn_Schoolgirl")
 define_quest("verdanturf_nurse",:FIELD_QUEST,_INTL("The Bored Nurse"), _INTL("The Pokémon Center's nurse challenged you to a battle. Meet her in the meadow behind the Pokémon Center."),_INTL("Verdanturf Town"),"NPC_Hoenn_Nurse")
+
+#Rusturf Tunnel
+define_quest("rusturf_trumpet",:FIELD_QUEST,_INTL("Uproar in B Flat"), _INTL("A trumpet player is cornered in Rusturf Tunnel. Find a way to help him!"),_INTL("Rusturf Tunnel"),"NPC_Hoenn_trumpet_playing")
+define_quest("evergrande_trumpet",:FIELD_QUEST,_INTL("The Trumpet Festival!"), _INTL("Find the 4 Trumpet Brothers and join the Trumpet Festival in Evergrande City"),_INTL("Evergrande City"),"NPC_Hoenn_trumpet_playing")

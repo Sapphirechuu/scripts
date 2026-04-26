@@ -126,7 +126,12 @@ class BattledTrainer
       CHAMPION_Steven:  [:STEEL],
 
       TEAM_AQUA_BOSS:  [:WATER],
+      TEAM_AQUA_EXEC_M:  [:WATER],
+      TEAM_AQUA_EXEC_F:  [:WATER],
+
       TEAM_MAGMA_BOSS:  [:GROUND],
+      TEAM_MAGMA_EXEC_M:  [:GROUND],
+      TEAM_MAGMA_EXEC_F:  [:GROUND],
 
     }
 end

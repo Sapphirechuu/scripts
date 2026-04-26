@@ -441,13 +441,8 @@ def pbGenerateWildPokemon(species,level,isRoamer=false)
   elsif itemrnd<(chances[0]+chances[1]+chances[2])
     genwildpoke.item = items[2]
   end
-  # Shiny Charm makes shiny Pokémon more likely to generate
-  if GameData::Item.exists?(:SHINYCHARM) && $PokemonBag.pbHasItem?(:SHINYCHARM)
-    2.times do   # 3 times as likely
-      break if genwildpoke.shiny?
-      genwildpoke.personalID = rand(2**16) | rand(2**16) << 16
-    end
-  end
+  apply_shiny_rerolls(genwildpoke)
+
   # Give Pokérus
   genwildpoke.givePokerus if rand(65536) < Settings::POKERUS_CHANCE
   # Change wild Pokémon's gender/nature depending on the lead party Pokémon's
@@ -466,6 +461,31 @@ def pbGenerateWildPokemon(species,level,isRoamer=false)
   # Trigger events that may alter the generated Pokémon further
   Events.onWildPokemonCreate.trigger(nil,genwildpoke)
   return genwildpoke
+end
+
+def apply_shiny_rerolls(pokemon)
+  # Shiny Charm: 2 extra rerolls (3× as likely)
+  if GameData::Item.exists?(:SHINYCHARM) && $PokemonBag.pbHasItem?(:SHINYCHARM)
+    2.times do
+      break if pokemon.shiny?
+      pokemon.personalID = rand(2**16) | rand(2**16) << 16
+    end
+  end
+
+  # NPC friends: 0–2 extra rerolls scaling with friend count (3× at 100 friends)
+  if $Trainer.nb_npc_friends && $Trainer.nb_npc_friends > 0
+    extra_rerolls  = ([[$Trainer.nb_npc_friends, 0].max, 100].min / 100.0) * 2.0
+    full_rerolls   = extra_rerolls.floor
+    partial_chance = extra_rerolls - full_rerolls
+
+    full_rerolls.times do
+      break if pokemon.shiny?
+      pokemon.personalID = rand(2**16) | rand(2**16) << 16
+    end
+    if !pokemon.shiny? && rand < partial_chance
+      pokemon.personalID = rand(2**16) | rand(2**16) << 16
+    end
+  end
 end
 
 # Used by fishing rods and Headbutt/Rock Smash/Sweet Scent to generate a wild

@@ -36,7 +36,7 @@ def unlockHat(outfit_id)
 end
 
 def obtainClothes(outfit_id)
-  echoln "obtained new clothes: " + outfit_id
+  echoln "obtained new clothes: #{outfit_id}"
   outfit = get_clothes_by_id(outfit_id)
   if !outfit
     pbMessage(_INTL("The clothes {1} are invalid.", outfit_id))
@@ -196,10 +196,12 @@ def findLastHairVersion(hairId)
 end
 
 def isWearingClothes(outfitId)
+  return false unless $Trainer
   return $Trainer.clothes == outfitId
 end
 
 def isWearingHat(outfitId)
+  return false unless $Trainer
   return $Trainer.hat == outfitId || $Trainer.hat2 == outfitId
 end
 
@@ -458,6 +460,9 @@ def select_hat()
   return selected_hat_id
 end
 
+def has_trumpet_hat?
+  return $Trainer.unlocked_hats.include?(HAT_TRUMPET)
+end
 def canPutHatOnPokemon(pokemon)
   return !pokemon.egg? && !pokemon.isTripleFusion? && $game_switches[SWITCH_UNLOCKED_POKEMON_HATS]
 end

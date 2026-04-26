@@ -5,10 +5,15 @@ module Settings
   SHINY_POKEMON_CHANCE = 16
   SNOW_DAY = false
 
+  STARTUP_MESSAGES = ""
+  MAIN_MENU_LINKS = {
+    "Discord" => "https://discord.com/invite/infinitefusion",
+    "Wiki" => "https://infinitefusion.fandom.com/",
+  }
   
+  FEEDBACK_FORM_URL = "https://forms.gle/1svTMSUMf7ebHdZq7"
   DISCORD_URL = "https://discord.com/invite/infinitefusion"
   WIKI_URL = "https://infinitefusion.fandom.com/"
-  STARTUP_MESSAGES = ""
   
   CREDITS_FILE_URL = "https://infinitefusion.net/customsprites/Sprite_Credits.csv"
 
@@ -50,7 +55,7 @@ module Settings
   AI_ENTRIES_RATE_LOG_FILE = 'Data/pokedex/rate_limit.log'  # Path to the log file
 
   #Spritepack
-  NEWEST_SPRITEPACK_MONTH = 1
+  NEWEST_SPRITEPACK_MONTH = 3
   NEWEST_SPRITEPACK_YEAR = 2026
 
 

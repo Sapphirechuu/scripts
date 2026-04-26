@@ -140,7 +140,7 @@ class PokeBattle_AI
         next if target_data.targets_foe && !user.opposes?(b)
         score = pbGetMoveScore(move, user, b, skill)
 
-        echoln "Move: #{move.id} Score: #{score}"
+        #echoln "Move: #{move.id} Score: #{score}"
         scoresAndTargets.push([score, b.index]) if score > 0
       end
       if scoresAndTargets.length > 0

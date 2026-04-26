@@ -1,20 +1,16 @@
-def isOutdoor()
-  current_map = $game_map.map_id
+def isOutdoor(current_map = nil)
+  current_map = $game_map.map_id if current_map.nil?
   map_metadata = GameData::MapMetadata.try_get(current_map)
   return map_metadata && map_metadata.outdoor_map
 end
 
 
-def find_random_walkable_coordinates_near_player(width,height,variance,max_nb_tries = 10)
-  found_available_position = false
-  current_try = 0
-  while !found_available_position
+def find_random_walkable_coordinates_near_player(width, height, variance, max_nb_tries = 10)
+  max_nb_tries.times do
     x, y = getRandomPositionOnPerimeter(width, height, $game_player.x, $game_player.y, variance)
-    found_available_position = true if $game_map.playerPassable?(x, y, $game_player.direction)
-    current_try += 1
-    return nil if current_try > max_nb_tries
+    return [x, y] if $game_map.playerPassable?(x, y, $game_player.direction)
   end
-  return [x,y]
+  return nil
 end
 
 def find_random_tall_grass_coordinates_near_player(width,height,variance,max_nb_tries = 10)

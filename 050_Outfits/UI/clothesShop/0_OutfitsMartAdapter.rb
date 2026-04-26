@@ -7,20 +7,29 @@ class OutfitsMartAdapter < PokemonMartAdapter
   WORN_ITEM_SHADOW_COLOR = MessageConfig::BLUE_TEXT_SHADOW_COLOR
 
 
-  REGIONAL_SET_BASE_COLOR =   Color.new(76,72,104)
-  REGIONAL_SET_SHADOW_COLOR =   Color.new(173,165,189)
 
-  CITY_EXCLUSIVE_BASE_COLOR =   Color.new(61 , 125, 70) #Color.new(72 , 104, 83)
-  CITY_EXCLUSIVE_SHADOW_COLOR =   Color.new(165, 189, 178)
 
-  def initialize(stock = [], isShop = true, isSecondaryHat = false)
+  def initialize(stock = [], isShop = true, isSecondaryHat = false, prices_override = {})
     @is_secondary_hat = isSecondaryHat
     @items = stock
     @worn_clothes = get_current_clothes()
     @isShop = isShop
     @version = nil
+    @prices_override = prices_override
     $Trainer.dyed_hats = {} if !$Trainer.dyed_hats
     $Trainer.dyed_clothes = {} if !$Trainer.dyed_clothes
+
+
+    @REGIONAL_SET_BASE_COLOR =   Color.new(76,72,104)
+    @REGIONAL_SET_SHADOW_COLOR =   Color.new(173,165,189)
+
+    @CITY_EXCLUSIVE_BASE_COLOR =   Color.new(61 , 125, 70) #Color.new(72 , 104, 83)
+    @CITY_EXCLUSIVE_SHADOW_COLOR =   Color.new(165, 189, 178)
+
+    if isDarkMode
+      @REGIONAL_SET_BASE_COLOR, @REGIONAL_SET_SHADOW_COLOR = @REGIONAL_SET_SHADOW_COLOR, @REGIONAL_SET_BASE_COLOR
+      @CITY_EXCLUSIVE_BASE_COLOR, @CITY_EXCLUSIVE_SHADOW_COLOR = @CITY_EXCLUSIVE_SHADOW_COLOR, @CITY_EXCLUSIVE_BASE_COLOR
+    end
   end
 
 
@@ -70,6 +79,9 @@ class OutfitsMartAdapter < PokemonMartAdapter
 
   def getPrice(item, selling = nil)
     return 0 if !@isShop
+    if @prices_override && @prices_override.has_key?(item.id)
+      return @prices_override[item.id]
+    end
     return nil if itemOwned(item)
     return item.price.to_i
   end
@@ -110,14 +122,14 @@ class OutfitsMartAdapter < PokemonMartAdapter
   end
 
   def getBaseColorOverride(item)
-      return REGIONAL_SET_BASE_COLOR if isItemInRegionalSet(item)
-      return CITY_EXCLUSIVE_BASE_COLOR  if isItemCityExclusive(item)
+      return @REGIONAL_SET_BASE_COLOR if isItemInRegionalSet(item)
+      return @CITY_EXCLUSIVE_BASE_COLOR  if isItemCityExclusive(item)
       return nil
   end
 
   def getShadowColorOverride(item)
-    return REGIONAL_SET_SHADOW_COLOR if isItemInRegionalSet(item)
-    return CITY_EXCLUSIVE_SHADOW_COLOR  if isItemCityExclusive(item)
+    return @REGIONAL_SET_SHADOW_COLOR if isItemInRegionalSet(item)
+    return @CITY_EXCLUSIVE_SHADOW_COLOR  if isItemCityExclusive(item)
     return nil
   end
 

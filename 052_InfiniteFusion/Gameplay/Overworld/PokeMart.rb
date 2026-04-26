@@ -211,6 +211,8 @@ def get_mart_exclusive_items_hoenn(city)
     items_list = [:SOOTHEBELL, :NETBALL]
   when :MAUVILLE
     items_list = [:CELLBATTERY, :FASTBALL]
+  when :VERDANTURF
+    items_list = [:MENTALHERB, :LUXURYBALL]
   when :LAVARIDGE
     items_list = [:LAVACOOKIE, :REPEATBALL]
   when :FALLARBOR
@@ -218,7 +220,7 @@ def get_mart_exclusive_items_hoenn(city)
   when :FORTREE
     items_list = [:ABSORBBULB, :FRIENDBALL]
   when :LILYCOVE
-    items_list = [:METRONOME, :QUICKBALL, :TIMERBALL]
+    items_list = [:METRONOME, :QUICKBALL,:TIMERBALL]
   when :MOSSDEEP
     items_list = [:AIRBALLOON, :MOONBALL]
   when :SOOTOPOLIS
@@ -229,4 +231,36 @@ def get_mart_exclusive_items_hoenn(city)
     items_list = [:FLOATSTONE, :DIVEBALL]
   end
   return items_list
+end
+
+
+
+def regional_clothes_shop(regionTag)
+  selector = OutfitSelector.new
+  list = selector.generate_clothes_choice(
+    baseOptions = false,
+    additionalIds = [],
+    additionalTags = [regionTag],
+    filterOutTags = [])
+  clothesShop(list)
+end
+
+def regional_hats_shop(regionTag)
+  selector = OutfitSelector.new
+  list = selector.generate_hats_choice(
+    baseOptions = false,
+    additionalIds = [],
+    additionalTags = [regionTag],
+    filterOutTags = [])
+  hatShop(list)
+end
+
+def regional_hairstyle_shop(regionTag)
+  selector = OutfitSelector.new
+  list = selector.generate_hairstyle_choice(
+    baseOptions = false,
+    additionalIds = [],
+    additionalTags = [regionTag],
+    filterOutTags = [])
+  hairShop(list)
 end

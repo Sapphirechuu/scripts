@@ -301,6 +301,7 @@ class PokemonMart_Scene
     @sprites["itemwindow"].refresh
     @sprites["itemtextwindow"] = Window_UnformattedTextPokemon.newWithSize("",
                                                                            64, Graphics.height - 96 - 16, Graphics.width - 64, 128, @viewport)
+
     pbPrepareWindow(@sprites["itemtextwindow"])
     @sprites["itemtextwindow"].baseColor = Color.new(248, 248, 248)
     @sprites["itemtextwindow"].shadowColor = Color.new(0, 0, 0)
@@ -619,6 +620,10 @@ class PokemonMartScreen
     @adapter = adapter
   end
 
+  def set_price_overrides(value)
+    @price_overrides = value
+  end
+
   def pbConfirm(msg)
     return @scene.pbConfirm(msg)
   end
@@ -702,7 +707,6 @@ class PokemonMartScreen
         end
         if extra_item
           item_name = GameData::Item.get(extra_item).real_name
-          echoln extra_item
           if @adapter.addItem(GameData::Item.get(extra_item))
             pbDisplayPaused(_INTL("I'll throw in a {1}, too.", item_name))
           end
@@ -751,6 +755,9 @@ class PokemonMartScreen
 end
 
 def replaceShopStockWithRandomized(stock)
+  unless $PokemonGlobal.randomItemsHash
+    pbShuffleItems
+  end
   if $PokemonGlobal.randomItemsHash != nil
     newStock = []
     for item in stock
@@ -770,10 +777,11 @@ end
 #
 #===============================================================================
 def pbPokemonMart(stock, speech_welcome = nil, cantsell = false, speech_bye=nil, speech_what_else=nil)
+  stock = [] unless stock
+  stock = [] unless stock.is_a?(Array)
   if $game_switches[SWITCH_RANDOM_ITEMS_GENERAL] && $game_switches[SWITCH_RANDOM_SHOP_ITEMS]
     stock = replaceShopStockWithRandomized(stock)
   end
-  stock = [] unless stock
   for i in 0...stock.length
     stock[i] = GameData::Item.get(stock[i])&.id
     stock[i] = nil if GameData::Item.get(stock[i])&.is_important? && $PokemonBag.pbHasItem?(stock[i])

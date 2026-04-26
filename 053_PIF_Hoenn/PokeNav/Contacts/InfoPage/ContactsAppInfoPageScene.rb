@@ -1,9 +1,3 @@
-#
-#todo: Phonebook- like visuals for the list page
-# Have a "trainer-fact" display when there's no recent event defined in trainer.txt
-#
-#
-
 class ContactsAppInfoPageScene < PokeNavAppScene
   attr_accessor :trainer
 
@@ -143,11 +137,6 @@ class ContactsAppInfoPageScene < PokeNavAppScene
 
     trainerClassName = GameData::TrainerType.get(@trainer.trainerType).real_name
     trainer_name = "#{trainerClassName} #{@trainer.trainerName}"
-
-    echoln @trainer.trainerType
-    echoln @trainer.trainerName
-    echoln trainer_name
-
     level_sum = 0
     if @trainer.currentTeam.size > 0
       @trainer.currentTeam.each do |pokemon|
@@ -190,43 +179,45 @@ class ContactsAppInfoPageScene < PokeNavAppScene
       if action
         case action.eventType
         when :CATCH
-          action_text = _INTL("Recently caught a {1}",
+          action_text = _INTL("Recently caught a {1}.",
                               GameData::Species.get(action.caught_pokemon).real_name)
         when :EVOLVE
-          action_text = _INTL("Recently evolved their {1}",
+          action_text = _INTL("Recently evolved their {1}.",
                               GameData::Species.get(action.evolved_pokemon).real_name)
         when :FUSE
-          action_text = _INTL("Recently fused their {1} and {2}",
+          action_text = _INTL("Recently fused their {1} and {2}\.",
                               GameData::Species.get(action.fusion_head_pokemon).real_name,
                               GameData::Species.get(action.fusion_body_pokemon).real_name)
         when :UNFUSE
-          action_text = _INTL("Recently unfused their {1}",
+          action_text = _INTL("Recently unfused their {1}.",
                               GameData::Species.get(action.unfused_pokemon).real_name)
         when :REVERSE
-          action_text = _INTL("Recently reversed their {1}",
+          action_text = _INTL("Recently reversed their {1}.",
                               GameData::Species.get(action.reversed_pokemon).real_name)
         end
-        displayText(action_text, INFO_HEADER_X, current_y)
-        # No pagination needed for event text — clear pages so LEFT/RIGHT do nothing
-        @info_text_pages = []
-        @info_text_page = 0
-      else
-        displayInfoText(current_y, trainer_data)
       end
     end
+    displayInfoText(current_y, trainer_data, action_text)
   end
 
-  def displayInfoText(current_y, trainer_data)
+  def displayInfoText(current_y, trainer_data, action_text = nil)
     infoText = trainer_data&.infoText
-    if infoText
-      full_text = "\"" + infoText + "\""
+    if infoText || action_text
+      if infoText
+        full_text = infoText.gsub("___", "")
+        full_text = full_text.gsub("<PLAYER_NAME>", $Trainer.name)
+        full_text = "\"#{full_text}\"" unless full_text.empty?
+      end
+
       max_width = SPRITE_POSITION_X - INFO_HEADER_X - 20
       temp_bitmap = Bitmap.new(1, 1)
-      all_lines = wrap_text(full_text, temp_bitmap, max_width)
+      all_lines = full_text ? wrap_text(full_text, temp_bitmap, max_width) : []
       temp_bitmap.dispose
 
-      # Rebuild pages only when switching trainers (page resets to 0 in change_trainer)
       @info_text_pages = all_lines.each_slice(INFO_TEXT_LINES_PER_PAGE).to_a
+
+      #insert action page as first
+      @info_text_pages.unshift([action_text]) if action_text
       @info_text_page = @info_text_page.clamp(0, [@info_text_pages.size - 1, 0].max)
 
       page_lines = @info_text_pages[@info_text_page] || []
@@ -235,19 +226,19 @@ class ContactsAppInfoPageScene < PokeNavAppScene
         current_y += INFO_TEXT_GAP
       end
 
-      # Draw pagination indicator when there are multiple pages, e.g. "1 / 3"
       if @info_text_pages.size > 1
         indicator = "#{@info_text_page + 1} / #{@info_text_pages.size}"
-        indicator_x = Graphics.width - 80
-
-        echoln current_y- INFO_TEXT_GAP
-
-        displayText(indicator, indicator_x, 340)
+        displayText(indicator, Graphics.width - 80, 340)
       end
     else
       @info_text_pages = []
       @info_text_page = 0
     end
+  end
+
+  def rebuildInfoTextPage(all_lines)
+    @info_text_pages = all_lines.each_slice(INFO_TEXT_LINES_PER_PAGE).to_a
+    @info_text_page = @info_text_page.clamp(0, [@info_text_pages.size - 1, 0].max)
   end
 
   def updateInput
@@ -315,6 +306,7 @@ class ContactsAppInfoPageScene < PokeNavAppScene
 
   def click(button_id)
     super
+    echoln @trainer.id
     cmd_team = _INTL("View Team")
     cmd_cancel = _INTL("Cancel")
     commands = []

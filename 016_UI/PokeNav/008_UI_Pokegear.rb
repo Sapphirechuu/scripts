@@ -131,6 +131,7 @@ class PokemonPokegear_Scene
     @index = 0
     @held_index
     @rearranging = false
+
     if $game_temp.pokenav_last_index
       @index = $game_temp.pokenav_last_index
     end
@@ -260,7 +261,6 @@ class PokemonPokegear_Scene
       @sprites["button#{i}"].set_command(cmd)
     end
   end
-
 
 
   # def refresh_apps

@@ -492,9 +492,23 @@ class PokemonLoadScreen
         commands[cmd_new_game_plus = commands.length] = _INTL('New Game +')
       end
       commands[cmd_options = commands.length] = _INTL('Options')
-      commands[cmd_language = commands.length] = _INTL('Language') if Settings::LANGUAGES.length >= 2
-      commands[cmd_discord = commands.length] = _INTL('Discord')
-      commands[cmd_wiki = commands.length] = _INTL('Wiki')
+      commands[cmd_language = commands.length] = _INTL('Language') if Settings::LANGUAGES.length >= 2 && Settings::KANTO
+
+
+      cmd_links = {}
+
+      if Settings::HOENN && new_game_plus && !Settings::FEEDBACK_FORM_URL.empty?
+        cmd_links[commands.length] = Settings::FEEDBACK_FORM_URL
+        commands[commands.length] = _INTL("Demo Feedback Form")
+      end
+
+      Settings::MAIN_MENU_LINKS.each do |key, value|
+        cmd_links[commands.length] = value
+        commands[commands.length] = _INTL(key)
+      end
+
+      # commands[cmd_discord = commands.length] = _INTL('Discord')
+      # commands[cmd_wiki = commands.length] = _INTL('Wiki')
       commands[cmd_savefile = commands.length] = _INTL('Savefile management') if show_continue
       commands[cmd_debug = commands.length] = _INTL('Debug') if $DEBUG
       commands[cmd_quit = commands.length] = _INTL('Quit Game')
@@ -541,10 +555,6 @@ class PokemonLoadScreen
           initialize_alt_sprite_substitutions()
           @save_data[:player].new_game_plus_unlocked = true
           return
-        when cmd_discord
-          openUrlInBrowser(Settings::DISCORD_URL)
-        when cmd_wiki
-          openUrlInBrowser(Settings::WIKI_URL)
         when cmd_mystery_gift
           pbFadeOutIn { pbDownloadMysteryGift(@save_data[:player]) }
         when cmd_options
@@ -586,7 +596,11 @@ class PokemonLoadScreen
           @selected_file = SaveData.get_next_slot(save_file_list, @selected_file)
           break # to outer loop
         else
-          pbPlayBuzzerSE
+          if cmd_links.key?(command)
+            openUrlInBrowser(cmd_links[command])
+          else
+            pbPlayBuzzerSE
+          end
         end
       end
     end
@@ -870,6 +884,12 @@ module Game
     if ngp_trainer
       $Trainer.unlocked_hats = ngp_trainer.unlocked_hats
       $Trainer.unlocked_clothes = ngp_trainer.unlocked_clothes
+
+      if Settings::HOENN
+        $Trainer.pokenav = Pokenav.new
+        $Trainer.pokenav.installed_apps = ngp_trainer.pokenav.installed_apps
+        echoln $Trainer.pokenav.installed_apps
+      end
     end
     $Trainer.new_game_plus_unlocked = ngp_unlocked
   end
@@ -892,7 +912,7 @@ module Game
     # Set resize factor
     pbSetResizeFactor([$PokemonSystem.screensize, 4].min)
     # Set language (and choose language if there is no save file)
-    if Settings::LANGUAGES.length >= 2
+    if Settings::LANGUAGES.length >= 2 && Settings::KANTO
       $PokemonSystem.language = pbChooseLanguage if save_data.empty?
       pbLoadMessages('Data/' + Settings::LANGUAGES[$PokemonSystem.language][1])
     end

@@ -46,3 +46,14 @@ def get_player_sprite_character
   end
   return nil
 end
+
+def setFog(intensity)
+  current_weather = $game_weather.current_weather[$game_map.map_id]
+  if current_weather && current_weather[0] == :Fog
+    starting_intensity = current_weather[1]
+  else
+    starting_intensity =0
+  end
+  echoln starting_intensity
+  $scene.spriteset.fade_in_fog(starting_intensity,intensity)
+end

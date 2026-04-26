@@ -72,6 +72,7 @@ def pbMapInterpreterRunning?
 end
 
 def pbRefreshSceneMap
+  echoln $scene
   if $scene && $scene.is_a?(Scene_Map)
     if $scene.respond_to?("miniupdate")
       $scene.miniupdate

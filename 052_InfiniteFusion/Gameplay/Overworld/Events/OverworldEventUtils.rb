@@ -19,6 +19,13 @@ def turnEventTowardsEvent(turning, turnedTowards)
   end
 end
 
+def resetFrames(event)
+  if event.is_a?(Integer)
+    event = $game_map.events[event]
+  end
+  event.pattern=0
+end
+
 def turnPlayerTowardsEvent(event)
   if event.is_a?(Integer)
     event = $game_map.events[event]
@@ -66,10 +73,17 @@ def sign(message, type = 0)
   pbMessage(formatted_message)
 end
 
-def setEventGraphicsToPokemon(species, eventId)
+def setEventGraphicsToPokemon(species, eventId, shiny=false)
   event = $game_map.events[eventId]
   return if !event
-  event.character_name = "Followers/#{species.to_s}"
+  shiny_folder= shiny ? "Shiny/" : ""
+  path = "Followers/#{shiny_folder}#{species.to_s}"
+  if pbResolveBitmap(path)
+    event.character_name = path
+  else
+    path =  "Followers/#{shiny_folder}#{species.to_s}_fly"
+    event.character_name = path
+  end
   event.refresh
 end
 
@@ -541,6 +555,10 @@ def this_event()
   return $game_map.events[@event_id]
 end
 
+def get_event(id)
+  return $game_map.events[id]
+end
+
 def select_tv_show_quests(episode = 0)
   all_episodes = [
     [],
@@ -638,7 +656,11 @@ def setDayCareOverworlds(land_event_ids = [], water_event_ids = [])
     pbSetSelfSwitch(event.id, "A", true, day_care_map)
     $game_map.refresh
 
-    event.character_name = getOverworldLandPath(day_care_pokemon.species_data, day_care_pokemon.isShiny?)
+    overworldPath = getRoamingSprite(day_care_pokemon.species_data, day_care_pokemon.isShiny?)
+    is_flying = overworldPath.include?("_fly")
+    event.step_anime = true if is_flying
+    echoln overworldPath
+    event.character_name = overworldPath if overworldPath
     if swimming
       event.forced_bush_depth = 20
       event.step_anime = true

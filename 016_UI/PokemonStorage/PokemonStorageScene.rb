@@ -84,6 +84,7 @@ class PokemonStorageScene
       pbUpdateOverlay(@selection, @storage.party)
       pbSetMosaic(@selection)
     end
+    checkOpenTransferBox(@storage.currentBox)
     pbSEPlay("PC access") if animate
     pbFadeInAndShow(@sprites) if animate
   end
@@ -483,7 +484,7 @@ class PokemonStorageScene
     @sprites["box"].dispose
     @sprites["box"] = newbox
     newbox.refreshAllBoxSprites
-    checkTransferBoxTutorial(newbox.boxnumber)
+    checkOpenTransferBox(newbox.boxnumber)
   end
 
   def pbSwitchBoxToLeft(newbox)
@@ -505,7 +506,7 @@ class PokemonStorageScene
     @sprites["box"].dispose
     @sprites["box"] = newbox
     newbox.refreshAllBoxSprites
-    checkTransferBoxTutorial(newbox.boxnumber)
+    checkOpenTransferBox(newbox.boxnumber)
   end
 
   def pbJumpToBox(newbox)
@@ -517,7 +518,19 @@ class PokemonStorageScene
       end
       @storage.currentBox = newbox
     end
-    checkTransferBoxTutorial(newbox)
+    checkOpenTransferBox(newbox)
+  end
+
+  def checkOpenTransferBox(newbox)
+    isTransferBox = @storage[newbox].is_a?(StorageTransferBox)
+    if isTransferBox
+      checkTransferBoxTutorial(newbox)
+      if @storage[newbox].can_use_transfer_box?
+        @storage[newbox].loadTransferBoxPokemon
+      else
+        @storage[newbox].setDisabled
+      end
+    end
   end
 
 
@@ -673,14 +686,18 @@ class PokemonStorageScene
 
   def pbChooseBox(msg)
     commands = []
+    boxIndices = []
     for i in 0...@storage.maxBoxes
       box = @storage[i]
       if box
+        next if box.is_a?(StorageTransferBox)
         commands.push(_INTL("{1} ({2}/{3})", box.name, box.nitems, box.length))
+        boxIndices.push(i)
       end
     end
-
-    return pbShowCommands(msg, commands, @storage.currentBox)
+    defaultIndex = boxIndices.index(@storage.currentBox) || 0
+    cmdIndex = pbShowCommands(msg, commands, defaultIndex)
+    return cmdIndex >= 0 ? boxIndices[cmdIndex] : -1
   end
 
   def pbBoxName(helptext, minchars, maxchars)

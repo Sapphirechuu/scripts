@@ -151,7 +151,11 @@ class PokemonIconSprite < SpriteWrapper
     @numFrames = 0
     @currentFrame = 0
     @counter = 0
-    self.pokemon = pokemon
+    if pokemon.is_a?(Symbol)
+      self.pokemon = Pokemon.new(pokemon,1)
+    else
+      self.pokemon = pokemon
+    end
     @logical_x = 0 # Actual x coordinate
     @logical_y = 0 # Actual y coordinate
     @adjusted_x = 0 # Offset due to "jumping" animation in party screen
@@ -370,7 +374,6 @@ class PokemonSpeciesIconSprite < SpriteWrapper
   end
 
   def shiny=(value)
-    print "wut"
     @shiny = value
     refresh
   end

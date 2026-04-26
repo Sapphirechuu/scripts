@@ -2,6 +2,18 @@ def playerHasFusionItems()
   return pbHasItem?(:DNASPLICERS) || pbHasItem?(:SUPERSPLICERS) || pbHasItem?(:INFINITESPLICERS) || pbHasItem?(:INFINITESPLICERS2)
 end
 
+def hasUnfusedPokemonInParty(allow_fainted=true)
+  $Trainer.party.each do |pokemon|
+    unless pokemon.isFusion?
+      if !allow_fainted
+        next if pokemon.hp <= 0
+      end
+      return true
+    end
+  end
+  return false
+end
+
 def selectSplicer()
   dna_splicers_const = _INTL("DNA Splicers")
   super_splicers_const = _INTL("Super Splicers")
@@ -22,7 +34,7 @@ def selectSplicer()
     return nil
   end
 
-  cmd = pbShowCommands(_INTL("Use which splicers?"), options)
+  cmd = pbMessage(_INTL("Use which splicers?"), options)
   if cmd == -1
     return nil
   end
@@ -228,6 +240,7 @@ end
 def checkIfCustomSpriteExistsByPath(path)
   return true if pbResolveBitmap(path) != nil
 end
+
 
 def customSpriteExistsBodyHead(body, head)
   pathCustom = getCustomSpritePath(body, head)

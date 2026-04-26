@@ -735,7 +735,8 @@ end
 #   return updated_trainer, player_won
 # end
 
-def pbMoveTutorBattle(trainerID, trainerName, moves, scaleLevel=true)
+#Event_id and map_id when the trainer's event with the graphics is a different one from the one that's starting the battle
+def pbMoveTutorBattle(trainerID, trainerName, moves, scaleLevel=true, event_id=nil, map_id=nil)
   if moves && moves.is_a?(Array)
     favored_moves = moves
   else
@@ -750,12 +751,27 @@ def pbMoveTutorBattle(trainerID, trainerName, moves, scaleLevel=true)
   pbSet(Settings::OVERRIDE_BATTLE_LEVEL_VALUE_VAR, $Trainer.highest_level_pokemon_in_party)
 
   $PokemonTemp.recordBattleRule("favoredMoves", favored_moves) if favored_moves
-  res = pbTrainerBattle(trainerID, trainerName)
+  res = pbTrainerBattle(trainerID, trainerName, nil, false, 0, false, 1, nil, nil, event_id, map_id)
 
   $game_switches[Settings::OVERRIDE_BATTLE_LEVEL_SWITCH] = false
   $game_switches[SWITCH_DONT_RANDOMIZE] = false
   return res
 end
+
+def scaledLevelBattle(trainerId,trainerName,event_id=nil, map_id=nil)
+  $game_switches[Settings::OVERRIDE_BATTLE_LEVEL_SWITCH] = true
+  pbSet(Settings::OVERRIDE_BATTLE_LEVEL_VALUE_VAR, $Trainer.highest_level_pokemon_in_party)
+  res = pbTrainerBattle(trainerId, trainerName, nil, false, 0, false, 1, nil, nil, event_id, map_id)
+  $game_switches[Settings::OVERRIDE_BATTLE_LEVEL_SWITCH] = false
+  $game_switches[SWITCH_DONT_RANDOMIZE] = false
+  return res
+end
+
+# def pbTrainerBattle(trainerID, trainerName,endSpeech=nil,
+#                     doubleBattle=false, trainerPartyID=0,
+#                     canLose=false, outcomeVar=1,
+#                     name_override = nil, trainer_type_overide = nil,
+#                     event_id = nil, map_id = nil)
 
 #===============================================================================
 # Standard methods that start a trainer battle of various sizes
@@ -803,10 +819,18 @@ def pbTrainerBattle(trainerID, trainerName, endSpeech = nil,
     # other triggered trainer event
     if otherEvent.length == 1 && trainer.party.length <= Settings::MAX_PARTY_SIZE
       trainer.lose_text = endSpeech if endSpeech && !endSpeech.empty?
-      $PokemonTemp.waitingTrainer = [trainer, thisEvent.id]
+      $PokemonTemp.waitingTrainer = [trainer, thisEvent.id, trainerID, trainerName]
       return false
     end
   end
+  if $PokemonTemp.waitingTrainer
+    waiting_type = $PokemonTemp.waitingTrainer[2]
+    waiting_name = $PokemonTemp.waitingTrainer[3]
+    if waiting_type == trainerID && waiting_name == trainerName
+      $PokemonTemp.waitingTrainer = nil
+    end
+  end
+
   # Set some battle rules
   setBattleRule("outcomeVar", outcomeVar) if outcomeVar != 1
   setBattleRule("canLose") if canLose

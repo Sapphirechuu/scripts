@@ -11,7 +11,10 @@ class ContactsAppScreen
                               :TEAM_MAGMAQUA_GRUNT_M, :TEAM_MAGMAQUA_GRUNT_F,
                               :TEAM_AQUA_EXEC_M, :TEAM_AQUA_EXEC_F,
                               :TEAM_MAGMA_EXEC_M, :TEAM_MAGMA_EXEC_F,
-                              :TEAM_AQUA_BOSS, :TEAM_MAGMA_BOSS
+                              :TEAM_AQUA_BOSS, :TEAM_MAGMA_BOSS,
+                              :ADVENTURER_KANTO, :ADVENTURER_JOHTO,
+                              :ADVENTURER_SINNOH, :ADVENTURER_UNOVA,
+                              :ADVENTURER_KALOS, :ADVENTURER_ALOLA,
   ]
 
   def pbStartScreen(main_menu_scene, screen)
@@ -23,6 +26,7 @@ class ContactsAppScreen
   end
 
   def list_contacts
+    echoln $PokemonGlobal.battledTrainers
     contacts_list_by_location = {}
     $PokemonGlobal.battledTrainers = {} unless $PokemonGlobal.battledTrainers
     $PokemonGlobal.battledTrainers.each do |id, trainer|

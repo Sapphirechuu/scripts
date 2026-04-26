@@ -236,7 +236,6 @@ def generateWildEncounter(encounter_type)
   if encounter[0].is_a?(Integer)
     encounter[0] = getSpecies(encounter[0])
   end
-  echoln encounter[0]
   $game_switches[SWITCH_FORCE_FUSE_NEXT_POKEMON] = false
   return encounter
 end

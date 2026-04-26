@@ -54,6 +54,13 @@ def pbBGMPlay(param,volume=nil,pitch=nil)
   param=pbResolveAudioFile(param,volume,pitch)
   param = pbResolveAudioFile("ultra_metropolis", volume, pitch) if darknessEffectOnCurrentMap() && !$PokemonTemp.during_battle
   param = pbResolveAudioFile("ship", volume, pitch) if $PokemonGlobal && $PokemonGlobal.boat
+
+  if isWearingHat(HAT_TRUMPET) && Settings::HOENN
+    trumpet_track = "trumpet/" + param.name
+    trumpet_param = pbResolveAudioFile(trumpet_track)
+    param = trumpet_param if trumpet_param.is_a?(RPG::AudioFile)
+  end
+
   if param.name && param.name!=""
     if $PokemonSystem
       $PokemonSystem.encountered_music = [] if !$PokemonSystem.encountered_music
@@ -299,3 +306,6 @@ def pbPlayCloseMenuSE
     pbSEPlay("GUI menu close",80)
   end
 end
+DATA_PATH = "Audio/SE/Anim/AnimationData/moves/"
+DATA_SUFFIX="anim_"
+SHEET_EXT=".dat"

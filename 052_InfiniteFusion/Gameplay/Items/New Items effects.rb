@@ -444,6 +444,25 @@ ItemHandlers::UseFromBag.add(:EMERGENCYWHISTLE, proc { |item|
   next 0
 })
 
+
+ItemHandlers::UseFromBag.add(:PRESENT, proc { |item|
+  quantity = $PokemonBag.pbQuantity(item)
+  nb = 1
+  if quantity > 1
+    params = ChooseNumberParams.new
+    params.setRange(1, quantity)
+    params.setDefaultValue(1)
+    nb = pbMessageChooseNumber(_INTL("\How many would you like to open?<br>({1} in bag)", quantity), params)
+  end
+  if Settings::HOENN
+    pbReceiveCosmeticsMoney(600*nb)
+  else
+    pbReceiveMoney(400*nb)
+  end
+  $PokemonBag.pbDeleteItem(item, nb)
+  next 1
+})
+
 ItemHandlers::UseFromBag.add(:MUSHROOMSPORES, proc { |item|
   if $game_switches[SWITCH_SPORES_REPEL]
     if pbQuantity(:MUSHROOMSPORES) >= 2
@@ -789,7 +808,7 @@ ItemHandlers::UseOnPokemon.add(:DNAREVERSER, proc { |item, pokemon, scene|
     scene.pbDisplay(_INTL("It won't have any effect."))
     next false
   end
-  if Kernel.pbConfirmMessageSerious(_INTL("Should {1} be reversed?", pokemon.name))
+  if Kernel.pbConfirmMessage(_INTL("Should {1} be reversed?", pokemon.name))
     reverseFusion(pokemon)
     scene.pbRefreshAnnotations(proc { |p| pbCheckEvolution(p, item) > 0 })
     scene.pbRefresh
@@ -831,7 +850,7 @@ ItemHandlers::UseOnPokemon.add(:INFINITEREVERSERS, proc { |item, pokemon, scene|
     scene.pbDisplay(_INTL("It won't have any effect."))
     next false
   end
-  if Kernel.pbConfirmMessageSerious(_INTL("Should {1} be reversed?", pokemon.name))
+  if Kernel.pbConfirmMessage(_INTL("Should {1} be reversed?", pokemon.name))
     body = getBasePokemonID(pokemon.species, true)
     head = getBasePokemonID(pokemon.species, false)
     newspecies = (head) * Settings::NB_POKEMON + body

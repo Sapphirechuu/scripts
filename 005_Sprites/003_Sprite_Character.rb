@@ -82,7 +82,7 @@ class Sprite_Character < RPG::Sprite
     if @character && @character != $game_player
       checkModifySpriteGraphics(@character) if @character.active?
     end
-    if @character.character_name == "000"
+    if @character && @character.character_name == "000"
       @character.character_name=""
     end
     update

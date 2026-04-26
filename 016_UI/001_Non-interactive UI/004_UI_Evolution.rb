@@ -556,7 +556,7 @@ class PokemonEvolutionScene
     pbPlayDecisionSE
     oldstate  = pbSaveSpriteState(@sprites["rsprite1"])
     oldstate2 = pbSaveSpriteState(@sprites["rsprite2"])
-    pbMEPlay("Evolution start")
+    pbMEPlay("Evolution Start")
     pbBGMPlay("Evolution")
     canceled = false
     begin
@@ -600,7 +600,7 @@ class PokemonEvolutionScene
       pbUpdate
     end
     # Success jingle/message
-    pbMEPlay("Evolution success")
+    pbMEPlay("Evolution Success")
     sprite_bitmap=@sprites["rsprite2"].getBitmap
 
     #drawSpriteCredits(sprite_bitmap.filename,sprite_bitmap.path, @viewport)

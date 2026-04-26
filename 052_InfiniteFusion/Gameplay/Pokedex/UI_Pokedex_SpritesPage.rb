@@ -232,7 +232,7 @@ class PokemonPokedexInfo_Scene
         setBlacklistIconEnabled(iconName)
       end
     else
-      if species_blacklist.include?(sprite)
+      if species_blacklist.include?(sprite.alt_letter)
         setBlacklistIconDisabled(iconName)
       else
         setBlacklistIconEnabled(iconName)
@@ -242,7 +242,7 @@ class PokemonPokedexInfo_Scene
   end
 
   def load_pif_sprite(pif_sprite)
-    animated_bitmap = @spritesLoader.load_pif_sprite_directly(pif_sprite)
+    animated_bitmap = @spritesLoader.load_pif_sprite_directly(pif_sprite) if pif_sprite
     return animated_bitmap.bitmap if animated_bitmap
     return nil
   end
@@ -268,10 +268,9 @@ class PokemonPokedexInfo_Scene
       return if !$PokemonGlobal.alt_sprite_substitutions[species_id]
       current_sprite = $PokemonGlobal.alt_sprite_substitutions[species_id]
     end
-
     index = @selected_index
     for alt in altsList
-      if alt == current_sprite.alt_letter
+      if alt.alt_letter == current_sprite.alt_letter
         @selected_index = index
         return
       end
@@ -279,10 +278,21 @@ class PokemonPokedexInfo_Scene
     end
   end
 
-  SHARED_BODIES = {
-  }
-
+  SHARED_BODIES = {}
   SHARED_HEADS = {}
+  def get_shared_bodies
+    #return SHARED_BODIES
+    return {
+      GameData::Species.get(NB_POKEMON-3).species => GameData::Species.get(NB_POKEMON-1).species,
+      GameData::Species.get(NB_POKEMON-1).species => GameData::Species.get(NB_POKEMON-3).species,
+      GameData::Species.get(NB_POKEMON-2).species => GameData::Species.get(NB_POKEMON).species,
+      GameData::Species.get(NB_POKEMON).species => GameData::Species.get(NB_POKEMON-2).species,
+    }
+  end
+
+  def get_shared_heads
+    return SHARED_HEADS
+  end
 
   def list_shared_sprites(species_id)
     pokedexUtils = PokedexUtils.new
@@ -293,8 +303,10 @@ class PokemonPokedexInfo_Scene
       body_species = GameData::Species.get(body_num)&.species
       head_species = GameData::Species.get(head_num)&.species
 
-      if SHARED_BODIES[body_species]
-        shared_dex_num = GameData::Species.get(SHARED_BODIES[body_species]).id_number
+      shared_bodies = get_shared_bodies
+      shared_heads = get_shared_heads
+      if shared_bodies[body_species]
+        shared_dex_num = GameData::Species.get(shared_bodies[body_species]).id_number
         fusion_species = getFusedPokemonIdFromDexNum(shared_dex_num, head_num)
         fusion_number = GameData::Species.get(fusion_species).id_number
         shared_body_alts = pokedexUtils.pbGetAvailableAlts(fusion_number, false)
@@ -305,8 +317,8 @@ class PokemonPokedexInfo_Scene
         shared_alts += shared_body_sprites
       end
 
-      if SHARED_HEADS[head_species]
-        shared_dex_num = GameData::Species.get(SHARED_HEADS[head_species]).id_number
+      if shared_heads[head_species]
+        shared_dex_num = GameData::Species.get(shared_heads[head_species]).id_number
         fusion_species = getFusedPokemonIdFromDexNum(body_num, shared_dex_num)
         fusion_number = GameData::Species.get(fusion_species).id_number
         shared_head_alts = pokedexUtils.pbGetAvailableAlts(fusion_number, false)
@@ -567,7 +579,7 @@ class PokemonPokedexInfo_Scene
     species_blacklist = $PokemonGlobal.sprites_blacklist[@species_id]
     species_blacklist ||= initialize_species_blacklist(@species_id)
 
-    selected_letter = @available[@selected_index]
+    selected_letter = @available[@selected_index].alt_letter
 
     total = @available.length
     blacklisted = species_blacklist.length

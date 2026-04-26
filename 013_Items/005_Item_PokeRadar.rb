@@ -35,11 +35,11 @@ def pbCanUsePokeRadar?
   # Debug
   return true if $DEBUG && Input.press?(Input::CTRL)
   # Can't use Radar if it isn't fully charged
-  if $PokemonGlobal.pokeradarBattery && $PokemonGlobal.pokeradarBattery > 0
-    pbMessage(_INTL("The battery has run dry!\nFor it to recharge, you need to walk another {1} steps.",
-                    $PokemonGlobal.pokeradarBattery))
-    return false
-  end
+  # if $PokemonGlobal.pokeradarBattery && $PokemonGlobal.pokeradarBattery > 0
+  #   pbMessage(_INTL("The battery has run dry!\nFor it to recharge, you need to walk another {1} steps.",
+  #                   $PokemonGlobal.pokeradarBattery))
+  #   return false
+  # end
   return true
 end
 
@@ -208,7 +208,8 @@ def pbPokeRadarHighlightGrass(showmessage = true)
         # Choose a rarity for the grass (0=normal, 1=rare, 2=shiny)
         s = (rand(100) < 25) ? 1 : 0
         if $PokemonTemp.pokeradar && $PokemonTemp.pokeradar[2] > 0
-          v = [(65536 / Settings::SHINY_POKEMON_CHANCE) - $PokemonTemp.pokeradar[2] * 200, 200].max
+          chain_for_odds = [$PokemonTemp.pokeradar[2], 40].min
+          v = [(65536 / Settings::SHINY_POKEMON_CHANCE) - chain_for_odds * 200, 200].max
           v = 0xFFFF / v
           v = rand(65536) / v
           s = 2 if v == 0
@@ -282,7 +283,7 @@ end
 # Event handlers
 ################################################################################
 EncounterModifier.register(proc { |encounter|
-  next encounter if $PokemonSystem.overworld_encounters
+  next encounter if Settings::HOENN
   if GameData::EncounterType.get($PokemonTemp.encounterType).type != :land ||
     $PokemonGlobal.partner # $PokemonGlobal.bicycle || $PokemonGlobal.partner
     pbPokeRadarCancel
@@ -321,7 +322,7 @@ EncounterModifier.register(proc { |encounter|
 
 Events.onWildPokemonCreate += proc { |_sender, e|
   pokemon = e[0]
-  next if $PokemonSystem.overworld_encounters # pokeradar shininess is handled in spawn_pokeradar_pokemon for overworld pokemon pokeradar
+  next if Settings::HOENN # pokeradar shininess is handled in spawn_pokeradar_pokemon for pokenav pokeradar
   next if !$PokemonTemp.pokeradar
   grasses = $PokemonTemp.pokeradar[3]
   next if !grasses
@@ -347,10 +348,10 @@ Events.onWildBattleEnd += proc { |_sender, e|
       $PokemonTemp.pokeradar[0] = species
       $PokemonTemp.pokeradar[1] = level
       $PokemonTemp.pokeradar[2] += 1
-      $PokemonTemp.pokeradar[2] = 40 if $PokemonTemp.pokeradar[2] > 40
-      if $PokemonSystem.overworld_encounters
+      if Settings::HOENN
         continue_pokeradar_app_chain
       else
+        $PokemonTemp.pokeradar[2] = 40 if $PokemonTemp.pokeradar[2] > 40
         pbPokeRadarHighlightGrass(false)
       end
     else

@@ -52,8 +52,7 @@ class CharacterSelectMenuPresenter
     trainer_clothes = $Trainer.clothes
     trainer_skinTone = $Trainer.skin_tone
     trainer_name = $Trainer.name
-
-
+    @trainerPreview.set_trainer(false)
     $Trainer.hat = nil
     @options = [OPTION_NAME, OPTION_SKIN, OPTION_HAIR, OPTION_CONFIRM]
     @view.setMaxIndex(@options.length - 1)
@@ -80,6 +79,7 @@ class CharacterSelectMenuPresenter
   end
 
   def main()
+    #@trainerPreview.show()
     pbSEPlay("GUI naming tab swap start", 80, 100)
     @current_index = 0
     loop do
@@ -101,6 +101,7 @@ class CharacterSelectMenuPresenter
 
   def updateTrainerPreview
     @trainerPreview.resetOutfits
+    @trainerPreview.hat2=nil
     @trainerPreview.updatePreview
   end
 
@@ -195,7 +196,7 @@ class CharacterSelectMenuPresenter
   end
 
   def close_menu
-    @trainerPreview.erase()
+    @trainerPreview.erase
     Kernel.pbClearNumber()
     Kernel.pbClearText()
     pbDisposeSpriteHash(@view.sprites)

@@ -126,10 +126,11 @@ class BattledTrainer
         pbMessage(_INTL("You can now trade with each other!"))
       when 2
         pbMessage(_INTL("They will now give you items after rematches from time to time!"))
+        $Trainer.nb_npc_friends =0 unless $Trainer.nb_npc_friends
+        $Trainer.nb_npc_friends+=1  #odds of shiny pokemon increases slightly the more NPCs at matx friendship you have
       # when 3
-      #   pbMessage(_INTL("You can now partner up with them!"))
-      end
-
+      #   #pbMessage(_INTL("You can now partner up with them!"))
+       end
       echoln "#{@trainerName}'s friendship level increased to #{@friendship_level}!"
     end
   end
@@ -209,6 +210,7 @@ class BattledTrainer
 
   def loadOriginalTrainerTeam(trainerVersion=0)
     original_trainer = pbLoadTrainer(@trainerType,@trainerName,trainerVersion)
+
     return if !original_trainer
     echoln "Loading Trainer #{@trainerType}"
     current_party = []

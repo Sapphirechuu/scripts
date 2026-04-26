@@ -1,17 +1,17 @@
 def pbUnfuse(pokemon, scene, partyPosition=nil, pcPosition = nil)
   if pokemon.original_body && pokemon.original_head
     if pcPosition
-      unfusePokemonFromPC(pokemon, scene, pcPosition)
+      result = unfusePokemonFromPC(pokemon, scene, pcPosition)
     else
-      unfusePokemonFromParty(pokemon, scene, partyPosition)
+      result = unfusePokemonFromParty(pokemon, scene, partyPosition)
     end
   else
-    unfusePokemonLegacy(pokemon, scene, false, pcPosition)  #still used for wild Fusions
+    result =unfusePokemonLegacy(pokemon, scene, false, pcPosition)  #still used for wild Fusions
   end
   $PokemonTemp.unfuse_count_today = 0 unless $PokemonTemp.unfuse_count_today
   $PokemonTemp.unfuse_count_today += 1
   checkUnfuseChallenges(pokemon)
-  return true
+  return result
 end
 
 def unfusePokemonFromPC(fused_pokemon, scene, pcPosition)
@@ -23,6 +23,9 @@ def unfusePokemonFromPC(fused_pokemon, scene, pcPosition)
     pbMessage(_INTL("Unfusing...\\....\\....\\....\\wtnp[5]"))
     pbSEPlay("Voltorb Flip Point")
     pbMessage(_INTL("Your Pokémon were successfully unfused!"))
+    return true
+  else
+    return false
   end
 end
 
@@ -37,6 +40,9 @@ def unfusePokemonFromParty(fused_pokemon, scene, partyPosition)
     pbSEPlay("Voltorb Flip Point")
     scene.pbHardRefresh
     pbMessage(_INTL("Your Pokémon were successfully unfused!"))
+    return true
+  else
+    return false
   end
 end
 

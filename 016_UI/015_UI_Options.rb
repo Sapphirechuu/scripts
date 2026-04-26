@@ -4,6 +4,7 @@
 class PokemonSystem
   attr_accessor :textspeed
   attr_accessor :battlescene
+  attr_accessor :nobattlemovement
   attr_accessor :battlestyle
   attr_accessor :frame
   attr_accessor :textskin
@@ -490,9 +491,11 @@ class PokemonOption_Scene
   end
 
   def initOptionsWindow
+    width = Graphics.width
+    height = (Graphics.height - @sprites["title"].height - @sprites["textbox"].height) +32
     optionsWindow = Window_PokemonOption.new(@PokemonOptions, 0,
-                                             @sprites["title"].height, Graphics.width,
-                                             Graphics.height - @sprites["title"].height - @sprites["textbox"].height)
+                                             @sprites["title"].height,
+                                             width, height)
     optionsWindow.viewport = @viewport
     optionsWindow.visible = true
     return optionsWindow
@@ -587,7 +590,7 @@ class PokemonOption_Scene
     end
     pbDisposeMessageWindow(@sprites["textbox"])
     pbDisposeSpriteHash(@sprites)
-    pbRefreshSceneMap
+    #pbRefreshSceneMap
     @viewport.dispose
   end
 end

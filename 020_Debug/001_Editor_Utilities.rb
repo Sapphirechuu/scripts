@@ -132,7 +132,7 @@ end
 
 def pbChooseSpeciesTextList(default = nil)
   commands = []
-  for i in 1..NB_POKEMON
+  for i in 1..NB_POKEMON-4
     species = GameData::Species.get(i)
     commands.push([species.id_number, species.real_name, species.id])
   end

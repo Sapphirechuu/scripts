@@ -154,7 +154,9 @@ class RandomizerTrainerOptionsScene < PokemonOption_Scene
                                   proc { $game_variables[VAR_RANDOMIZER_TRAINER_BST] },
                                   proc { |value|
                                     $game_variables[VAR_RANDOMIZER_TRAINER_BST] = value
-                                  })
+                                  },
+                                  "The higher the number, the more random it is."
+                                  )
     end
     options << EnumOption.new(_INTL("Custom Sprites only"), [_INTL("On"), _INTL("Off")],
                               proc { $game_switches[RANDOM_TEAMS_CUSTOM_SPRITES] ? 0 : 1 },
@@ -212,7 +214,8 @@ class RandomizerWildPokemonOptionsScene < PokemonOption_Scene
                                   proc { $game_variables[VAR_RANDOMIZER_WILD_POKE_BST] },
                                   proc { |value|
                                     $game_variables[VAR_RANDOMIZER_WILD_POKE_BST] = value
-                                  })
+                                  },
+                                  "The higher the number, the more random it is.")
     end
 
     options << EnumOption.new(_INTL("Type"), [_INTL("Global"), _INTL("Area")],
@@ -253,7 +256,6 @@ class RandomizerWildPokemonOptionsScene < PokemonOption_Scene
                                   "Only legendaries can be randomized into legendaries"]
     )
 
-
     options << EnumOption.new(_INTL("Starters"), [_INTL("1st Stage"), _INTL("Any"), _INTL("Off")],
                               proc {
                                 getStarterRandomizerSelectedOption() },
@@ -269,21 +271,19 @@ class RandomizerWildPokemonOptionsScene < PokemonOption_Scene
                                   $game_switches[SWITCH_RANDOM_STARTERS] = false
                                   $game_switches[SWITCH_RANDOM_STARTER_FIRST_STAGE] = false
                                 end
-
-                                echoln "random starters: #{$game_switches[SWITCH_RANDOM_STARTERS]}"
-                                echoln "random 1st stage: #{$game_switches[SWITCH_RANDOM_STARTER_FIRST_STAGE]}"
-
                               }, ["The starters will always be a first evolution Pokémon",
                                   "The starters can be any Pokémon",
                                   "The starters are not randomized"]
     )
-    options << EnumOption.new(_INTL("Static encounters"), [_INTL("On"), _INTL("Off")],
-                              proc { $game_switches[RANDOM_STATIC] ? 0 : 1 },
-                              proc { |value|
-                                $game_switches[RANDOM_STATIC] = value == 0
-                              },
-                              "Randomize Pokémon that appear in the overworld (including legendaries)"
-    )
+    if Settings::KANTO
+      options << EnumOption.new(_INTL("Static encounters"), [_INTL("On"), _INTL("Off")],
+                                proc { $game_switches[RANDOM_STATIC] ? 0 : 1 },
+                                proc { |value|
+                                  $game_switches[RANDOM_STATIC] = value == 0
+                                },
+                                "Randomize Pokémon that appear in the overworld (including legendaries)"
+      )
+    end
 
     options << EnumOption.new(_INTL("Gift Pokémon"), [_INTL("On"), _INTL("Off")],
                               proc { $game_switches[GIFT_POKEMON] ? 0 : 1 },
@@ -298,9 +298,23 @@ class RandomizerWildPokemonOptionsScene < PokemonOption_Scene
                                 $game_switches[REGULAR_TO_FUSIONS] = value == 0
                               }, "All wild Pokémon will already be pre-fused"
     )
+
+    # options << ButtonOption.new(_INTL("SHUFFLE"),
+    #                             proc {
+    #                               pbMessage(_INTL("Shuffling..."))
+    #                               if $game_switches[RANDOM_WILD_AREA]
+    #                                 type = 1
+    #                               else
+    #                                 type = 0
+    #                               end
+    #
+    #                               Kernel.pbShuffleDex($game_variables[VAR_RANDOMIZER_WILD_POKE_BST], type)
+    #                             },
+    #                             _INTL("Shuffle the wild encounters with the selected options.")
+    # )
+
     return options
   end
-
 
   def getStarterRandomizerSelectedOption()
     return 0 if $game_switches[SWITCH_RANDOM_STARTERS] && $game_switches[SWITCH_RANDOM_STARTER_FIRST_STAGE]
@@ -308,8 +322,6 @@ class RandomizerWildPokemonOptionsScene < PokemonOption_Scene
     return 2
   end
 end
-
-
 
 class RandomizerGymOptionsScene < PokemonOption_Scene
   RANDOM_GYM_TYPES = 921
@@ -345,7 +357,8 @@ class RandomizerGymOptionsScene < PokemonOption_Scene
                                   proc { $game_variables[VAR_RANDOMIZER_TRAINER_BST] },
                                   proc { |value|
                                     $game_variables[VAR_RANDOMIZER_TRAINER_BST] = value
-                                  })
+                                  },
+                                  "The higher the number, the more random it is.")
     end
     options << EnumOption.new(_INTL("Custom sprites only"), [_INTL("On"), _INTL("Off")],
                               proc { $game_switches[SWITCH_RANDOM_GYM_CUSTOMS] ? 0 : 1 },

@@ -2,7 +2,7 @@
 #
 #===============================================================================
 class PokemonPokedexInfo_Scene
-  def pbStartScene(dexlist, index, region, pokemon = nil, fromSummary=false)
+  def pbStartScene(dexlist, index, region, pokemon = nil, fromSummary = false)
     @fromSummary = fromSummary
     @pokemon = pokemon
     @endscene = false
@@ -251,6 +251,7 @@ class PokemonPokedexInfo_Scene
   end
 
   def drawPageInfo(reloading = false)
+    @entry_author = nil
     pbUpdateDummyPokemon
     @sprites["background"].setBitmap("Graphics/Pictures/Pokedex/bg_info")
     overlay = @sprites["overlay"].bitmap
@@ -268,48 +269,40 @@ class PokemonPokedexInfo_Scene
     species_data = GameData::Species.get_species_form(@species, @form)
     # Write various bits of text
     indexText = "???"
-    # if @dexlist[@index][4] > 0
     indexNumber = @dexlist[@index][4]
     indexNumber -= 1 if @dexlist[@index][5]
     indexNumber = GameData::Species.get(@species).id_number
     indexText = sprintf("%03d", indexNumber)
     # end
     textpos = [
-      ["#{indexText}  #{species_data.name}",
-       246, 36, 0, Color.new(248, 248, 248), Color.new(0, 0, 0)],
-      [_INTL("Height"), 314, 152, 0, base, shadow],
-      [_INTL("Weight"), 314, 184, 0, base, shadow]
+      ["#{indexText}  #{species_data.name}", 246, 36, 0, Color.new(248, 248, 248), Color.new(0, 0, 0)],
     ]
     if $Trainer.owned?(@species)
-      # Write the category
+      # Category
       textpos.push([_INTL("{1} Pokémon", species_data.category), 246, 68, 0, base, shadow])
-      # Write the height and weight
-      height = species_data.height
-      weight = species_data.weight
-      if System.user_language[3..4] == "US" # If the user is in the United States
-        inches = (height / 0.254).round
-        pounds = (weight / 0.45359).round
-        textpos.push([_ISPRINTF("{1:d}'{2:02d}\"", inches / 12, inches % 12), 460, 152, 1, base, shadow])
-        textpos.push([_ISPRINTF("{1:4.1f} lbs.", pounds / 10.0), 494, 184, 1, base, shadow])
+      #Weighty / Height
+      weight_value = species_data.weight / 10.0
+      weight_unit = _INTL("kg")
+      height_value = species_data.height / 10.0
+      height_unit = _INTL("m")
+      if System.user_language[3..4] == "US"
+        weight_value = ((weight_value / 0.45359) * 10).round / 10.0  # e.g. 13.2
+        weight_unit = _INTL("lbs")
+
+        total_inches = (height_value / 0.0254).round
+        feet = total_inches / 12
+        inches = total_inches % 12
+        height_text = _INTL("{1}'{2}\"", feet, inches)
+        height_unit = ""
       else
-        textpos.push([_ISPRINTF("{1:.1f} m", height / 10.0), 470, 152, 1, base, shadow])
-        textpos.push([_ISPRINTF("{1:.1f} kg", weight / 10.0), 482, 184, 1, base, shadow])
+        height_text = _INTL("{1} {2}", height_value, height_unit)
       end
-      # Draw the Pokédex entry text
-      # drawTextEx(overlay, 40, 244, Graphics.width - (40 * 2), 4, # overlay, x, y, width, num lines
-      #            species_data.pokedex_entry, base, shadow)
-      #
-      #
-      #$PokemonSystem.use_generated_dex_entries=true if $PokemonSystem.use_generated_dex_entries ==nil
+      weight_text = _INTL("{1} {2}", weight_value, weight_unit)
+      textpos.push(["#{height_text}", 224, 102, 0, base, shadow])
+      textpos.push(["#{weight_text}", 224, 124, 0, base, shadow])
+
       drawEntryText(overlay, species_data, reloading)
-      echoln species_data.name
-      # Draw the footprint
-      footprintfile = GameData::Species.footprint_filename(@species, @form)
-      if footprintfile
-        footprint = RPG::Cache.load_bitmap("", footprintfile)
-        overlay.blt(226, 138, footprint, footprint.rect)
-        footprint.dispose
-      end
+
       # Show the owned icon
       imagepos.push(["Graphics/Pictures/Pokedex/icon_own", 212, 44])
       # Draw the type icon(s)
@@ -319,20 +312,27 @@ class PokemonPokedexInfo_Scene
       type2_number = GameData::Type.get(type2).id_number
       type1rect = Rect.new(0, type1_number * 32, 96, 32)
       type2rect = Rect.new(0, type2_number * 32, 96, 32)
-      overlay.blt(296, 120, @typebitmap.bitmap, type1rect)
-      overlay.blt(396, 120, @typebitmap.bitmap, type2rect) if type1 != type2
+      overlay.blt(300, 120, @typebitmap.bitmap, type1rect)
+      overlay.blt(400, 120, @typebitmap.bitmap, type2rect) if type1 != type2
     else
       # Write the category
       textpos.push([_INTL("????? Pokémon"), 246, 68, 0, base, shadow])
-      # Write the height and weight
-      if System.user_language[3..4] == "US" # If the user is in the United States
-        textpos.push([_INTL("???'??\""), 460, 152, 1, base, shadow])
-        textpos.push([_INTL("????.? lbs."), 494, 184, 1, base, shadow])
-      else
-        textpos.push([_INTL("????.? m"), 470, 152, 1, base, shadow])
-        textpos.push([_INTL("????.? kg"), 482, 184, 1, base, shadow])
-      end
     end
+
+    sprite_author = "Japeal"
+    unless @displayed_pif_sprite.type == :AUTOGEN
+      echoln @displayed_pif_sprite&.to_filename
+      sprite_author = getSpriteCredits(@displayed_pif_sprite&.to_filename(false))
+    end
+    dex_author = @entry_author if @entry_author
+    unless dex_author
+      dex_author = _INTL("Auto-generated")
+      dex_author = _INTL("None") unless $PokemonSystem.use_generated_dex_entries
+      dex_author = _INTL("Game Freak") unless getDexNumberForSpecies(@species) > NB_POKEMON
+    end
+    textpos.push([_INTL("Sprite: {1}", sprite_author), 224, 156, 0, base, shadow])
+    textpos.push([_INTL("Entry:  {1}", dex_author), 224, 188, 0, base, shadow]) if $Trainer.owned?(@species)
+
     # Draw all text
     pbDrawTextPositions(overlay, textpos)
     # Draw all images
@@ -352,9 +352,11 @@ class PokemonPokedexInfo_Scene
     end
 
     if species_data.is_fusion
-      customEntry = getCustomEntryText(species_data)
+      customEntry, entryAuthor = getCustomEntryText(species_data)
       if customEntry
         entryText = customEntry
+        @entry_text = entryText
+        @entry_author = entryAuthor
         baseColor = baseCustom
         shadowColor = shadowCustom
       else
@@ -421,18 +423,21 @@ class PokemonPokedexInfo_Scene
     return !sprite_path.include?(Settings::CUSTOM_BATTLERS_FOLDER)
   end
 
+  # Returns array
+  # [text, author]
   def getCustomEntryText(species_data)
     spriteLoader = BattleSpriteLoader.new
     if @displayed_pif_sprite
       pif_sprite = @displayed_pif_sprite
-    else  #fallback - should never go through here in theory
+    else
+      # fallback - should never go through here in theory
       pif_sprite = spriteLoader.get_pif_sprite_from_species(species_data)
     end
     return nil if pif_sprite.type != :CUSTOM
     possibleCustomEntries = getCustomDexEntry(pif_sprite)
     if possibleCustomEntries && possibleCustomEntries.length > 0
       customEntry = possibleCustomEntries.sample
-      customEntry = customEntry.gsub(Settings::CUSTOM_ENTRIES_NAME_PLACEHOLDER, species_data.name)
+      customEntry[0] = customEntry[0].gsub(Settings::CUSTOM_ENTRIES_NAME_PLACEHOLDER, species_data.name)
     end
     return customEntry
   end
@@ -444,7 +449,7 @@ class PokemonPokedexInfo_Scene
 
     entries = parsed_data.select { |entry| entry["sprite"] == sprite }
     if entries.any?
-      return entries.map { |entry| entry["entry"] }
+      return entries.map { |entry| [entry["entry"], entry["author"]] }
     else
       echoln "No custom entry found for sprite " + sprite.to_s
       return nil
@@ -615,7 +620,7 @@ class PokemonPokedexInfo_Scene
   end
 
   def pbGoToPrevious
-    @displayed_pif_sprite=nil
+    @displayed_pif_sprite = nil
     @entry_page = 0
     @randomEntryText = nil
     newindex = @index
@@ -629,7 +634,7 @@ class PokemonPokedexInfo_Scene
   end
 
   def pbGoToNext
-    @displayed_pif_sprite=nil
+    @displayed_pif_sprite = nil
     @entry_page = 0
     @randomEntryText = nil
     newindex = @index
@@ -642,8 +647,6 @@ class PokemonPokedexInfo_Scene
     end
   end
 
-
-
   def updateBlacklistIconVisibility
     visible = (@page == 3 && @selecting_sprites && @selecting_blacklist)
     visible = false unless $PokemonSystem.random_sprites
@@ -654,21 +657,18 @@ class PokemonPokedexInfo_Scene
   ].each do |base|
       next unless @sprites["#{base}_blacklistEnabled"]
 
-      @sprites["#{base}_blacklistEnabled"].visible  &&= visible
+      @sprites["#{base}_blacklistEnabled"].visible &&= visible
       @sprites["#{base}_blacklistDisabled"].visible &&= visible
-      @sprites["#{base}_blacklistAutogen"].visible  &&= visible
+      @sprites["#{base}_blacklistAutogen"].visible &&= visible
     end
   end
-
 
   def updateBlackListInstructionIcons
     visible = (@page == 3 && @fromSummary && !@selecting_sprites)
     visible = false unless $PokemonSystem.random_sprites
-    @sprites["downarrow"].visible   = visible
+    @sprites["downarrow"].visible = visible
     @sprites["blacklistIcon"].visible = visible
   end
-
-
 
   def pbScene
     Pokemon.play_cry(@species, @form)
@@ -700,7 +700,7 @@ class PokemonPokedexInfo_Scene
       elsif Input.trigger?(Input::DOWN)
         dorefresh = handleVerticalInput(1)
 
-      elsif Input.trigger?(Input::RIGHT)  && @page == 3 && @fromSummary
+      elsif Input.trigger?(Input::RIGHT) && @page == 3 && @fromSummary
         pbPlayDecisionSE
         pbChooseAlt
         dorefresh = true
@@ -756,7 +756,6 @@ class PokemonPokedexInfo_Scene
     end
     return dorefresh
   end
-
 
   def pbSceneBrief
     Pokemon.play_cry(@species, @form)

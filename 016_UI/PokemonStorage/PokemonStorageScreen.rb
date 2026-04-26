@@ -14,6 +14,7 @@ class PokemonStorageScreen
     @pbHeldPokemon = nil
     @command = 0
     @filterProc = nil
+    @saveWhenPlaceDown = false
   end
 
   def setFilter(filterProc)
@@ -38,8 +39,7 @@ class PokemonStorageScreen
     end
   end
 
-
-  #TODO: Open party screen by default.
+  # TODO: Open party screen by default.
   # Handle when player chooses a Pokemon from their party instead of a box
   def choosePokemon
     command = COMMAND_SELECT_POKEMON
@@ -169,7 +169,7 @@ class PokemonStorageScreen
   def pcSelectCommand
     @scene.choseFromParty = true
     loop do
-      selected =  @scene.pbSelectBox(@storage.party)
+      selected = @scene.pbSelectBox(@storage.party)
       if selected == nil
         next if pbConfirm(_INTL("Continue Box operations?"))
         break
@@ -190,8 +190,6 @@ class PokemonStorageScreen
         end
         pokemon = @storage[selected[0], selected[1]]
         next if !pokemon
-        echoln selected
-
         if @filterProc.call(pokemon)
           command = pbShowCommands(_INTL("{1} is selected.", pokemon.name), [
             _INTL("Choose"),
@@ -385,8 +383,9 @@ class PokemonStorageScreen
       pbDisplay(_INTL("Your party's full!"))
       return false
     end
-
-    if @storage[box].is_a?(StorageTransferBox)
+    if @storage[box].is_a?(StorageTransferBox) && @storage[box].can_use_transfer_box?
+      pokemon = $PokemonStorage[*selected]
+      return if @storage[box].check_is_duplicate(pokemon)
       unless verifyTransferBoxAutosave
         return
       end
@@ -450,6 +449,8 @@ class PokemonStorageScreen
     index = selected[1]
 
     if @storage[box].is_a?(StorageTransferBox)
+      pokemon = $PokemonStorage[*selected]
+      return if @storage[box].check_is_duplicate(pokemon)
       unless verifyTransferBoxAutosave
         return
       end
@@ -464,17 +465,21 @@ class PokemonStorageScreen
     @heldpkmn = @storage[box, index]
     @storage.pbDelete(box, index)
     @scene.pbRefresh
+    if @storage[box].is_a?(StorageTransferBox)
+      @saveWhenPlaceDown = true
+    end
   end
 
   def pbPlace(selected)
     box = selected[0]
     index = selected[1]
-
     if @storage[box].is_a?(StorageTransferBox)
       if @heldpkmn.owner.name == "RENTAL"
         pbMessage(_INTL("This Pokémon cannot be transferred."))
         return
       end
+      pokemon = $PokemonStorage[*selected]
+      return if @storage[box].check_is_duplicate(pokemon)
       unless verifyTransferBoxAutosave
         return
       end
@@ -505,6 +510,10 @@ class PokemonStorageScreen
     end
     @scene.pbRefresh
     @heldpkmn = nil
+    if @saveWhenPlaceDown
+      @saveWhenPlaceDown = false
+      Game.save()
+    end
   end
 
   def pbSwap(selected)
@@ -520,6 +529,9 @@ class PokemonStorageScreen
         pbMessage(_INTL("This Pokémon cannot be transferred."))
         return
       end
+      pokemon = $PokemonStorage[*selected]
+      return if @storage[box].check_is_duplicate(pokemon)
+
       unless verifyTransferBoxAutosave
         return
       end
@@ -543,6 +555,10 @@ class PokemonStorageScreen
     tmp = @storage[box, index]
     @storage[box, index] = @heldpkmn
     @heldpkmn = tmp
+    if @saveWhenPlaceDown
+      @saveWhenPlaceDown = false
+      Game.save()
+    end
     @scene.pbRefresh
     return true
   end
@@ -917,7 +933,7 @@ class PokemonStorageScreen
       scene.pbDisplay(_INTL("It won't have any effect."))
       return
     end
-    if Kernel.pbConfirmMessageSerious(_INTL("Should {1} be reversed?", pokemon.name))
+    if Kernel.pbConfirmMessage(_INTL("Should {1} be reversed?", pokemon.name))
       reverseFusion(pokemon)
       $PokemonBag.pbDeleteItem(:DNAREVERSER) if $PokemonBag.pbQuantity(:INFINITEREVERSERS) <= 0
     end

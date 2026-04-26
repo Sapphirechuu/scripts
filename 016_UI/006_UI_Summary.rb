@@ -723,7 +723,7 @@ class PokemonSummary_Scene
 
     if ability
       textpos.push([ability.name, 362, 278, 0, @text_color_base, @text_color_shadow])
-      drawTextEx(overlay, 224, 320, 282, 2, ability.description, base, shadow)
+      drawTextEx(overlay, 224, 320, 282, 2, ability.description, @text_color_base, @text_color_shadow)
     end
 
 

@@ -267,7 +267,7 @@ module GameData
     end
 
     def replace_species_to_randomized_regular(species, trainerId, pokemonIndex)
-      if $PokemonGlobal.randomTrainersHash[trainerId] == nil
+      if !$PokemonGlobal.randomTrainersHash || $PokemonGlobal.randomTrainersHash[trainerId] == nil
         Kernel.pbMessage(_INTL("The trainers need to be re-shuffled."))
         Kernel.pbShuffleTrainers()
       end

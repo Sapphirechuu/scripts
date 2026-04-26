@@ -44,6 +44,19 @@ def wally_update_team_mauville
   updateRebattledTrainerWithKey(BATTLED_TRAINER_WALLY_KEY, trainer)
 end
 
+def get_wally_starter()
+  wallyTeam = get_wally_team
+  wallyStarter=wallyTeam.last  #starter is the oldest so whatever is at the end
+  unless wallyStarter #failsafe
+    wallyStarter=wallyTeam[-1]
+  end
+  return wallyStarter
+end
+
+def get_wally_starter_name(variable=1)
+  wallyStarter = get_wally_starter
+  pbSet(variable,wallyStarter.name)
+end
 def wally_battle()
   trainer = $PokemonGlobal.battledTrainers[BATTLED_TRAINER_WALLY_KEY]
   return rematchable_trainer_battle([trainer],nil,false)
@@ -86,6 +99,19 @@ def wally_fuse_pokemon(with_fusion_screen = true)
   fusion_species = getFusedPokemonIdFromSymbols(body_pokemon.species, head_pokemon.species)
   level = (body_pokemon.level + head_pokemon.level) / 2
   fused_pokemon = Pokemon.new(fusion_species, level)
+
+
+  if body_pokemon.isShiny? || head_pokemon.isShiny?
+    fused_pokemon.shiny= true
+    if body_pokemon.radar_shiny || head_pokemon.radar_shiny
+      fused_pokemon.radar_shiny = true
+    end
+    if !(body_pokemon.debug_shiny || head_pokemon.debug_shiny)
+      fused_pokemon.natural_shiny = true if fused_pokemon.natural_shiny
+    end
+  end
+
+  echoln fused_pokemon.shiny?
 
   trainer.currentTeam.delete(body_pokemon)
   trainer.currentTeam.delete(head_pokemon)

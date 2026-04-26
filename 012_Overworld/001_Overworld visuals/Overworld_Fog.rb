@@ -3,6 +3,7 @@ Events.onSpritesetCreate += proc { |_sender, e|
   spriteset = e[0]
   new_map_id = spriteset.map.map_id
   old_map_id = $Trainer.last_visited_map
+  next unless isOutdoor(new_map_id)
 
   old_w = old_map_id ? $game_weather.get_map_weather_type(old_map_id) : :None
   new_w = $game_weather.get_map_weather_type(new_map_id)
@@ -47,7 +48,6 @@ class Spriteset_Map
 
   def update_fog_fade
     return if @fog_target_opacity.nil?
-
     if @current_fog_opacity < @fog_target_opacity
       @current_fog_opacity = [@current_fog_opacity + @fog_fade_speed, @fog_target_opacity].min
     elsif @current_fog_opacity > @fog_target_opacity

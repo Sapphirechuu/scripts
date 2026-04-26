@@ -257,6 +257,7 @@ module PokeBattle_BattleCommon
         return 4
       end
     end
+
     # Calculate the number of shakes
     numShakes = 0
     for i in 0...4

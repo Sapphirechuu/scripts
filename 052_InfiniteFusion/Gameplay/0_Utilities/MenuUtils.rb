@@ -162,11 +162,25 @@ def promptCaughtPokemonAction(pokemon)
   return pbStorePokemon(pokemon) if !$Trainer.party_full?
   return promptKeepOrRelease(pokemon) if isOnPinkanIsland() && !$game_switches[SWITCH_PINKAN_FINISHED]
   while !pickedOption
-    command = pbMessage(_INTL("\\ts[]Your team is full!"),
-                        [_INTL("Add to your party"), _INTL("Store to PC"),], 2)
-    case command
-    when 0 # SWAP
+    cmd_swap = _INTL("Add to your party")
+    cmd_fuse = _INTL("Fuse in party")
+    cmd_pc = _INTL("Store to PC")
+
+    options = []
+    options << cmd_swap
+    if !pokemon.isFusion? && playerHasFusionItems && hasUnfusedPokemonInParty(false)
+      options << cmd_fuse
+    end
+    options << cmd_pc
+
+    command = pbMessage(_INTL("\\ts[]Your team is full!"), options, 2)
+    case options[command]
+    when cmd_swap
       if swapCaughtPokemon(pokemon)
+        pickedOption = true
+      end
+    when cmd_fuse
+      if fuseCaughtPokemon(pokemon)
         pickedOption = true
       end
     else
@@ -175,7 +189,6 @@ def promptCaughtPokemonAction(pokemon)
       pickedOption = true
     end
   end
-
 end
 
 def promptKeepOrRelease(pokemon)
@@ -192,6 +205,37 @@ def promptKeepOrRelease(pokemon)
       pickedOption = true
     end
   end
+end
+
+def fuseCaughtPokemon(caughtPokemon)
+  pbChoosePokemon(1, 2,
+                             proc { |poke|
+                               !poke.egg? &&
+                                 !(poke.isFusion? rescue false) &&
+                                 poke.hp > 0
+
+                             })
+  partyPosition = pbGet(1)
+  return false if partyPosition == -1
+  splicerItem = selectSplicer()
+  return unless splicerItem
+
+  selected = $Trainer.party[partyPosition].clone
+  selectedHead, fusion_pif_sprite = selectFusion(caughtPokemon,selected)
+  return false unless selectedHead && fusion_pif_sprite
+  if (pbConfirmMessage(_INTL("Fuse the newly obtained {1} with {2}?", caughtPokemon.name, selected.name)))
+    if selectedHead == caughtPokemon
+      pbRemovePokemonAt(partyPosition)
+      pbAddPokemonSilent(caughtPokemon)
+      pbFuse(caughtPokemon, selected, splicerItem, fusion_pif_sprite)
+    else
+      actualPartyPokemon = $Trainer.party[partyPosition]  # real reference, not clone
+      pbFuse(actualPartyPokemon, caughtPokemon, splicerItem, fusion_pif_sprite)
+    end
+    $PokemonBag.pbDeleteItem(splicerItem) if splicerItem == :DNASPLICERS || splicerItem == :SUPERSPLICERS
+    return true
+  end
+  return false
 end
 
 # def pbChoosePokemon(variableNumber, nameVarNumber, ableProc = nil, allowIneligible = false)

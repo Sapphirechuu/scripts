@@ -1,4 +1,10 @@
 class PokemonGameOption_Scene < PokemonOption_Scene
+  ICON_AUDIO = "optionIcons/AUDIO"
+  ICON_GAMEPLAY = "optionIcons/GAMEPLAY"
+  ICON_VISUALS = "optionIcons/VISUALS"
+  ICON_CHALLENGE = "optionIcons/CHALLENGE"
+  ICON_RANDOMIZER = "optionIcons/RANDOMIZER"
+
   def pbGetOptions(inloadscreen = false)
     @current_game_mode = getTrainersDataMode
     options = []
@@ -9,7 +15,7 @@ class PokemonGameOption_Scene < PokemonOption_Scene
         @system_menu = true
         openSystemMenu()
       },
-      _INTL("Volume, UI, Autosave, etc.")
+      _INTL("<icon=#{ICON_AUDIO}> Volume, UI, Autosave, etc.")
     )
 
     if $game_switches
@@ -19,7 +25,7 @@ class PokemonGameOption_Scene < PokemonOption_Scene
           @gameplay_menu = true
           openGameplayMenu()
         },
-        _INTL("Difficulty, movement, etc.")
+        _INTL("<icon=#{ICON_GAMEPLAY}> Difficulty, movement, etc.")
       )
 
       options << ButtonOption.new(
@@ -28,7 +34,7 @@ class PokemonGameOption_Scene < PokemonOption_Scene
           @sprites_menu = true
           openSpritesMenu()
         },
-        _INTL("Sprites, Pokédex entries, etc.")
+        _INTL("<icon=#{ICON_VISUALS}> Sprites, Pokédex entries, etc.")
       )
 
       options << ButtonOption.new(
@@ -37,19 +43,19 @@ class PokemonGameOption_Scene < PokemonOption_Scene
           @challenge_menu = true
           openChallengeMenu()
         },
-        _INTL("Set optional self-imposed challenge options.")
+        _INTL("<icon=#{ICON_CHALLENGE}> Set optional self-imposed challenges.")
       )
 
-      if $game_switches[SWITCH_RANDOMIZED_AT_LEAST_ONCE]
-        options << ButtonOption.new(
-          _INTL("Randomizer Options"),
-          proc {
-            @randomizer_menu = true
-            openRandomizerMenu()
-          },
-          _INTL("Set how the game should be randomized.")
-        )
-      end
+      # if $game_switches[SWITCH_RANDOMIZED_AT_LEAST_ONCE]
+      #   options << ButtonOption.new(
+      #     _INTL("Randomizer Options"),
+      #     proc {
+      #       @randomizer_menu = true
+      #       openRandomizerMenu()
+      #     },
+      #     _INTL("<icon=#{ICON_RANDOMIZER}> Set how to randomize the game.")
+      #   )
+      # end
     end
     return options
   end

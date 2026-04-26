@@ -23,7 +23,7 @@ class HoennIntroScreen
   # INITIALIZATION
   # =========================================================================
   def initialize
-    @bgm = "title"
+    @bgm = "title_screen"
     @currentFrame = 0
     @scrollLayers = {}
     @scrollSprites = {}

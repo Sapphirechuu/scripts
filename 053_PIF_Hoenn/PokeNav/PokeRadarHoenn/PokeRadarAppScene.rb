@@ -54,11 +54,19 @@ class PokeRadarAppScene < PokeNavAppScene
     else
       buttons = showWildPokemonList
       super(buttons)
-      hover(@buttons[0]&.id)
-      if @unseenPokemon.empty? && @seenPokemon.empty?
-        showEmpty
-      end
+      showSelectedPokemonInfo
     end
+    showHeaderInfo
+  end
+
+  def showSelectedPokemonInfo
+    hover(@buttons[@index]&.id)
+    if @unseenPokemon.empty? && @seenPokemon.empty?
+      showEmpty
+    end
+  end
+
+  def showHeaderInfo
     showBattery
     showHeaderName
     showAreaName
@@ -97,12 +105,10 @@ class PokeRadarAppScene < PokeNavAppScene
   end
 
   def showEmpty
-    Kernel.pbDisplayText(_INTL("No Pokémon found nearby."), Graphics.width / 2, Graphics.height / 2, nil, @text_color_base, @text_color_shadow)
+    Kernel.pbDisplayText(_INTL("No wild Pokémon found nearby."), Graphics.width / 2, Graphics.height / 2, nil, @text_color_base, @text_color_shadow)
   end
 
   def showCurrentScanningTarget
-    echoln @text_color_base
-    echoln @text_color_shadow
     scanningPokemon = $PokemonTemp.pokeradar[0]
     icon_path = pbCheckPokemonIconFiles(scanningPokemon)
     bmp = load_bitmap(icon_path, false)
@@ -241,6 +247,8 @@ class PokeRadarAppScene < PokeNavAppScene
     cmd_cancel = _INTL("Cancel")
     options << cmd_stop_scan
     options << cmd_cancel
+    Kernel.pbClearText()
+    showHeaderInfo
     chosen = pbMessage(_INTL("You are currently scanning for {1}.", species_name), options, options.length)
     case options[chosen]
     when cmd_stop_scan
@@ -248,6 +256,7 @@ class PokeRadarAppScene < PokeNavAppScene
       pbEndScene
       pbStartScene(@pokenav_main_menu_scene)
     else
+      showCurrentScanningTarget
       return
     end
 
@@ -259,11 +268,13 @@ class PokeRadarAppScene < PokeNavAppScene
     cmd_cancel = _INTL("Cancel")
     options << cmd_scan
     options << cmd_cancel
+    Kernel.pbClearText()
+    showHeaderInfo
     chosen = pbMessage(_INTL("What would you like to do?"), options, options.length)
     case options[chosen]
     when cmd_scan
       energy_needed = get_energy_for_scan(species)
-      if true # Settings::POKERADAR_BATTERY_STEPS - $PokemonGlobal.pokeradarBattery >= energy_needed
+      if Settings::POKERADAR_BATTERY_STEPS - $PokemonGlobal.pokeradarBattery >= energy_needed
         $PokemonGlobal.pokeradarBattery += energy_needed
         displayTextElements
         @exiting = true
@@ -280,7 +291,6 @@ class PokeRadarAppScene < PokeNavAppScene
         pbMessage(_INTL("Scanning for {1}...\\wtnp[5]", GameData::Species.get(species).real_name))
         possible_tiles = getTerrainTilesNearPlayer(getTerrainType, 3)
         position = possible_tiles.sample
-        echoln possible_tiles
         if position
           set_pokeradar_data(species, level, position)
           spawn_pokeradar_pokemon(species, level)
@@ -290,47 +300,25 @@ class PokeRadarAppScene < PokeNavAppScene
         end
       else
         pbPokeRadarCancel
+        Kernel.pbClearText()
+        showHeaderInfo
         pbMessage(_INTL("The battery is not charged enough for this scan!"))
+        showSelectedPokemonInfo
       end
     else
+      showSelectedPokemonInfo
       return
     end
   end
 
-  # Reusing the old pokeradar mechanics for chaining
-  def set_pokeradar_data(species, level, position)
-    x = position[0]
-    y = position[1]
-    if $PokemonTemp.pokeradar && $PokemonTemp.pokeradar[2] > 0
-      v = [(65536 / Settings::SHINY_POKEMON_CHANCE) - $PokemonTemp.pokeradar[2] * 200, 200].max
-      v = 0xFFFF / v
-      v = rand(65536) / v
-      s = 2 if v == 0
-    end
-    pokeradar_grass = [x, y, 0, s]
-    chain_count = 0
-    $PokemonTemp.pokeradar = [0, 0, 0, []] if !$PokemonTemp.pokeradar
-    $PokemonTemp.pokeradar[0] = species
-    $PokemonTemp.pokeradar[1] = level
-    $PokemonTemp.pokeradar[2] = chain_count
-    $PokemonTemp.pokeradar[3] = pokeradar_grass if $PokemonTemp.pokeradar
-  end
 
-  def determine_shininess
-    radar = $PokemonTemp.pokeradar
-    return false if !radar || radar[2] <= 0
-    chain_length = radar[2]
-    base_shiny_threshold = 65536 / Settings::SHINY_POKEMON_CHANCE
-    adjusted_threshold = base_shiny_threshold - chain_length * 200
-    adjusted_threshold = [adjusted_threshold, 200].max
-
-    shiny_roll_divisor = 0xFFFF / adjusted_threshold
-    shiny_roll = rand(65536) / shiny_roll_divisor
-    return shiny_roll == 0
-  end
 
   def click_unseen
+    return unless @unseenPokemon.any?
+    Kernel.pbClearText()
+    showHeaderInfo
     pbMessage(_INTL('You need to encounter the Pokémon before you can scan for it.'))
+    hover_unseen
   end
 
   def hover_seen(species)
@@ -414,11 +402,18 @@ def getTerrainType
 end
 
 def continue_pokeradar_app_chain()
-  echoln "continue pokeradar app chain"
   pbWait(12)
   species = $PokemonTemp.pokeradar[0]
   level = $PokemonTemp.pokeradar[1]
-  spawn_pokeradar_pokemon(species, level)
+  possible_tiles = getTerrainTilesNearPlayer(getTerrainType, 3)
+  position = possible_tiles.sample
+  if position
+    set_pokeradar_data(species, level, position)
+    spawn_pokeradar_pokemon(species, level)
+  else
+    pbPokeRadarCancel
+    pbMessage(_INTL("The Pokéradar scan failed... Try again somewhere else"))
+  end
 end
 
 def update_pokeradar_overworld_ui
@@ -428,7 +423,11 @@ def update_pokeradar_overworld_ui
     species = $PokemonTemp.pokeradar[0]
     $PokemonTemp.pokeradar_ui.dispose if $PokemonTemp.pokeradar_ui
     $PokemonTemp.pokeradar_ui = PokeRadar_UI.new([species], [], [])
-    $PokemonTemp.pokeradar_ui.set_text(_INTL("PokéRadar Chain: {1}", current_chain), 72, 12)
+    if current_chain >= 40
+      $PokemonTemp.pokeradar_ui.set_text(_INTL("PokéRadar Chain: {1}", current_chain), 72, 12, pbColor(:GREEN), pbColor(:DARKGREEN))
+    else
+      $PokemonTemp.pokeradar_ui.set_text(_INTL("PokéRadar Chain: {1}", current_chain), 72, 12)
+    end
   else
     $PokemonTemp.pokeradar_ui.dispose if $PokemonTemp.pokeradar_ui
   end
@@ -436,41 +435,73 @@ def update_pokeradar_overworld_ui
 end
 
 def spawn_pokeradar_pokemon(species, level)
-  max_attempts = 10
+  max_attempts = 50
   return unless species && level
+
   pbWait(20)
   playAnimation(Settings::POKERADAR_LIGHT_ANIMATION_RED_ID, $game_player.x, $game_player.y)
   pbWait(10)
-  current_attempt = 0
-  while current_attempt < max_attempts
+
+  spawned_events = nil
+  radius = 4
+
+  max_attempts.times do |current_attempt|
     echoln "attempt #{current_attempt}/#{max_attempts}"
-    spawned_events = spawn_ow_pokemon(species, level, 1, 4)
-    break if spawned_events && spawned_events.length > 0
-    current_attempt += 1
+    radius += 1 if current_attempt > 0 && current_attempt % 10 == 0
+    spawned_events = spawn_ow_pokemon(species, level, 1, radius)
+    break if spawned_events&.length.to_i > 0
   end
-  if spawned_events && spawned_events.length > 0
+
+  if spawned_events&.length.to_i > 0
     event = spawned_events[0]
     grass = $PokemonTemp.pokeradar[3]
+
     if grass[3] == 2
       pbSEPlay("shiny", 60)
       playAnimation(Settings::SPARKLE_SHORT_ANIMATION_ID, event.x, event.y)
       event.make_shiny
     end
-    event.behavior_roaming = :look_around
-    if event.pokemon.shiny?
-      event.behavior_noticed = :curious
-    else
-      event.behavior_noticed = :flee
-    end
+
+    event.behavior_roaming    = :look_around
+    event.behavior_noticed    = event.pokemon.shiny? ? :curious : :flee
     event.turn_away_from_player
     playAnimation(Settings::POKERADAR_LIGHT_ANIMATION_RED_ID, event.x, event.y)
   else
-    echoln "failed to spawn"
+    echoln "failed to spawn after #{max_attempts} attempts"
     pbPokeRadarCancel
     pbMessage(_INTL("The Pokéradar scan failed... Try again somewhere else"))
   end
+
   update_pokeradar_overworld_ui
 end
+
+# Reusing the old pokeradar mechanics for chaining
+def set_pokeradar_data(species, level, position)
+  x = position[0]
+  y = position[1]
+
+  existing_chain = ($PokemonTemp.pokeradar && $PokemonTemp.pokeradar[2]) ? $PokemonTemp.pokeradar[2] : 0
+
+  $PokemonTemp.pokeradar = [0, 0, 0, []] unless $PokemonTemp.pokeradar
+  $PokemonTemp.pokeradar[0] = species
+  $PokemonTemp.pokeradar[1] = level
+  $PokemonTemp.pokeradar[2] = existing_chain
+  $PokemonTemp.pokeradar[3] = [x, y, 0, determine_shininess]
+end
+
+def determine_shininess
+  chain_length = ($PokemonTemp.pokeradar && $PokemonTemp.pokeradar[2]) ? $PokemonTemp.pokeradar[2] : 0
+  rarity = (rand(100) < 25) ? 1 : 0
+  if chain_length > 0
+    capped_chain = [chain_length, 40].min
+    shiny_threshold = [(65536 / Settings::SHINY_POKEMON_CHANCE) - capped_chain * 200, 200].max
+    shiny_divisor = 0xFFFF / shiny_threshold
+    shiny_roll = rand(65536) / shiny_divisor
+    rarity = 2 if shiny_roll == 0
+  end
+  return rarity
+end
+
 
 Events.onMapChange += proc { |_sender, e|
   pbPokeRadarCancel

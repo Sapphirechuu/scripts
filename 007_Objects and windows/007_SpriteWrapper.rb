@@ -472,8 +472,10 @@ class ChangelingSprite < SpriteWrapper
   end
 
   def addBitmap(key, path)
+    path_dark = path + "_dark"
+    finalPath = (isDarkMode && pbResolveBitmap(path_dark)) ? path_dark : path
     @bitmaps[key].dispose if @bitmaps[key]
-    @bitmaps[key] = AnimatedBitmap.new(path)
+    @bitmaps[key] = AnimatedBitmap.new(finalPath)
   end
 
   def changeBitmap(key)
