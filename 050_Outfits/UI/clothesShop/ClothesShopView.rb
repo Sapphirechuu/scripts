@@ -91,7 +91,7 @@ class ClothesShopView < PokemonMart_Scene
           text = @adapter.getDescription(item)
         end
       else
-        text = _INTL("Quit.")
+        text = getQuitDescription
       end
       @sprites["itemtextwindow"].text = text
       itemwindow.refresh
@@ -114,11 +114,14 @@ class ClothesShopView < PokemonMart_Scene
       end
       @adapter.updateTrainerPreview(itemwindow.item, @sprites["trainerPreview"])
     else
-      description = _INTL("Quit.")
+      description = getQuitDescription
     end
     @sprites["itemtextwindow"].text = description
   end
 
+  def getQuitDescription
+    return _INTL("Outfits are submitted by the community. More will be added with future updates.")
+  end
   def updatePreviewWindow
     itemwindow= @sprites["itemwindow"]
     @adapter.updateTrainerPreview(itemwindow.item, @sprites["trainerPreview"])
