@@ -43,7 +43,7 @@ Payapon
 Payapon
 
 With contributions and tools by:
-Kiwikelly, Greystorm, Sapphire.Chuu
+Kiwikelly, Greystorm, Sapphire_chuu
 
 <title>Trainer Teams and dialogs:
 .Realthree<s>Chardub
