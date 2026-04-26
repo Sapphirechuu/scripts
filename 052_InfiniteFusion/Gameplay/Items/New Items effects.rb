@@ -454,7 +454,11 @@ ItemHandlers::UseFromBag.add(:PRESENT, proc { |item|
     params.setDefaultValue(1)
     nb = pbMessageChooseNumber(_INTL("\How many would you like to open?<br>({1} in bag)", quantity), params)
   end
-  pbReceiveCosmeticsMoney(500*nb)
+  if Settings::HOENN
+    pbReceiveCosmeticsMoney(600*nb)
+  else
+    pbReceiveMoney(400*nb)
+  end
   $PokemonBag.pbDeleteItem(item, nb)
   next 1
 })
