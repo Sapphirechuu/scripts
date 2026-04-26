@@ -136,6 +136,9 @@ def pbDayCareGetCompat
   # Pokémon in the Undiscovered egg group cannot breed
   egg_groups1 = pkmn1.species_data.egg_groups
   egg_groups2 = pkmn2.species_data.egg_groups
+  egg_groups1 = [egg_groups1] unless egg_groups1.is_a?(Array)
+  egg_groups2 = [egg_groups2] unless egg_groups2.is_a?(Array)
+
   return 0 if egg_groups1.include?(:Undiscovered) ||
     egg_groups2.include?(:Undiscovered)
   # Pokémon that don't share an egg group (and neither is in the Ditto group)
