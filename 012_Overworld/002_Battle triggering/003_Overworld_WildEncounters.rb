@@ -400,6 +400,7 @@ class PokemonEncounters
 
   def list_weather_encounters(enctype)
     list = []
+    return [] unless $game_weather.current_weather[$game_map.map_id]
     current_weather = $game_weather.current_weather[$game_map.map_id][0]
     weather_encounter_type = get_weather_encounter_type(enctype, current_weather)
     weather_encounters = @encounter_tables[weather_encounter_type]
